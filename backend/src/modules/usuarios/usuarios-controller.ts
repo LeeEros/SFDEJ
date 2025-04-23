@@ -60,7 +60,9 @@ class UsuariosController {
       },
     });
 
-    return response.status(201).json(usuario);
+    const { senha: _, ...usuarioSemSenha } = usuario;
+
+    return response.status(201).json(usuarioSemSenha);
   }
 }
 
