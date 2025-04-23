@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch --env-file .env src/server.ts",
     "test": "run test"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.12",
+    "prisma": "^5.19.1",
     "tsx": "^4.16.2",
     "typescript": "^5.5.4"
   }

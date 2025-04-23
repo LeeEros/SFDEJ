@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model usuarios {
+  id_usuario        Int       @id @default(autoincrement())
+  nome              String    @db.VarChar(255)
+  email             String    @unique @db.VarChar(255)
+  senha             String    @db.VarChar(255)
+  diretor           Boolean   @default(false)
+  ativo             Boolean   @default(true)
+  data_criacao      DateTime  @default(now())
+  data_atualizacao  DateTime? @updatedAt
+  data_desligamento DateTime?
+
+  permissao permissao @default(USUARIO)
+
+  fk_diretoria Int
+  diretoria    diretoria @relation(fields: [fk_diretoria], references: [id_diretoria], onUpdate: Cascade, onDelete: Restrict)
+
+  fk_ej Int
+  ej    ej  @relation(fields: [fk_ej], references: [id_ej])
+
+  feedback feedback[]
+}
+
+enum permissao {
+  USUARIO
+  ADMIN
+}
+
+model diretoria {
+  id_diretoria Int        @id @default(autoincrement())
+  diretoria    String
+  usuarios     usuarios[]
+}
+
+model endereco {
+  id_endereco Int    @id @default(autoincrement())
+  CEP         String @db.VarChar(8)
+  cidade      String @db.VarChar(255)
+  endereco    String @db.VarChar(255)
+  numero      Int
+
+  cliente     cliente[]
+  ej          ej[]
+  instituicao instituicao[]
+}
+
+model ej {
+  id_ej    Int        @id @default(autoincrement())
+  nome     String     @db.VarChar(255)
+  CNPJ     String     @unique @db.VarChar(14)
+  usuarios usuarios[]
+
+  fk_endereco Int
+  endereco    endereco @relation(fields: [fk_endereco], references: [id_endereco])
+
+  fk_federacao Int
+  federacao    federacao @relation(fields: [fk_federacao], references: [id_federacao], onUpdate: Cascade, onDelete: Restrict)
+
+  fk_instituicao Int
+  instituicao    instituicao @relation(fields: [fk_instituicao], references: [id_instituicao])
+}
+
+model instituicao {
+  id_instituicao Int     @id @default(autoincrement())
+  faculdade      String  @db.VarChar(255)
+  unidade        String? @db.VarChar(255)
+  CNPJ           String  @db.VarChar(14)
+  ej             ej[]
+
+  fk_endereco Int
+  endereco    endereco @relation(fields: [fk_endereco], references: [id_endereco])
+}
+
+model federacao {
+  id_federacao Int    @id @default(autoincrement())
+  nome         String @db.VarChar(255)
+  nivel        nivel  @default(REGIONAL)
+
+  ej ej[]
+}
+
+enum nivel {
+  REGIONAL
+  ESTADUAL
+  NACIONAL
+  INTERNACIONAL
+}
+
+model feedback {
+  id_feedback     Int            @id @default(autoincrement())
+  resultado_media Float
+  tipo_avaliador  tipo_avaliador @default(INTERNO)
+
+  feedback_categoria  feedback_categoria[]
+  feedback_empresario feedback_empresario[]
+  feedback_projeto    feedback_projeto[]
+  feedback_historicos feedback_historico[]
+  usuarios            usuarios              @relation(fields: [fk_usuario_avaliado], references: [id_usuario], onUpdate: Cascade, onDelete: Cascade)
+  fk_usuario_avaliado Int
+}
+
+enum tipo_avaliador {
+  EXTERNO
+  INTERNO
+}
+
+model feedback_historico {
+  id_fb_historico Int       @id @default(autoincrement())
+  media_notas     Float
+  media_questoes  Float
+  data_realizacao DateTime  @default(now())
+  feedback        feedback? @relation(fields: [fk_feedback], references: [id_feedback])
+  fk_feedback     Int?
+}
+
+model feedback_categoria {
+  id_fb_categoria     Int     @id @default(autoincrement())
+  categoria           String
+  descricao_categoria String?
+
+  feedback    feedback? @relation(fields: [fk_feedback], references: [id_feedback])
+  fk_feedback Int?
+}
+
+model feedback_empresario {
+  id_fb_empresario Int        @id @default(autoincrement())
+  data_realizacao  DateTime   @default(now())
+  comentario       String
+  feedback         feedback?  @relation(fields: [fk_feedback], references: [id_feedback])
+  fk_feedback      Int?
+  questoes         questoes[]
+}
+
+model feedback_projeto {
+  id_fb_projeto       Int        @id @default(autoincrement())
+  data_realizacao     DateTime   @default(now())
+  feedback            feedback?  @relation(fields: [feedbackId_feedback], references: [id_feedback])
+  feedbackId_feedback Int?
+  questoes            questoes[]
+  projeto             projeto    @relation(fields: [fk_projeto], references: [id_projeto])
+  fk_projeto          Int
+}
+
+model projeto {
+  id_projeto       Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(255)
+  descricao        String
+  status           status_projeto     @default(NEGOCIACAO)
+  data_assinatura  DateTime           @default(now())
+  data_conclusao   DateTime?          @db.Date
+  valor            Float
+  anexo            Bytes?
+  feedback_projeto feedback_projeto[]
+  fk_categoria     Int
+  categoria        categoria          @relation(fields: [fk_categoria], references: [id_categoria])
+  fk_cliente       Int
+  cliente          cliente            @relation(fields: [fk_cliente], references: [id_cliente])
+}
+
+enum status_projeto {
+  NEGOCIACAO
+  EM_ANDAMENTO
+  FINALIZADO
+  CANCELADO
+}
+
+model cliente {
+  id_cliente  Int       @id @default(autoincrement())
+  nome        String    @db.VarChar(255)
+  CNPJ        String?   @unique @db.VarChar(14)
+  CPF         String?   @unique @db.VarChar(11)
+  email       String?   @db.VarChar(255)
+  telefone    String?   @db.VarChar(15)
+  projeto     projeto[]
+  endereco    endereco? @relation(fields: [fk_endereco], references: [id_endereco])
+  fk_endereco Int?
+}
+
+model categoria {
+  id_categoria            Int          @id @default(autoincrement())
+  categoria               String       @db.VarChar(255)
+  complexidade            complexidade @default(N1)
+  comentario_complexidade String?
+  projeto                 projeto[]
+}
+
+enum complexidade {
+  N1
+  N2
+  N3
+  N4
+  N5
+}
+
+model questoes {
+  id_questao          Int                  @id @default(autoincrement())
+  enunciado           String               @db.VarChar(255)
+  pontuacao           Int
+  media               Float
+  descricao           String?
+  feedback_empresario feedback_empresario? @relation(fields: [fk_fb_empresario], references: [id_fb_empresario])
+  fk_fb_empresario    Int?
+  feedback_projeto    feedback_projeto?    @relation(fields: [fk_fb_projeto], references: [id_fb_projeto])
+  fk_fb_projeto       Int?
+}
