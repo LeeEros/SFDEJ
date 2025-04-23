@@ -1,0 +1,32 @@
+{
+  "name": "sfdej",
+  "version": "1.0.0",
+  "description": "TCC TADS IFPR",
+  "homepage": "https://github.com/LeeEros/SFDEJ#readme",
+  "bugs": {
+    "url": "https://github.com/LeeEros/SFDEJ/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeeEros/SFDEJ.git"
+  },
+  "license": "MIT",
+  "author": "Lee Eros Galaad",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "test": "run test"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.12",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4"
+  }
+}
