@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { hashSenha } from "./hash";
+import { hashSenha } from "../hash";
 import { prisma } from "@/database/prisma";
 
 async function main() {
