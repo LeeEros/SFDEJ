@@ -1,0 +1,102 @@
+import { prisma } from "@/database/prisma";
+import { AppError } from "@/utils/AppError";
+import { usuarioSchema } from "./usuarios-schema";
+import { hashSenha } from "@/utils/hash";
+
+export class UsuariosService {
+  async findAll() {
+    const usuarios = await prisma.usuarios.findMany({
+      where: { ativo: true },
+      orderBy: { nome: "asc" },
+    });
+    return usuarios;
+  }
+
+  async findById(id: number) {
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id_usuario: id },
+    });
+
+    if (!usuario) {
+      throw new AppError("Usuário não encontrado", 404);
+    }
+
+    return usuario;
+  }
+
+  async create(data: any) {
+    const validatedData = usuarioSchema.parse(data);
+
+    const usuarioEmailUsado = await prisma.usuarios.findFirst({
+      where: { email: validatedData.email },
+    });
+
+    if (usuarioEmailUsado) {
+      throw new AppError("Email já utilizado ou inválido");
+    }
+
+    const hashSenhaUsuario = await hashSenha(validatedData.senha);
+
+    const usuario = await prisma.usuarios.create({
+      data: {
+        ...validatedData,
+        senha: hashSenhaUsuario,
+      },
+    });
+
+    const { senha, ...usuarioSemSenha } = usuario;
+    return usuarioSemSenha;
+  }
+
+  async update(id: number, data: any) {
+    const validatedData = usuarioSchema.partial().parse(data);
+
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id_usuario: id },
+    });
+
+    if (!usuario) {
+      throw new AppError("Usuário não encontrado", 404);
+    }
+
+    if (validatedData.email) {
+      const usuarioEmailUsado = await prisma.usuarios.findFirst({
+        where: { email: validatedData.email, id_usuario: { not: id } },
+      });
+
+      if (usuarioEmailUsado) {
+        throw new AppError("Email já utilizado ou inválido");
+      }
+    }
+
+    let updatedData = { ...validatedData };
+    if (validatedData.senha) {
+      updatedData.senha = await hashSenha(validatedData.senha);
+    }
+
+    const usuarioAtualizado = await prisma.usuarios.update({
+      where: { id_usuario: id },
+      data: updatedData,
+    });
+
+    const { senha, ...usuarioSemSenha } = usuarioAtualizado;
+    return usuarioSemSenha;
+  }
+
+  async delete(id: number) {
+    const usuario = await prisma.usuarios.findUnique({
+      where: { id_usuario: id },
+    });
+
+    if (!usuario) {
+      throw new AppError("Usuário não encontrado", 404);
+    }
+
+    await prisma.usuarios.update({
+      where: { id_usuario: id },
+      data: { ativo: false },
+    });
+
+    return { message: "Usuário desativado com sucesso" };
+  }
+}

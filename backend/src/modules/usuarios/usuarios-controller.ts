@@ -1,56 +1,35 @@
 import { Request, Response } from "express";
-import { prisma } from "@/database/prisma";
-import { AppError } from "@/utils/AppError";
-import { usuarioSchema } from "./usuarios-schema";
-import { hashSenha } from "@/utils/mock/hash";
+import { UsuariosService } from "./usuarios-service";
+
+const usuariosService = new UsuariosService();
 
 class UsuariosController {
   async findAll(request: Request, response: Response) {
-    const usuarios = await prisma.usuarios.findMany({
-      where: { ativo: true },
-      orderBy: { nome: "asc" },
-    });
-
+    const usuarios = await usuariosService.findAll();
     return response.status(200).json(usuarios);
   }
 
   async findById(request: Request, response: Response) {
     const { id } = request.params;
-
-    const usuario = await prisma.usuarios.findUnique({
-      where: { id_usuario: Number(id) },
-    });
-
-    if (!usuario) {
-      throw new AppError("Usuário não encontrado", 404);
-    }
-
+    const usuario = await usuariosService.findById(Number(id));
     return response.status(200).json(usuario);
   }
 
   async create(request: Request, response: Response) {
-    const data = usuarioSchema.parse(request.body);
+    const usuario = await usuariosService.create(request.body);
+    return response.status(201).json(usuario);
+  }
 
-    const usuarioEmailUsado = await prisma.usuarios.findFirst({
-      where: { email: data.email },
-    });
+  async update(request: Request, response: Response) {
+    const { id } = request.params;
+    const usuario = await usuariosService.update(Number(id), request.body);
+    return response.status(200).json(usuario);
+  }
 
-    if (usuarioEmailUsado) {
-      throw new AppError("Email já utilizado ou inválido");
-    }
-
-    const hashSenhaUsuario = await hashSenha(data.senha);
-
-    const usuario = await prisma.usuarios.create({
-      data: {
-        ...data,
-        senha: hashSenhaUsuario,
-      },
-    });
-
-    const { senha, ...usuarioSemSenha } = usuario;
-
-    return response.status(201).json(usuarioSemSenha);
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+    const result = await usuariosService.delete(Number(id));
+    return response.status(200).json(result);
   }
 }
 

@@ -7,5 +7,7 @@ const usuariosController = new UsuariosController();
 usuariosRoutes.get("/", usuariosController.findAll);
 usuariosRoutes.get("/:id", usuariosController.findById);
 usuariosRoutes.post("/", usuariosController.create);
+usuariosRoutes.put("/:id", usuariosController.update);
+usuariosRoutes.delete("/:id", usuariosController.delete);
 
 export { usuariosRoutes };
