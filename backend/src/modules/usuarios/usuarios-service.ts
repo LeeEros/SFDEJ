@@ -9,7 +9,8 @@ export class UsuariosService {
       where: { ativo: true },
       orderBy: { nome: "asc" },
     });
-    return usuarios;
+    const usuariosSemSenha = usuarios.map(({ senha, ...corpo }) => corpo);
+    return usuariosSemSenha;
   }
 
   async findById(id: number) {
@@ -21,7 +22,8 @@ export class UsuariosService {
       throw new AppError("Usuário não encontrado", 404);
     }
 
-    return usuario;
+    const { senha, ...usuariosSemSenha } = usuario;
+    return usuariosSemSenha;
   }
 
   async create(data: any) {
