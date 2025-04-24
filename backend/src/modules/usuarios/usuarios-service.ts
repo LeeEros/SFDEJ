@@ -1,7 +1,7 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
-import { usuarioSchema } from "./usuarios-schema";
 import { hashSenha } from "@/utils/hash";
+import { usuarioSchema } from "./usuarios-schema";
 
 export class UsuariosService {
   async findAll() {
@@ -96,7 +96,10 @@ export class UsuariosService {
 
     await prisma.usuarios.update({
       where: { id_usuario: id },
-      data: { ativo: false },
+      data: {
+        ativo: false,
+        data_desligamento: new Date(),
+      },
     });
 
     return { message: "Usuário desativado com sucesso" };
