@@ -9,6 +9,11 @@ class UsuariosController {
     return response.status(200).json(usuarios);
   }
 
+  async findAllDesativados(request: Request, response: Response) {
+    const usuarios = await usuariosService.findAllDesativados();
+    return response.status(200).json(usuarios);
+  }
+
   async findById(request: Request, response: Response) {
     const { id } = request.params;
     const usuario = await usuariosService.findById(Number(id));

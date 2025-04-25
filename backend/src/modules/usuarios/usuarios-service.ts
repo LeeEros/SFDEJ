@@ -13,6 +13,17 @@ export class UsuariosService {
     return usuariosSemSenha;
   }
 
+  async findAllDesativados() {
+    const usuarioDesativados = await prisma.usuarios.findMany({
+      where: { ativo: false },
+      orderBy: { nome: "asc" },
+    });
+    const usuariosSemSenha = usuarioDesativados.map(
+      ({ senha, ...corpo }) => corpo
+    );
+    return usuariosSemSenha;
+  }
+
   async findById(id: number) {
     const usuario = await prisma.usuarios.findUnique({
       where: { id_usuario: id },

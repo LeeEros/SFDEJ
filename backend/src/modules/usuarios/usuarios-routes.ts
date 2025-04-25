@@ -5,6 +5,7 @@ const usuariosRoutes = Router();
 const usuariosController = new UsuariosController();
 
 usuariosRoutes.get("/", usuariosController.findAll);
+usuariosRoutes.get("/desativados", usuariosController.findAllDesativados);
 usuariosRoutes.get("/:id", usuariosController.findById);
 usuariosRoutes.post("/", usuariosController.create);
 usuariosRoutes.put("/:id", usuariosController.update);
