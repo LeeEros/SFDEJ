@@ -3,6 +3,8 @@ import { AppError } from "@/utils/AppError";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
 import { loginSchema } from "../usuarios/usuarios-schema";
+import { authConfig } from "@/configs/auth";
+import { sign } from "jsonwebtoken";
 
 class SessaoController {
   async findUsuario(request: Request, response: Response) {
@@ -22,7 +24,14 @@ class SessaoController {
       throw new AppError("Credenciais inválidas", 401);
     }
 
-    return response.json({ message: "ok" });
+    const { secret, expiresIn } = authConfig.jwt;
+
+    const token = sign({ permissao: usuario.permissao ?? "USUARIO" }, secret, {
+      subject: String(usuario.id_usuario),
+      expiresIn,
+    });
+
+    return response.json({ token });
   }
 }
 
