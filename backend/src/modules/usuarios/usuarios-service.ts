@@ -16,7 +16,7 @@ export class UsuariosService {
   async findAllDesativados() {
     const usuarioDesativados = await prisma.usuarios.findMany({
       where: { ativo: false },
-      orderBy: { nome: "asc" },
+      orderBy: { id_usuario: "asc" },
     });
     const usuariosSemSenha = usuarioDesativados.map(
       ({ senha, ...corpo }) => corpo
