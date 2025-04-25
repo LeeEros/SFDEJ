@@ -38,26 +38,26 @@ export class UsuariosService {
   }
 
   async create(data: any) {
-    const validatedData = usuarioSchema.parse(data);
+    const usuario = usuarioSchema.parse(data);
 
     const usuarioEmailUsado = await prisma.usuarios.findFirst({
-      where: { email: validatedData.email },
+      where: { email: usuario.email },
     });
 
     if (usuarioEmailUsado) {
       throw new AppError("Email já utilizado ou inválido");
     }
 
-    const hashSenhaUsuario = await hashSenha(validatedData.senha);
+    const hashSenhaUsuario = await hashSenha(usuario.senha);
 
-    const usuario = await prisma.usuarios.create({
+    const usuarioReq = await prisma.usuarios.create({
       data: {
-        ...validatedData,
+        ...usuario,
         senha: hashSenhaUsuario,
       },
     });
 
-    const { senha, ...usuarioSemSenha } = usuario;
+    const { senha, ...usuarioSemSenha } = usuarioReq;
     return usuarioSemSenha;
   }
 
