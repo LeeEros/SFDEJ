@@ -3,7 +3,7 @@ import { UsuariosService } from "./usuarios-service";
 
 const usuariosService = new UsuariosService();
 
-class UsuariosController {
+export class UsuariosController {
   async findAll(request: Request, response: Response) {
     const usuarios = await usuariosService.findAll();
     return response.status(200).json(usuarios);
@@ -37,5 +37,3 @@ class UsuariosController {
     return response.status(200).json(result);
   }
 }
-
-export { UsuariosController };
