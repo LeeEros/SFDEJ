@@ -7,7 +7,7 @@ export class UsuariosService {
   async findAll() {
     const usuarios = await prisma.usuarios.findMany({
       where: { ativo: true },
-      orderBy: { nome: "asc" },
+      orderBy: { id_usuario: "asc" },
     });
     const usuariosSemSenha = usuarios.map(({ senha, ...corpo }) => corpo);
     return usuariosSemSenha;
