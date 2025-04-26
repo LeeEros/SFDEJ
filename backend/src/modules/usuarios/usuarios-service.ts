@@ -2,6 +2,7 @@ import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { hashSenha } from "@/utils/hash";
 import { usuarioSchema } from "./usuarios-schema";
+import { usuarios } from "@prisma/client";
 
 export class UsuariosService {
   async findAll() {
@@ -37,7 +38,7 @@ export class UsuariosService {
     return usuariosSemSenha;
   }
 
-  async create(data: any) {
+  async create(data: usuarios) {
     const usuario = usuarioSchema.parse(data);
 
     const usuarioEmailUsado = await prisma.usuarios.findFirst({
@@ -50,19 +51,19 @@ export class UsuariosService {
 
     const hashSenhaUsuario = await hashSenha(usuario.senha);
 
-    const usuarioReq = await prisma.usuarios.create({
+    const usuarioCriado = await prisma.usuarios.create({
       data: {
         ...usuario,
         senha: hashSenhaUsuario,
       },
     });
 
-    const { senha, ...usuarioSemSenha } = usuarioReq;
+    const { senha, ...usuarioSemSenha } = usuarioCriado;
     return usuarioSemSenha;
   }
 
-  async update(id: number, data: any) {
-    const validatedData = usuarioSchema.partial().parse(data);
+  async update(id: number, data: usuarios) {
+    const dadoValidado = usuarioSchema.partial().parse(data);
 
     const usuario = await prisma.usuarios.findUnique({
       where: { id_usuario: id },
@@ -72,9 +73,9 @@ export class UsuariosService {
       throw new AppError("Usuário não encontrado", 404);
     }
 
-    if (validatedData.email) {
+    if (dadoValidado.email) {
       const usuarioEmailUsado = await prisma.usuarios.findFirst({
-        where: { email: validatedData.email, id_usuario: { not: id } },
+        where: { email: dadoValidado.email, id_usuario: { not: id } },
       });
 
       if (usuarioEmailUsado) {
@@ -82,9 +83,9 @@ export class UsuariosService {
       }
     }
 
-    let updatedData = { ...validatedData };
-    if (validatedData.senha) {
-      updatedData.senha = await hashSenha(validatedData.senha);
+    let updatedData = { ...dadoValidado };
+    if (dadoValidado.senha) {
+      updatedData.senha = await hashSenha(dadoValidado.senha);
     }
 
     const usuarioAtualizado = await prisma.usuarios.update({

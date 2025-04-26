@@ -33,7 +33,7 @@ export class UsuariosController {
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
-    const result = await usuariosService.delete(Number(id));
-    return response.status(200).json(result);
+    const usuario = await usuariosService.delete(Number(id));
+    return response.status(200).json(usuario);
   }
 }
