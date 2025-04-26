@@ -21,9 +21,8 @@ export class DiretoriasController {
 
   async findById(request: Request, response: Response) {
     const { id } = request.params;
-
     try {
-      const diretoria = await DiretoriasService.findB(Number(id));
+      const diretoria = await diretoriaService.findById(Number(id));
       return response.status(200).json(diretoria);
     } catch (error) {
       if (error instanceof AppError) {
