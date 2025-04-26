@@ -1,6 +1,6 @@
+import { AppError } from "@/utils/AppError";
 import { Request, Response } from "express";
 import { DiretoriasService } from "./diretoria-service";
-import { AppError } from "@/utils/AppError";
 
 const diretoriaService = new DiretoriasService();
 
@@ -32,5 +32,38 @@ export class DiretoriasController {
       }
       return response.status(500).json({ message: "Erro interno do servidor" });
     }
+  }
+
+  async create(request: Request, response: Response) {
+    try {
+      const diretoria = await diretoriaService.create(request.body);
+      return response.status(201).json(diretoria);
+    } catch (error) {
+      if (error instanceof AppError) {
+        return response
+          .status(error.statusCode)
+          .json({ message: "Erro interno do servidor" + error });
+      }
+    }
+  }
+
+  async update(request: Request, response: Response) {
+    try {
+      const { id } = request.params;
+      const diretoria = await diretoriaService.update(Number(id), request.body);
+      return response.status(200).json(diretoria);
+    } catch (error) {
+      if (error instanceof AppError) {
+        return response
+          .status(error.statusCode)
+          .json({ message: "Erro interno do servidor" + error });
+      }
+    }
+  }
+
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+    const diretoria = await diretoriaService.delete(Number(id));
+    return response.status(200).json(diretoria);
   }
 }

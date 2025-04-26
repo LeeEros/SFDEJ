@@ -35,7 +35,11 @@ export class DiretoriasService {
       throw new AppError("Diretoria inválida", 400);
     }
 
-    return diretoria;
+    const diretoriaCriada = await prisma.diretoria.create({
+      data: diretoria,
+    });
+
+    return diretoriaCriada;
   }
 
   async update(id: number, data: diretoria) {
@@ -45,16 +49,18 @@ export class DiretoriasService {
       throw new AppError("Diretoria não encontrada", 404);
     }
 
-    const updatedDiretoria = await prisma.diretoria.update({
+    const diretoriaAtualizada = await prisma.diretoria.update({
       where: { id_diretoria: id },
       data,
     });
 
-    return updatedDiretoria;
+    return diretoriaAtualizada;
   }
 
   async delete(id: number) {
-    const diretoria = await this.findById(id);
+    const diretoria = await prisma.diretoria.findUnique({
+      where: { id_diretoria: id },
+    });
 
     if (!diretoria) {
       throw new AppError("Diretoria não encontrada", 404);
