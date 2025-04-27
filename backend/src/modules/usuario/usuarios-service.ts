@@ -1,8 +1,9 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { hashSenha } from "@/utils/hash";
-import { usuarioSchema } from "./usuarios-schema";
+
 import { usuarios } from "@prisma/client";
+import { usuarioSchema } from "./usuarios-schema";
 
 export class UsuariosService {
   async findAll() {

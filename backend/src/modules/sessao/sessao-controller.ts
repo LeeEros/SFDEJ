@@ -2,9 +2,9 @@ import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
-import { loginSchema } from "../usuarios/usuarios-schema";
 import { authConfig } from "@/configs/auth";
 import { sign } from "jsonwebtoken";
+import { loginSchema } from "../usuario/usuarios-schema";
 
 class SessaoController {
   async findUsuario(request: Request, response: Response) {

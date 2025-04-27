@@ -4,7 +4,8 @@ import { enderecoRoutes } from "@/modules/endereco/endereco-routes";
 import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
 import { sessaoRoutes } from "@/modules/sessao/sessao-routes";
-import { usuariosRoutes } from "@/modules/usuarios/usuarios-routes";
+import { usuariosRoutes } from "@/modules/usuario/usuarios-routes";
+
 import { Router } from "express";
 
 const routes = Router();

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { UsuariosController } from "@/modules/usuarios/usuarios-controller";
 import { usuarioAutenticado } from "@/middlewares/auth-usuario";
+import { UsuariosController } from "./usuarios-controller";
 
 const usuariosRoutes = Router();
 const usuariosController = new UsuariosController();
