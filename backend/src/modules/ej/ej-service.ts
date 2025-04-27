@@ -29,11 +29,11 @@ export class EJService {
   async create(data: ej) {
     const ej = ejSchema.parse(data);
 
+    const ejCriada = await prisma.ej.create({ data: ej });
+
     if (!ej) {
       throw new AppError("Não foi possível criar EJ", 404);
     }
-
-    const ejCriada = await prisma.ej.create({ data: ej });
 
     return ejCriada;
   }
