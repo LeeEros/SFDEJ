@@ -31,7 +31,7 @@ export class EJService {
 
     const ejCriada = await prisma.ej.create({ data: ej });
 
-    if (!ej) {
+    if (!ejCriada) {
       throw new AppError("Não foi possível criar EJ", 404);
     }
 
