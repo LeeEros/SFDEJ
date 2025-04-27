@@ -3,6 +3,7 @@ import { diretoriasRoutes } from "@/modules/diretoria/diretoria-routes";
 import { ejRoutes } from "@/modules/ej/ej-routes";
 import { enderecoRoutes } from "@/modules/endereco/endereco-routes";
 import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
+import { feedbackRoutes } from "@/modules/feedback/feedback-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
 import { categoriaRoutes } from "@/modules/projeto/categoria/categoria-routes";
 import { projetoRoutes } from "@/modules/projeto/projeto-routes";
@@ -19,6 +20,7 @@ routes.use("/clientes", clienteRoutes);
 routes.use("/diretorias", diretoriasRoutes);
 routes.use("/ejs", ejRoutes);
 routes.use("/enderecos", enderecoRoutes);
+routes.use("/feedback", feedbackRoutes);
 routes.use("/instituicoes", instRoutes);
 routes.use("/federacoes", federacaoRoutes);
 
