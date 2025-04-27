@@ -35,7 +35,7 @@ export class DiretoriasService {
       data: diretoria,
     });
 
-    if (!diretoria) {
+    if (!diretoriaCriada) {
       throw new AppError("Não foi possível criar Diretoria", 400);
     }
 
