@@ -26,11 +26,11 @@ model usuarios {
 
   permissao permissao @default(USUARIO)
 
-  fk_diretoria Int
-  diretoria    diretoria @relation(fields: [fk_diretoria], references: [id_diretoria], onUpdate: Cascade, onDelete: Restrict)
+  fk_diretoria Int?
+  diretoria    diretoria? @relation(fields: [fk_diretoria], references: [id_diretoria], onUpdate: Cascade, onDelete: Restrict)
 
-  fk_ej Int
-  ej    ej  @relation(fields: [fk_ej], references: [id_ej])
+  fk_ej Int?
+  ej    ej?  @relation(fields: [fk_ej], references: [id_ej])
 
   feedback feedback[]
 }
