@@ -161,15 +161,15 @@ model projeto {
   nome             String             @db.VarChar(255)
   descricao        String
   status           status_projeto     @default(NEGOCIACAO)
-  data_assinatura  DateTime           @default(now())
+  data_assinatura  DateTime?          @db.Date
   data_conclusao   DateTime?          @db.Date
-  valor            Float
+  valor            Float?
   anexo            Bytes?
   feedback_projeto feedback_projeto[]
   fk_categoria     Int
   categoria        categoria          @relation(fields: [fk_categoria], references: [id_categoria])
-  fk_cliente       Int
-  cliente          cliente            @relation(fields: [fk_cliente], references: [id_cliente])
+  fk_cliente       Int?
+  cliente          cliente?           @relation(fields: [fk_cliente], references: [id_cliente])
 }
 
 enum status_projeto {

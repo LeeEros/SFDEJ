@@ -4,6 +4,7 @@ import { ejRoutes } from "@/modules/ej/ej-routes";
 import { enderecoRoutes } from "@/modules/endereco/endereco-routes";
 import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
+import { projetoRoutes } from "@/modules/projeto/projeto-routes";
 import { sessaoRoutes } from "@/modules/sessao/sessao-routes";
 import { usuariosRoutes } from "@/modules/usuario/usuarios-routes";
 
@@ -19,5 +20,7 @@ routes.use("/ejs", ejRoutes);
 routes.use("/enderecos", enderecoRoutes);
 routes.use("/instituicoes", instRoutes);
 routes.use("/federacoes", federacaoRoutes);
+
+routes.use("/projetos", projetoRoutes);
 
 export { routes };
