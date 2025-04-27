@@ -50,6 +50,7 @@ model endereco {
   id_endereco Int    @id @default(autoincrement())
   CEP         String @db.VarChar(8)
   cidade      String @db.VarChar(255)
+  estado      String @db.VarChar(255)
   endereco    String @db.VarChar(255)
   numero      Int
 
@@ -146,13 +147,13 @@ model feedback_empresario {
 }
 
 model feedback_projeto {
-  id_fb_projeto       Int        @id @default(autoincrement())
-  data_realizacao     DateTime   @default(now())
-  feedback            feedback?  @relation(fields: [feedbackId_feedback], references: [id_feedback])
-  feedbackId_feedback Int?
-  questoes            questoes[]
-  projeto             projeto    @relation(fields: [fk_projeto], references: [id_projeto])
-  fk_projeto          Int
+  id_fb_projeto   Int        @id @default(autoincrement())
+  data_realizacao DateTime   @default(now())
+  feedback        feedback?  @relation(fields: [fk_feedback], references: [id_feedback])
+  fk_feedback     Int?
+  questoes        questoes[]
+  projeto         projeto    @relation(fields: [fk_projeto], references: [id_projeto])
+  fk_projeto      Int
 }
 
 model projeto {
