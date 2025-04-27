@@ -6,8 +6,8 @@ export const usuarioSchema = z.object({
   senha: z.string().min(8, "A senha deve ter pelo menos 8 caracteres"),
   diretor: z.boolean().optional(),
   ativo: z.boolean(),
-  fk_diretoria: z.number(),
-  fk_ej: z.number(),
+  fk_diretoria: z.number().optional(),
+  fk_ej: z.number().optional(),
   permissao: z.enum(["USUARIO", "ADMIN"]),
 });
 
