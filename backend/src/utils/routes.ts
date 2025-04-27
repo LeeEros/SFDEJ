@@ -1,3 +1,4 @@
+import { clienteRoutes } from "@/modules/cliente/cliente-routes";
 import { diretoriasRoutes } from "@/modules/diretoria/diretoria-routes";
 import { ejRoutes } from "@/modules/ej/ej-routes";
 import { enderecoRoutes } from "@/modules/endereco/endereco-routes";
@@ -11,6 +12,8 @@ import { Router } from "express";
 const routes = Router();
 routes.use("/sessao", sessaoRoutes);
 routes.use("/usuarios", usuariosRoutes);
+
+routes.use("/clientes", clienteRoutes);
 routes.use("/diretorias", diretoriasRoutes);
 routes.use("/ejs", ejRoutes);
 routes.use("/enderecos", enderecoRoutes);
