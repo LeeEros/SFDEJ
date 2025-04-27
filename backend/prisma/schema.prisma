@@ -166,8 +166,8 @@ model projeto {
   valor            Float?
   anexo            Bytes?
   feedback_projeto feedback_projeto[]
-  fk_categoria     Int
-  categoria        categoria          @relation(fields: [fk_categoria], references: [id_categoria])
+  fk_categoria     Int?
+  categoria        categoria?         @relation(fields: [fk_categoria], references: [id_categoria])
   fk_cliente       Int?
   cliente          cliente?           @relation(fields: [fk_cliente], references: [id_cliente])
 }
@@ -177,18 +177,6 @@ enum status_projeto {
   EM_ANDAMENTO
   FINALIZADO
   CANCELADO
-}
-
-model cliente {
-  id_cliente  Int       @id @default(autoincrement())
-  nome        String    @db.VarChar(255)
-  CNPJ        String?   @unique @db.VarChar(14)
-  CPF         String?   @unique @db.VarChar(11)
-  email       String?   @db.VarChar(255)
-  telefone    String?   @db.VarChar(15)
-  projeto     projeto[]
-  endereco    endereco? @relation(fields: [fk_endereco], references: [id_endereco])
-  fk_endereco Int?
 }
 
 model categoria {
@@ -205,6 +193,18 @@ enum complexidade {
   N3
   N4
   N5
+}
+
+model cliente {
+  id_cliente  Int       @id @default(autoincrement())
+  nome        String    @db.VarChar(255)
+  CNPJ        String?   @unique @db.VarChar(14)
+  CPF         String?   @unique @db.VarChar(11)
+  email       String?   @db.VarChar(255)
+  telefone    String?   @db.VarChar(15)
+  projeto     projeto[]
+  endereco    endereco? @relation(fields: [fk_endereco], references: [id_endereco])
+  fk_endereco Int?
 }
 
 model questoes {

@@ -16,6 +16,6 @@ export const projetoSchema = z.object({
       message: "O arquivo deve ter no máximo 10MB",
     })
     .optional(),
-  fk_categoria: z.number().int("ID da categoria deve ser inteiro"),
+  fk_categoria: z.number().int("ID da categoria deve ser inteiro").optional(),
   fk_cliente: z.number().int("ID da categoria deve ser inteiro").optional(),
 });
