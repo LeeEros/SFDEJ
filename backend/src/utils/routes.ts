@@ -7,7 +7,7 @@ import { Router } from "express";
 const routes = Router();
 routes.use("/sessao", sessaoRoutes);
 routes.use("/usuarios", usuariosRoutes);
-routes.use("ejs", ejRoutes);
+routes.use("/ejs", ejRoutes);
 routes.use("/diretorias", diretoriasRoutes);
 
 export { routes };
