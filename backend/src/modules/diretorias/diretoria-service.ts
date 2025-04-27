@@ -4,7 +4,7 @@ import { AppError } from "@/utils/AppError";
 import { diretoria } from "@prisma/client";
 
 export class DiretoriasService {
-  async FindAll() {
+  async findAll() {
     const diretorias = await prisma.diretoria.findMany({
       orderBy: { id_diretoria: "asc" },
     });
@@ -53,6 +53,10 @@ export class DiretoriasService {
       where: { id_diretoria: id },
       data,
     });
+
+    if (!diretoriaAtualizada) {
+      throw new AppError("Diretoria não atualizada", 400);
+    }
 
     return diretoriaAtualizada;
   }

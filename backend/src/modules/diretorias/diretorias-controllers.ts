@@ -5,7 +5,7 @@ const diretoriaService = new DiretoriasService();
 
 export class DiretoriasController {
   async findAll(request: Request, response: Response) {
-    const diretorias = await diretoriaService.FindAll();
+    const diretorias = await diretoriaService.findAll();
     return response.status(200).json(diretorias);
   }
 
