@@ -10,7 +10,7 @@ export class EJService {
     });
 
     if (!EJ) {
-      throw new AppError("Nenhuma EJ encontrada", 404);
+      throw new AppError("Nenhuma EJ encontrada.", 404);
     }
 
     return EJ;
@@ -20,7 +20,7 @@ export class EJService {
     const EJ = await prisma.ej.findUnique({ where: { id_ej: id } });
 
     if (!EJ) {
-      throw new AppError("EJ não encontrada", 404);
+      throw new AppError("EJ não encontrada.", 404);
     }
 
     return EJ;
@@ -32,7 +32,7 @@ export class EJService {
     const ejCriada = await prisma.ej.create({ data: ej });
 
     if (!ejCriada) {
-      throw new AppError("Não foi possível criar EJ", 404);
+      throw new AppError("Não foi possível criar EJ.", 404);
     }
 
     return ejCriada;
@@ -42,7 +42,7 @@ export class EJService {
     const ej = await this.findById(id);
 
     if (!ej) {
-      throw new AppError("EJ não encontrada", 404);
+      throw new AppError("EJ não encontrada.", 404);
     }
 
     const ejAtualizada = await prisma.ej.update({
@@ -51,7 +51,7 @@ export class EJService {
     });
 
     if (!ejAtualizada) {
-      throw new AppError("Não foi possível atualizar a EJ", 400);
+      throw new AppError("Não foi possível atualizar a EJ.", 400);
     }
 
     return ejAtualizada;
@@ -61,11 +61,11 @@ export class EJService {
     const ej = await this.findById(id);
 
     if (!ej) {
-      throw new AppError("EJ não encontrada", 404);
+      throw new AppError("EJ não encontrada.", 404);
     }
 
     await prisma.ej.delete({ where: { id_ej: id } });
 
-    return { message: "ej deletada com sucesso" };
+    return { message: "ej deletada com sucesso." };
   }
 }
