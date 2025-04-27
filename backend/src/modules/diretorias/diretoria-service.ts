@@ -32,7 +32,7 @@ export class DiretoriasService {
     const diretoria = diretoriaSchema.parse(data);
 
     if (!diretoria) {
-      throw new AppError("Diretoria inválida", 400);
+      throw new AppError("Não foi possível criar Diretoria", 400);
     }
 
     const diretoriaCriada = await prisma.diretoria.create({
