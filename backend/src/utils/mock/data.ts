@@ -23,6 +23,7 @@ async function main() {
         data: {
           CEP: faker.location.zipCode("########"),
           cidade: faker.location.city(),
+          estado: faker.location.state(),
           endereco: faker.location.streetAddress(),
           numero: faker.number.int({ min: 1, max: 1000 }),
         },
@@ -211,7 +212,7 @@ async function main() {
     await prisma.feedback_projeto.create({
       data: {
         data_realizacao: faker.date.past(),
-        feedbackId_feedback: feedbacks[i % feedbacks.length].id_feedback,
+        fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
         fk_projeto: projetos[i % projetos.length].id_projeto,
       },
     });
