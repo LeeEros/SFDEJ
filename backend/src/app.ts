@@ -2,7 +2,7 @@ import express from "express";
 import "express-async-errors";
 
 import { tratamentoErros } from "./middlewares/tratamento.erros";
-import { routes } from "./utils";
+import { routes } from "./utils/routes";
 
 const app = express();
 
