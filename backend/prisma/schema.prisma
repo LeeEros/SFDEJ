@@ -138,11 +138,16 @@ model feedback_categoria {
   categoria           String
   descricao_categoria String?
   media_categoria     Float?
-  perfil              perfil[]
+  perfil              perfil     @default(hard_skills)
   feedback            feedback[]
 
   feedback_questao feedback_questao? @relation(fields: [fk_fb_questoes], references: [id_questao])
   fk_fb_questoes   Int?
+}
+
+enum perfil {
+  hard_skills
+  soft_skills
 }
 
 model feedback_questao {
@@ -152,11 +157,6 @@ model feedback_questao {
   pontuacao  Int
 
   fk_fb_categoria feedback_categoria[]
-}
-
-enum perfil {
-  hard_skills
-  soft_skills
 }
 
 model projeto {
