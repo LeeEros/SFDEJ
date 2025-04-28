@@ -13,7 +13,7 @@ export class ClienteController {
     const { id } = request.params;
 
     const cliente = await clienteService.findById(Number(id));
-    return response.status(201).json(cliente);
+    return response.status(200).json(cliente);
   }
 
   async create(request: Request, response: Response) {

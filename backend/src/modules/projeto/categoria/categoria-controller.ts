@@ -13,7 +13,7 @@ export class CategoriaController {
     const { id } = request.params;
 
     const categoria = await categoriaService.findById(Number(id));
-    return response.status(201).json(categoria);
+    return response.status(200).json(categoria);
   }
 
   async create(request: Request, response: Response) {

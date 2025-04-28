@@ -13,7 +13,7 @@ export class EJController {
     const { id } = request.params;
 
     const ej = await ejService.findById(Number(id));
-    return response.status(201).json(ej);
+    return response.status(200).json(ej);
   }
 
   async create(request: Request, response: Response) {

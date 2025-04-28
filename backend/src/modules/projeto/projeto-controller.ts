@@ -13,7 +13,7 @@ export class ProjetoController {
     const { id } = request.params;
 
     const projeto = await projetoService.findById(Number(id));
-    return response.status(201).json(projeto);
+    return response.status(200).json(projeto);
   }
 
   async create(request: Request, response: Response) {

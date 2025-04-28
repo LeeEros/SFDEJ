@@ -55,7 +55,7 @@ export class EnderecoService {
     });
 
     if (!enderecoAtualizado) {
-      throw new AppError("Endero não atualizado", 400);
+      throw new AppError("Endereço não atualizado", 400);
     }
 
     return enderecoAtualizado;

@@ -3,7 +3,10 @@ import { diretoriasRoutes } from "@/modules/diretoria/diretoria-routes";
 import { ejRoutes } from "@/modules/ej/ej-routes";
 import { enderecoRoutes } from "@/modules/endereco/endereco-routes";
 import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
-import { feedbackRoutes } from "@/modules/feedback/feedback-routes";
+import { fbCategoriaRoutes } from "@/modules/feedback/fb-categoria/fb-categoria-routes";
+import { fbHistoricoRoutes } from "@/modules/feedback/fb-historico/fb-historico-routes";
+import { fbQuestaoRoutes } from "@/modules/feedback/fb-questao/fb-questao-routes";
+import { feedbackRoutes } from "@/modules/feedback/fb/feedback-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
 import { categoriaRoutes } from "@/modules/projeto/categoria/categoria-routes";
 import { projetoRoutes } from "@/modules/projeto/projeto-routes";
@@ -13,7 +16,7 @@ import { usuariosRoutes } from "@/modules/usuario/usuarios-routes";
 import { Router } from "express";
 
 const routes = Router();
-routes.use("/sessao", sessaoRoutes);
+routes.use("/login", sessaoRoutes);
 routes.use("/usuarios", usuariosRoutes);
 
 routes.use("/clientes", clienteRoutes);
@@ -21,6 +24,9 @@ routes.use("/diretorias", diretoriasRoutes);
 routes.use("/ejs", ejRoutes);
 routes.use("/enderecos", enderecoRoutes);
 routes.use("/feedback", feedbackRoutes);
+routes.use("/fb-categorias", fbCategoriaRoutes);
+routes.use("/fb-historico", fbHistoricoRoutes);
+routes.use("/fb-questoes", fbQuestaoRoutes);
 routes.use("/instituicoes", instRoutes);
 routes.use("/federacoes", federacaoRoutes);
 
