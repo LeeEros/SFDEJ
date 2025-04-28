@@ -39,8 +39,17 @@ export class UsuariosService {
     return usuariosSemSenha;
   }
 
-  async create(data: usuarios) {
+  async create(
+    data: usuarios,
+    usuarioAutenticado?: { id: string; permissao: string }
+  ) {
     const usuario = usuarioSchema.parse(data);
+
+    if (usuario.permissao === "ADMIN") {
+      if (!usuarioAutenticado || usuarioAutenticado.permissao !== "ADMIN") {
+        throw new AppError("Não autorizado.", 403);
+      }
+    }
 
     const usuarioEmailUsado = await prisma.usuarios.findFirst({
       where: { email: usuario.email },
