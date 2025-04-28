@@ -132,7 +132,6 @@ async function main() {
       data: {
         categoria: faker.commerce.department(),
         descricao_categoria: faker.commerce.productDescription(),
-        fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
       },
     });
   }
@@ -142,7 +141,6 @@ async function main() {
       data: {
         data_realizacao: faker.date.past(),
         comentario: faker.lorem.sentence(),
-        fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
       },
     });
   }
@@ -212,7 +210,6 @@ async function main() {
     await prisma.feedback_projeto.create({
       data: {
         data_realizacao: faker.date.past(),
-        fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
         fk_projeto: projetos[i % projetos.length].id_projeto,
       },
     });
@@ -225,7 +222,6 @@ async function main() {
         pontuacao: faker.number.int({ min: 1, max: 10 }),
         media: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
         descricao: faker.lorem.sentence(),
-        fk_fb_projeto: feedbacks[i % feedbacks.length].id_feedback,
       },
     });
   }
