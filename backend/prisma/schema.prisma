@@ -105,18 +105,20 @@ enum nivel {
 model feedback {
   id_feedback     Int            @id @default(autoincrement())
   data_realizacao DateTime       @default(now())
-  comentario      String
-  media_geral     Float
+  comentario      String?
+  media_geral     Float?
   tipo_avaliador  tipo_avaliador @default(INTERNO)
 
   feedback_historicos feedback_historico[]
 
-  usuarios            usuarios            @relation(fields: [fk_usuario_avaliado], references: [id_usuario], onUpdate: Cascade, onDelete: Restrict)
+  feedback_categoria feedback_categoria? @relation(fields: [fk_fb_categoria], references: [id_fb_categoria], onUpdate: Cascade)
+  fk_fb_categoria    Int?
+
+  projeto    projeto? @relation(fields: [fk_projeto], references: [id_projeto])
+  fk_projeto Int?
+
+  usuarios            usuarios @relation(fields: [fk_usuario_avaliado], references: [id_usuario], onUpdate: Cascade, onDelete: Restrict)
   fk_usuario_avaliado Int
-  feedback_categoria  feedback_categoria? @relation(fields: [fk_fb_categoria], references: [id_fb_categoria], onUpdate: Cascade)
-  fk_fb_categoria     Int?
-  projeto             projeto?            @relation(fields: [fk_projeto], references: [id_projeto])
-  fk_projeto          Int?
 }
 
 enum tipo_avaliador {
@@ -128,21 +130,20 @@ model feedback_historico {
   id_fb_historico  Int       @id @default(autoincrement())
   media_geral      Float
   media_categorias Float
-  data_realizacao  DateTime  @default(now())
-  feedback         feedback? @relation(fields: [fk_feedback], references: [id_feedback])
-  fk_feedback      Int?
+  data_geracao     DateTime  @default(now())
+  data_atualizacao DateTime? @updatedAt
+  feedback         feedback  @relation(fields: [fk_feedback], references: [id_feedback])
+  fk_feedback      Int
 }
 
 model feedback_categoria {
-  id_fb_categoria     Int        @id @default(autoincrement())
-  categoria           String
+  id_fb_categoria     Int                @id @default(autoincrement())
+  categoria           String             @db.VarChar(255)
   descricao_categoria String?
   media_categoria     Float?
-  perfil              perfil     @default(hard_skills)
+  perfil              perfil             @default(hard_skills)
   feedback            feedback[]
-
-  feedback_questao feedback_questao? @relation(fields: [fk_fb_questoes], references: [id_questao])
-  fk_fb_questoes   Int?
+  questoes            feedback_questao[]
 }
 
 enum perfil {
@@ -151,12 +152,12 @@ enum perfil {
 }
 
 model feedback_questao {
-  id_questao Int     @id @default(autoincrement())
-  enunciado  String  @db.VarChar(255)
-  comentario String?
-  pontuacao  Int
-
-  fk_fb_categoria feedback_categoria[]
+  id_questao         Int                @id @default(autoincrement())
+  enunciado          String             @db.VarChar(255)
+  comentario         String?
+  pontuacao          Int
+  feedback_categoria feedback_categoria @relation(fields: [fk_fb_categoria], references: [id_fb_categoria])
+  fk_fb_categoria    Int
 }
 
 model projeto {

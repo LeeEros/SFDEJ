@@ -42,7 +42,7 @@ export class FeedbackService {
     const fb = await this.findById(id);
 
     if (!fb) {
-      throw new AppError("EJ não encontrada.", 404);
+      throw new AppError("Feedback não encontrado.", 404);
     }
 
     const fbAtualizado = await prisma.feedback.update({

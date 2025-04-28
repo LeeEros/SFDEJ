@@ -2,229 +2,256 @@ import { faker } from "@faker-js/faker";
 import { hashSenha } from "../hash";
 import { prisma } from "@/database/prisma";
 
+export const mockData = {
+  usuarios: Array.from({ length: 10 }, () => ({
+    nome: faker.person.fullName(),
+    email: faker.internet.email(),
+    telefone: faker.phone.number().slice(0, 15),
+    senha: faker.internet.password({ length: 10 }),
+    diretor: faker.datatype.boolean(),
+    ativo: faker.datatype.boolean(),
+    data_criacao: faker.date.past(),
+    data_atualizacao: faker.date.recent(),
+    data_desligamento: faker.datatype.boolean() ? faker.date.past() : null,
+    permissao: faker.helpers.arrayElement(["USUARIO", "ADMIN"]),
+  })),
+
+  diretoria: Array.from({ length: 10 }, () => ({
+    diretoria: faker.company.name(),
+  })),
+
+  endereco: Array.from({ length: 10 }, () => ({
+    CEP: faker.location.zipCode("########"),
+    cidade: faker.location.city(),
+    estado: faker.location.state(),
+    endereco: faker.location.streetAddress(),
+    numero: faker.number.int({ min: 1, max: 1000 }),
+  })),
+
+  ej: Array.from({ length: 10 }, () => ({
+    nome: faker.company.name(),
+    CNPJ: faker.string.numeric(14),
+  })),
+
+  instituicao: Array.from({ length: 10 }, () => ({
+    faculdade: faker.company.name(),
+    unidade: faker.company.catchPhrase(),
+    CNPJ: faker.string.numeric(14),
+  })),
+
+  federacao: Array.from({ length: 10 }, () => ({
+    nome: faker.company.name(),
+    nivel: faker.helpers.arrayElement([
+      "REGIONAL",
+      "ESTADUAL",
+      "NACIONAL",
+      "INTERNACIONAL",
+    ]),
+  })),
+
+  cliente: Array.from({ length: 10 }, () => ({
+    nome: faker.person.fullName(),
+    CNPJ: faker.string.numeric(14),
+    CPF: faker.string.numeric(11),
+    email: faker.internet.email(),
+    telefone: faker.phone.number().slice(0, 15),
+  })),
+
+  categoria: Array.from({ length: 10 }, () => ({
+    categoria: faker.commerce.department(),
+    complexidade: faker.helpers.arrayElement(["N1", "N2", "N3", "N4", "N5"]),
+    comentario_complexidade: faker.lorem.sentence(),
+  })),
+
+  projeto: Array.from({ length: 10 }, () => ({
+    nome: faker.commerce.productName(),
+    descricao: faker.commerce.productDescription(),
+    status: faker.helpers.arrayElement([
+      "NEGOCIACAO",
+      "EM_ANDAMENTO",
+      "FINALIZADO",
+      "CANCELADO",
+    ]),
+    data_assinatura: faker.date.past(),
+    data_conclusao: faker.datatype.boolean() ? faker.date.recent() : null,
+    valor: faker.number.float({ min: 1000, max: 100000, fractionDigits: 2 }),
+    anexo: faker.datatype.boolean() ? Buffer.from(faker.lorem.words(10)) : null,
+  })),
+
+  feedback_categoria: Array.from({ length: 10 }, () => ({
+    categoria: faker.commerce.department(),
+    descricao_categoria: faker.commerce.productDescription(),
+    perfil: faker.helpers.arrayElement(["hard_skills", "soft_skills"]),
+    media_categoria: faker.datatype.boolean()
+      ? faker.number.float({ min: 0, max: 10, fractionDigits: 1 })
+      : null,
+  })),
+
+  feedback: Array.from({ length: 10 }, () => ({
+    tipo_avaliador: faker.helpers.arrayElement(["INTERNO", "EXTERNO"]),
+    comentario: faker.lorem.sentence(),
+    media_geral: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
+    data_realizacao: faker.date.past(),
+  })),
+
+  feedback_historico: Array.from({ length: 10 }, () => ({
+    media_geral: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
+    media_categorias: faker.number.float({
+      min: 0,
+      max: 10,
+      fractionDigits: 1,
+    }),
+    data_geracao: faker.date.past(),
+    data_atualizacao: faker.date.recent(),
+  })),
+
+  feedback_questao: Array.from({ length: 10 }, () => ({
+    enunciado: faker.lorem.sentence(),
+    pontuacao: faker.number.int({ min: 1, max: 10 }),
+    comentario: faker.lorem.sentence(),
+  })),
+};
+
 async function main() {
   console.log("Iniciando inserção de dados fictícios...");
 
-  const diretoria = [];
-  for (let i = 0; i < 10; i++) {
-    diretoria.push(
-      await prisma.diretoria.create({
-        data: {
-          diretoria: faker.company.name(),
-        },
+  const diretorias = await Promise.all(
+    mockData.diretoria.map((data) =>
+      prisma.diretoria.create({
+        data,
       })
-    );
-  }
+    )
+  );
 
-  const enderecos = [];
-  for (let i = 0; i < 10; i++) {
-    enderecos.push(
-      await prisma.endereco.create({
-        data: {
-          CEP: faker.location.zipCode("########"),
-          cidade: faker.location.city(),
-          estado: faker.location.state(),
-          endereco: faker.location.streetAddress(),
-          numero: faker.number.int({ min: 1, max: 1000 }),
-        },
+  const enderecos = await Promise.all(
+    mockData.endereco.map((data) =>
+      prisma.endereco.create({
+        data,
       })
-    );
-  }
+    )
+  );
 
-  const federacoes = [];
-  for (let i = 0; i < 10; i++) {
-    federacoes.push(
-      await prisma.federacao.create({
-        data: {
-          nome: faker.company.name(),
-          nivel: faker.helpers.arrayElement([
-            "REGIONAL",
-            "ESTADUAL",
-            "NACIONAL",
-            "INTERNACIONAL",
-          ]),
-        },
+  const federacoes = await Promise.all(
+    mockData.federacao.map((data) =>
+      prisma.federacao.create({
+        data,
       })
-    );
-  }
+    )
+  );
 
-  const instituicoes = [];
-  for (let i = 0; i < 10; i++) {
-    instituicoes.push(
-      await prisma.instituicao.create({
+  const instituicoes = await Promise.all(
+    mockData.instituicao.map((data, i) =>
+      prisma.instituicao.create({
         data: {
-          faculdade: faker.company.name(),
-          unidade: faker.company.catchPhrase(),
-          CNPJ: faker.string.numeric(14),
+          ...data,
           fk_endereco: enderecos[i % enderecos.length].id_endereco,
         },
       })
-    );
-  }
+    )
+  );
 
-  const ejs = [];
-  for (let i = 0; i < 10; i++) {
-    ejs.push(
-      await prisma.ej.create({
+  const ejs = await Promise.all(
+    mockData.ej.map((data, i) =>
+      prisma.ej.create({
         data: {
-          nome: faker.company.name(),
-          CNPJ: faker.string.numeric(14),
+          ...data,
           fk_endereco: enderecos[i % enderecos.length].id_endereco,
           fk_federacao: federacoes[i % federacoes.length].id_federacao,
           fk_instituicao: instituicoes[i % instituicoes.length].id_instituicao,
         },
       })
-    );
-  }
+    )
+  );
 
-  const usuarios = [];
-  for (let i = 0; i < 10; i++) {
-    const senhaHash = await hashSenha(faker.internet.password({ length: 10 }));
-    usuarios.push(
-      await prisma.usuarios.create({
+  const usuarios = await Promise.all(
+    mockData.usuarios.map(async (data, i) => {
+      const senhaHash = await hashSenha(data.senha);
+      return prisma.usuarios.create({
         data: {
-          nome: faker.person.fullName(),
-          email: faker.internet.email(),
-          senha: senhaHash, // Salva o hash da senha
-          diretor: faker.datatype.boolean(),
-          ativo: faker.datatype.boolean(),
-          fk_diretoria: diretoria[i % diretoria.length].id_diretoria,
+          ...data,
+          senha: senhaHash,
+          fk_diretoria: diretorias[i % diretorias.length].id_diretoria,
           fk_ej: ejs[i % ejs.length].id_ej,
         },
-      })
-    );
-  }
+      });
+    })
+  );
 
-  const feedbacks = [];
-  for (let i = 0; i < 10; i++) {
-    feedbacks.push(
-      await prisma.feedback.create({
+  const clientes = await Promise.all(
+    mockData.cliente.map((data, i) =>
+      prisma.cliente.create({
         data: {
-          resultado_media: faker.number.float({
-            min: 0,
-            max: 10,
-            fractionDigits: 1,
-          }),
-          tipo_avaliador: faker.helpers.arrayElement(["INTERNO", "EXTERNO"]),
-          fk_usuario_avaliado: usuarios[i % usuarios.length].id_usuario,
-        },
-      })
-    );
-  }
-
-  for (let i = 0; i < 10; i++) {
-    await prisma.feedback_historico.create({
-      data: {
-        media_notas: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
-        media_questoes: faker.number.float({
-          min: 0,
-          max: 10,
-          fractionDigits: 1,
-        }),
-        data_realizacao: faker.date.past(),
-        fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
-      },
-    });
-  }
-
-  for (let i = 0; i < 10; i++) {
-    await prisma.feedback_categoria.create({
-      data: {
-        categoria: faker.commerce.department(),
-        descricao_categoria: faker.commerce.productDescription(),
-      },
-    });
-  }
-
-  for (let i = 0; i < 10; i++) {
-    await prisma.feedback_empresario.create({
-      data: {
-        data_realizacao: faker.date.past(),
-        comentario: faker.lorem.sentence(),
-      },
-    });
-  }
-
-  const clientes = [];
-  for (let i = 0; i < 10; i++) {
-    clientes.push(
-      await prisma.cliente.create({
-        data: {
-          nome: faker.person.fullName(),
-          CNPJ: faker.string.numeric(14),
-          CPF: faker.string.numeric(11),
-          email: faker.internet.email(),
-          telefone: faker.phone.number({ style: "national" }),
+          ...data,
           fk_endereco: enderecos[i % enderecos.length].id_endereco,
         },
       })
-    );
-  }
+    )
+  );
 
-  const categorias = [];
-  for (let i = 0; i < 10; i++) {
-    categorias.push(
-      await prisma.categoria.create({
-        data: {
-          categoria: faker.commerce.department(),
-          complexidade: faker.helpers.arrayElement([
-            "N1",
-            "N2",
-            "N3",
-            "N4",
-            "N5",
-          ]),
-          comentario_complexidade: faker.lorem.sentence(),
-        },
+  const categorias = await Promise.all(
+    mockData.categoria.map((data) =>
+      prisma.categoria.create({
+        data,
       })
-    );
-  }
+    )
+  );
 
-  const projetos = [];
-  for (let i = 0; i < 10; i++) {
-    projetos.push(
-      await prisma.projeto.create({
+  const projetos = await Promise.all(
+    mockData.projeto.map((data, i) =>
+      prisma.projeto.create({
         data: {
-          nome: faker.commerce.productName(),
-          descricao: faker.commerce.productDescription(),
-          status: faker.helpers.arrayElement([
-            "NEGOCIACAO",
-            "EM_ANDAMENTO",
-            "FINALIZADO",
-            "CANCELADO",
-          ]),
-          data_assinatura: faker.date.past(),
-          valor: faker.number.float({
-            min: 1000,
-            max: 100000,
-            fractionDigits: 2,
-          }),
+          ...data,
           fk_categoria: categorias[i % categorias.length].id_categoria,
           fk_cliente: clientes[i % clientes.length].id_cliente,
         },
       })
-    );
-  }
+    )
+  );
 
-  for (let i = 0; i < 10; i++) {
-    await prisma.feedback_projeto.create({
-      data: {
-        data_realizacao: faker.date.past(),
-        fk_projeto: projetos[i % projetos.length].id_projeto,
-      },
-    });
-  }
+  const feedbackCategorias = await Promise.all(
+    mockData.feedback_categoria.map((data) =>
+      prisma.feedback_categoria.create({
+        data,
+      })
+    )
+  );
 
-  for (let i = 0; i < 10; i++) {
-    await prisma.questoes.create({
-      data: {
-        enunciado: faker.lorem.sentence(),
-        pontuacao: faker.number.int({ min: 1, max: 10 }),
-        media: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
-        descricao: faker.lorem.sentence(),
-      },
-    });
-  }
+  const feedbacks = await Promise.all(
+    mockData.feedback.map((data, i) =>
+      prisma.feedback.create({
+        data: {
+          ...data,
+          fk_usuario_avaliado: usuarios[i % usuarios.length].id_usuario,
+          fk_fb_categoria:
+            feedbackCategorias[i % feedbackCategorias.length].id_fb_categoria,
+          fk_projeto: projetos[i % projetos.length].id_projeto,
+        },
+      })
+    )
+  );
+
+  await Promise.all(
+    mockData.feedback_historico.map((data, i) =>
+      prisma.feedback_historico.create({
+        data: {
+          ...data,
+          fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
+        },
+      })
+    )
+  );
+
+  await Promise.all(
+    mockData.feedback_questao.map((data, i) =>
+      prisma.feedback_questao.create({
+        data: {
+          ...data,
+          fk_fb_categoria:
+            feedbackCategorias[i % feedbackCategorias.length].id_fb_categoria,
+        },
+      })
+    )
+  );
 
   console.log("Dados fictícios inseridos com sucesso!");
 }
