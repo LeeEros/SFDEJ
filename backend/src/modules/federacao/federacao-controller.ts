@@ -13,7 +13,7 @@ export class FederacaoController {
     const { id } = request.params;
 
     const federacao = await federacaoService.findById(Number(id));
-    return response.status(201).json(federacao);
+    return response.status(200).json(federacao);
   }
 
   async create(request: Request, response: Response) {

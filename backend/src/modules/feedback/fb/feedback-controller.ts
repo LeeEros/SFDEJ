@@ -13,7 +13,7 @@ export class FeedbackController {
     const { id } = request.params;
 
     const fb = await fbService.findById(Number(id));
-    return response.status(201).json(fb);
+    return response.status(200).json(fb);
   }
 
   async create(request: Request, response: Response) {

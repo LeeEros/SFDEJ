@@ -13,7 +13,7 @@ export class InstituicaoController {
     const { id } = request.params;
 
     const inst = await instituicaoService.findById(Number(id));
-    return response.status(201).json(inst);
+    return response.status(200).json(inst);
   }
 
   async create(request: Request, response: Response) {
