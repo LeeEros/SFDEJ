@@ -5,6 +5,7 @@ import { enderecoRoutes } from "@/modules/endereco/endereco-routes";
 import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
 import { fbCategoriaRoutes } from "@/modules/feedback/fb-categoria/fb-categoria-routes";
 import { fbHistoricoRoutes } from "@/modules/feedback/fb-historico/fb-historico-routes";
+import { fbQuestaoRoutes } from "@/modules/feedback/fb-questao/fb-questao-routes";
 import { feedbackRoutes } from "@/modules/feedback/fb/feedback-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
 import { categoriaRoutes } from "@/modules/projeto/categoria/categoria-routes";
@@ -25,6 +26,7 @@ routes.use("/enderecos", enderecoRoutes);
 routes.use("/feedback", feedbackRoutes);
 routes.use("/fb-categorias", fbCategoriaRoutes);
 routes.use("/fb-historico", fbHistoricoRoutes);
+routes.use("/fb-questoes", fbQuestaoRoutes);
 routes.use("/instituicoes", instRoutes);
 routes.use("/federacoes", federacaoRoutes);
 
