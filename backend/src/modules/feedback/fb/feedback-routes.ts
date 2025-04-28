@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { usuarioAutenticado } from "@/middlewares/auth-usuario";
-import { FeedbackController } from "./feedback.controller";
+import { FeedbackController } from "./feedback-controller";
 
 const feedbackRoutes = Router();
 const fbController = new FeedbackController();
