@@ -21,7 +21,11 @@ export class UsuariosController {
   }
 
   async create(request: Request, response: Response) {
-    const usuario = await usuariosService.create(request.body);
+    const usuarioAutenticado = request.usuario;
+    const usuario = await usuariosService.create(
+      request.body,
+      usuarioAutenticado
+    );
     return response.status(201).json(usuario);
   }
 
