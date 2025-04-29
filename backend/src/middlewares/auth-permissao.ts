@@ -1,7 +1,7 @@
 import { AppError } from "@/utils/AppError";
 import { Request, Response, NextFunction } from "express";
 
-function verificarAuthUsuario(permissao: string[]) {
+function verificarPermissao(permissao: string[]) {
   return (request: Request, response: Response, next: NextFunction) => {
     if (!request.usuario) {
       throw new AppError("Não autorizado", 401);
@@ -15,4 +15,4 @@ function verificarAuthUsuario(permissao: string[]) {
   };
 }
 
-export { verificarAuthUsuario };
+export { verificarPermissao };
