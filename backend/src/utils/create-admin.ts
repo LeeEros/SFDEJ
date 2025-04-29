@@ -31,15 +31,9 @@ export async function createAdmin() {
         ativo: true,
       },
     });
-
-    console.log("Administrador geral criado com sucesso!");
   } else if (adminExistente) {
-    console.log("Administrador geral já existe.");
+    console.log("Usuário administrador já existe.");
+  } else {
+    throw new Error("Erro ao criar o usuário administrador.");
   }
 }
-
-createAdmin()
-  .catch((e) => console.error(e))
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
