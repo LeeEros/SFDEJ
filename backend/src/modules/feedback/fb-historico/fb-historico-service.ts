@@ -1,7 +1,7 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { feedback_historico } from "@prisma/client";
-import { feedback_historicoSchema } from "./fb-historico-schema";
+import { feedbackHistoricoSchema } from "./fb-historico-schema";
 
 export class fbHistoricoService {
   async findAll() {
@@ -29,7 +29,7 @@ export class fbHistoricoService {
   }
 
   async create(data: feedback_historico) {
-    const fb_his = feedback_historicoSchema.parse(data);
+    const fb_his = feedbackHistoricoSchema.parse(data);
 
     const historicoCriado = await prisma.feedback_historico.create({
       data: fb_his,
