@@ -1,5 +1,6 @@
-import Navbar from './components/navbar'
+import Login from "./components/login";
+
 
 export function App() {
-  return <Navbar />
+  return <Login />
 }
