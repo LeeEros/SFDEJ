@@ -10,6 +10,6 @@
 - [TypeScrpit](https://www.typescriptlang.org/docs/)
 - [NodeJS](https://nodejs.org/docs/latest/api/)
 - [ExpressJS](https://expressjs.com/en/starter/installing.html)
-- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
+- [React](https://react.dev/learn)
 
  <img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=6A5ACD&height=120&section=footer"/>
