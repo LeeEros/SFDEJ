@@ -8,7 +8,7 @@ import { createAdmin } from "./utils/create-admin";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.json());
 
 createAdmin();
