@@ -5,10 +5,12 @@ export default function Login() {
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const api = "http://localhost:3333/login"
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); 
     try {
-      const response = await fetch("http://localhost:3333/login", {
+      const response = await fetch(api, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
