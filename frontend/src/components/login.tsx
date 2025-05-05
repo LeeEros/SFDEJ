@@ -1,36 +1,34 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [senha, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const api = "http://localhost:3333/login"
+    const api = "http://localhost:3333/"
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); 
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const response = await fetch(api, {
+      const response = await fetch(api + "login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, senha: senha }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, senha }),
       });
 
-      if (!response.ok) {
-        throw new Error("Login falhou. Verifique suas credenciais.");
+      if (response.ok) {
+        const data = await response.json();
+        const { token } = data;
+
+        localStorage.setItem("jwtToken", token);
+        navigate("/home");
+      } else {
+        setError("Erro ao fazer login. Verifique suas credenciais.");
       }
-
-      const data = await response.json();
-      const { token } = data;
-
-      localStorage.setItem("jwtToken", token);
-
-      console.log(token)
-
-    } catch (err: any) {
-      setError(err.message);
+    } catch (error) {
+      setError("Erro na requisição. Tente novamente mais tarde.");
     }
   };
 
@@ -44,12 +42,12 @@ export default function Login() {
             className="mx-auto h-10 w-auto"
           />
           <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">
-            Sign in to your account
+            Acesse sua conta.
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div>
               <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">
@@ -92,7 +90,7 @@ export default function Login() {
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Sign in
+                Acessar
               </button>
             </div>
           </form>
@@ -107,4 +105,6 @@ export default function Login() {
       </div>
     </>
   );
-}
+};
+
+export default Login;

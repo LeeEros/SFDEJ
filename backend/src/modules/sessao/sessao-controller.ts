@@ -3,7 +3,7 @@ import { AppError } from "@/utils/AppError";
 import { compare } from "bcrypt";
 import { Request, Response } from "express";
 import { authConfig } from "@/configs/auth";
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 import { loginSchema } from "../usuario/usuarios-schema";
 
 class SessaoController {
@@ -32,6 +32,23 @@ class SessaoController {
     });
 
     return response.json({ token });
+  }
+
+  async validarToken(request: Request, response: Response) {
+    const authHeader = request.headers.authorization;
+
+    if (!authHeader) {
+      return response.status(401).json({ message: "Token não encontrado" });
+    }
+
+    const [, token] = authHeader.split(" ");
+
+    try {
+      verify(token, authConfig.jwt.secret);
+      return response.status(200).json({ valid: true });
+    } catch (error) {
+      return response.status(401).json({ message: "Token inválido" });
+    }
   }
 }
 
