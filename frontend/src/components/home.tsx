@@ -19,19 +19,19 @@ function HomePage() {
 
 
       <section id="features" className="p-8 bg-white">
-        <h3 className="text-2xl font-semibold text-center text-gray-800 mb-6">Principais Recursos</h3>
+        <h3 className="text-2xl font-semibold text-center text-gray-800 mb-6">Lorem ipsum dolor.</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
           <div className="p-4 shadow rounded-lg hover:shadow-lg transition">
-            <h4 className="font-bold text-blue-600">Design Responsivo</h4>
-            <p className="text-gray-600 mt-2">Compatível com todos os dispositivos.</p>
+            <h4 className="font-bold text-blue-600">Lorem ipsum dolor.</h4>
+            <p className="text-gray-600 mt-2">Lorem ipsum dolor.</p>
           </div>
           <div className="p-4 shadow rounded-lg hover:shadow-lg transition">
-            <h4 className="font-bold text-blue-600">Código Limpo</h4>
-            <p className="text-gray-600 mt-2">Fácil de entender e manter.</p>
+            <h4 className="font-bold text-blue-600">Lorem ipsum dolor.</h4>
+            <p className="text-gray-600 mt-2">Lorem ipsum dolor.</p>
           </div>
           <div className="p-4 shadow rounded-lg hover:shadow-lg transition">
-            <h4 className="font-bold text-blue-600">Altamente Customizável</h4>
-            <p className="text-gray-600 mt-2">Adapte facilmente ao seu projeto.</p>
+            <h4 className="font-bold text-blue-600">Lorem ipsum dolor.</h4>
+            <p className="text-gray-600 mt-2">Lorem ipsum dolor.</p>
           </div>
         </div>
       </section>
