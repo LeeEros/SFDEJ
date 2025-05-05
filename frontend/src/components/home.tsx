@@ -1,23 +1,19 @@
-import React from "react";
+import Navbar from "./navbar";
 
 function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-white shadow p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-blue-600">MinhaHome</h1>
-        <nav className="space-x-4">
-          <a href="#features" className="text-gray-700 hover:text-blue-600">Recursos</a>
-          <a href="#about" className="text-gray-700 hover:text-blue-600">Sobre</a>
-          <a href="#contact" className="text-gray-700 hover:text-blue-600">Contato</a>
-        </nav>
-      </header>
+
+        <header>
+            <Navbar />
+        </header>
+
 
       <section className="flex-1 flex items-center justify-center bg-blue-50 p-8">
         <div className="max-w-xl text-center">
-          <h2 className="text-4xl font-bold text-blue-700 mb-4">Bem-vindo à MinhaHome</h2>
-          <p className="text-gray-600 mb-6">Home pAGE.</p>
-          <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Comece Agora</button>
+          <h2 className="text-4xl font-bold text-blue-700 mb-4">Bem-vindo à página</h2>
+          <p className="text-gray-600 mb-6">Home page.</p>
+
         </div>
       </section>
 
@@ -42,7 +38,7 @@ function HomePage() {
 
 
       <footer className="bg-blue-600 text-white text-center p-4">
-        <p>&copy; 2025 MinhaHome. Todos os direitos reservados.</p>
+        <p>&copy; 2025 SFDEJ. Todos os direitos reservados.</p>
       </footer>
     </div>
   );
