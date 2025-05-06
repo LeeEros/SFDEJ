@@ -8,11 +8,12 @@ const Login = () => {
   const navigate = useNavigate();
 
     const api = "http://localhost:3333/"
+    const rota = "login"
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(api + "login", {
+      const response = await fetch(api + rota, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, senha }),
