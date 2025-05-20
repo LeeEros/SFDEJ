@@ -1,5 +1,5 @@
 import Navbar from "../components/navbar";
-
+import  Footer  from "../components/footer";
 
 function HomePage() {
   return (
@@ -38,9 +38,10 @@ function HomePage() {
       </section>
 
 
-      <footer className="bg-blue-600 text-white text-center p-4">
-        <p>&copy; 2025 SFDEJ. Todos os direitos reservados.</p>
+      <footer>
+        <Footer />
       </footer>
+
     </div>
   );
 }
