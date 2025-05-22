@@ -16,6 +16,7 @@ export function Login() {
     }
 
     return (<form onSubmit={onSubmit} className="w-full flex flex-col gap-6">
+
         <Input
             required
             legenda="Email"
