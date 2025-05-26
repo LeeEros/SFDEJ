@@ -1,5 +1,5 @@
 import type React from "react"
-import { Button } from "../components/Botao"
+import { Button } from "../components/Button"
 import { Input } from "../components/Input"
 import { useState } from "react"
 import clsx from "clsx"
