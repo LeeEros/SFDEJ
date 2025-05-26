@@ -6,7 +6,7 @@ import { CriarConta } from "../pages/CriarConta";
 import { NaoEncontrado } from "../pages/NaoEncontrado";
 
 
-export function AuthRoutes() {
+export function AuthRota() {
     return (
         <Routes>
             <Route path="/" element={<AuthLayout />}>
