@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router";
 import { NaoEncontrado } from "../pages/NaoEncontrado";
-import { Empresario } from "../pages/EmpresarioJunior";
+import { Empresario } from "../pages/Federacao";
 import { AppLayout } from "../components/AppLayout";
 
 export function EmpresarioRota() {
