@@ -14,4 +14,14 @@
   --color-purple-300: #a78bfa;
   --color-purple-400: #c4b5fd;
   --color-purple-500: #ede9fe;
+
+  --text-xxs: 0.625rem;
+}
+
+select {
+  appearance: none;
+  background-image: url("./assets/arrow_dropdown.svg");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 1.25rem auto;
 }
