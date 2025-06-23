@@ -9,6 +9,10 @@ export class EnderecoService {
     return cepRegex.test(cep);
   }
 
+  inseriHifen(cep: string): string {
+    return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
+  }
+
   async findAll() {
     const enderecos = await prisma.endereco.findMany({
       orderBy: { id_endereco: "asc" },
@@ -40,6 +44,8 @@ export class EnderecoService {
       throw new AppError("CEP inválido", 400);
     }
 
+    endereco.CEP = this.inseriHifen(endereco.CEP);
+
     const enderecoCriado = await prisma.endereco.create({
       data: endereco,
     });
@@ -57,6 +63,8 @@ export class EnderecoService {
     if (!this.verificaCEP(endereco.CEP)) {
       throw new AppError("CEP inválido", 400);
     }
+
+    endereco.CEP = this.inseriHifen(endereco.CEP);
 
     if (!endereco) {
       throw new AppError("Endereço não encontrado", 404);
