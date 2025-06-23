@@ -49,7 +49,7 @@ model diretoria {
 
 model endereco {
   id_endereco Int    @id @default(autoincrement())
-  CEP         String @db.VarChar(8)
+  CEP         String @db.VarChar(9)
   cidade      String @db.VarChar(255)
   estado      String @db.VarChar(255)
   endereco    String @db.VarChar(255)
