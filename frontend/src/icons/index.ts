@@ -56,6 +56,13 @@ import { ReactComponent as AlertHexaIcon } from "./alert-hexa.svg?react";
 import { ReactComponent as ErrorHexaIcon } from "./info-hexa.svg?react";
 import { ReactComponent as CheckIcon } from "./check-icon.svg?react";
 import { ReactComponent as XMarkIcon } from "./mark-icon.svg?react";
+import { ReactComponent as UsersIcon } from "./users.svg?react";
+import { ReactComponent as BuildingOffice2Icon } from "./building-office-2.svg?react";
+import { ReactComponent as GlobeAltIcon } from "./globe-alt.svg?react";
+import { ReactComponent as AcademicCapIcon } from "./academic.svg?react";
+import { ReactComponent as BriefcaseIcon } from "./briefcase.svg?react";
+import { ReactComponent as ClipboardDocumentListIcon } from "./clipboard.svg?react";
+import { ReactComponent as ChartBarIcon } from "./chart-bar.svg?react";
 
 export {
   ErrorHexaIcon,
@@ -116,4 +123,11 @@ export {
   AngleRightIcon,
   CheckIcon,
   XMarkIcon,
+  UsersIcon,
+  BuildingOffice2Icon,
+  GlobeAltIcon,
+  AcademicCapIcon,
+  BriefcaseIcon,
+  ClipboardDocumentListIcon,
+  ChartBarIcon,
 };
