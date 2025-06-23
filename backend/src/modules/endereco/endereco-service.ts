@@ -4,6 +4,15 @@ import { endereco } from "@prisma/client";
 import { enderecoSchema } from "./endereco-schema";
 
 export class EnderecoService {
+  verificaCEP(cep: string): boolean {
+    const cepRegex = /^[0-9]{5}-?[0-9]{3}$/;
+    return cepRegex.test(cep);
+  }
+
+  inseriHifen(cep: string): string {
+    return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
+  }
+
   async findAll() {
     const enderecos = await prisma.endereco.findMany({
       orderBy: { id_endereco: "asc" },
@@ -31,6 +40,12 @@ export class EnderecoService {
   async create(data: endereco) {
     const endereco = enderecoSchema.parse(data);
 
+    if (!this.verificaCEP(endereco.CEP)) {
+      throw new AppError("CEP inválido", 400);
+    }
+
+    endereco.CEP = this.inseriHifen(endereco.CEP);
+
     const enderecoCriado = await prisma.endereco.create({
       data: endereco,
     });
@@ -44,6 +59,12 @@ export class EnderecoService {
 
   async update(id: number, data: endereco) {
     const endereco = await this.findById(id);
+
+    if (!this.verificaCEP(endereco.CEP)) {
+      throw new AppError("CEP inválido", 400);
+    }
+
+    endereco.CEP = this.inseriHifen(endereco.CEP);
 
     if (!endereco) {
       throw new AppError("Endereço não encontrado", 404);
