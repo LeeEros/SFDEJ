@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
 import { Link, useLocation } from "react-router";
+import { useSidebar } from "../context/SidebarContext";
 import {
-  UserCircleIcon,
-  GridIcon,
-  UsersIcon,
-  BuildingOffice2Icon,
-  GlobeAltIcon,
   AcademicCapIcon,
   BriefcaseIcon,
+  BuildingOffice2Icon,
+  ChartBarIcon,
   ClipboardDocumentListIcon,
   FolderIcon,
-  ChartBarIcon,
+  GlobeAltIcon,
+  GridIcon,
+  UserCircleIcon,
+  UsersIcon,
 } from "../icons";
-import { useSidebar } from "../context/SidebarContext";
 
 type NavItem = {
   name: string;
@@ -72,6 +72,12 @@ const navItems: NavItem[] = [
     name: "Feedbacks",
     path: "/feedbacks",
   },
+
+  {
+    icon: <  GlobeAltIcon />,
+    name: "Endereços",
+    path: "/endereco",
+  }
 ];
 
 const AppSidebar: React.FC = () => {
