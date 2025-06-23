@@ -18,7 +18,7 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
-import FederacaoDashboard from "./pages/FederacaoDashboard";
+import FederacaoDashboard from "./pages/Federacao/FederacaoDashboard";
 
 export default function App() {
   return (
