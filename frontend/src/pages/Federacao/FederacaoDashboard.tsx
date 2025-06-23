@@ -145,18 +145,28 @@ export default function FederacaoDashboard() {
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader>
-                                <TableRow>
-                                    <TableCell isHeader className="w-20">ID</TableCell>
-                                    <TableCell isHeader>Nome</TableCell>
-                                    <TableCell isHeader className="text-center">Nível</TableCell>
-                                    <TableCell isHeader className="text-center">Ações</TableCell>
+                                <TableRow className="bg-brand-500 dark:bg-gray-900">
+                                    <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
+                                    <TableCell isHeader className="text-white">Nome</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Nível</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Ações</TableCell>
                                 </TableRow>
                             </TableHeader>
-                            <TableBody className="space-y-2">
-                                {federacoes.map((f) => (
-                                    <TableRow key={f.id_federacao} className="align-middle">
-                                        <TableCell>{f.id_federacao}</TableCell>
-                                        <TableCell>
+                            <TableBody>
+                                {federacoes.map((f, idx) => (
+                                    <TableRow
+                                        key={f.id_federacao}
+                                        className={`
+                                          align-middle
+                                          ${idx % 2 === 0
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
+                                          hover:bg-brand-50 dark:hover:bg-brand-500/10
+                                        `}
+                                        style={{ minHeight: 56 }}
+                                    >
+                                        <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{f.id_federacao}</TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
                                             {editId === f.id_federacao ? (
                                                 <Input
                                                     value={editNome}
@@ -166,7 +176,7 @@ export default function FederacaoDashboard() {
                                                 f.nome
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
                                             {editId === f.id_federacao ? (
                                                 <Select
                                                     options={niveis.map(n => ({ label: n.label, value: n.value }))}
@@ -174,17 +184,18 @@ export default function FederacaoDashboard() {
                                                     defaultValue={editNivel}
                                                 />
                                             ) : (
-                                                <span className="inline-block rounded bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                                                <span className="inline-block rounded bg-gray-200 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                                                     {niveis.find(n => n.value === f.nivel)?.label || f.nivel}
                                                 </span>
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center py-3">
                                             {editId === f.id_federacao ? (
-                                                <div className="flex justify-center gap-3">
+                                                <div className="flex justify-center gap-2">
                                                     <Button
                                                         size="sm"
                                                         variant="success"
+                                                        className="py-2 px-4 bg-success-600 hover:bg-success-700 text-white rounded shadow"
                                                         onClick={() => handleEditSave(f.id_federacao)}
                                                         disabled={editLoading}
                                                         startIcon={<CheckIcon className="size-4" />}
@@ -194,6 +205,7 @@ export default function FederacaoDashboard() {
                                                     <Button
                                                         size="sm"
                                                         variant="outline"
+                                                        className="py-2 px-4 bg-gray-400 hover:bg-gray-500 text-white rounded shadow"
                                                         onClick={cancelEdit}
                                                         startIcon={<XMarkIcon className="size-4" />}
                                                     >
@@ -201,10 +213,11 @@ export default function FederacaoDashboard() {
                                                     </Button>
                                                 </div>
                                             ) : (
-                                                <div className="flex justify-center gap-3">
+                                                <div className="flex justify-center gap-2">
                                                     <Button
                                                         size="sm"
-                                                        variant="outline"
+                                                        variant="primary"
+                                                        className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
                                                         onClick={() => startEdit(f)}
                                                         startIcon={<PencilIcon className="size-4" />}
                                                     >
@@ -212,7 +225,8 @@ export default function FederacaoDashboard() {
                                                     </Button>
                                                     <Button
                                                         size="sm"
-                                                        variant="outline"
+                                                        variant="danger"
+                                                        className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
                                                         onClick={() => handleDelete(f.id_federacao)}
                                                         startIcon={<TrashBinIcon className="size-4" />}
                                                     >

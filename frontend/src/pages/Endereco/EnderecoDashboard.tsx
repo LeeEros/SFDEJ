@@ -204,21 +204,31 @@ export default function EnderecoDashboard() {
                     <div className="overflow-x-auto">
                         <Table>
                             <TableHeader>
-                                <TableRow>
-                                    <TableCell isHeader className="w-20">ID</TableCell>
-                                    <TableCell isHeader>CEP</TableCell>
-                                    <TableCell isHeader>Cidade</TableCell>
-                                    <TableCell isHeader>Estado</TableCell>
-                                    <TableCell isHeader>Endereço</TableCell>
-                                    <TableCell isHeader>Número</TableCell>
-                                    <TableCell isHeader className="text-center">Ações</TableCell>
+                                <TableRow className="bg-brand-500 dark:bg-gray-900">
+                                    <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
+                                    <TableCell isHeader className="text-white">CEP</TableCell>
+                                    <TableCell isHeader className="text-white">Cidade</TableCell>
+                                    <TableCell isHeader className="text-white">Estado</TableCell>
+                                    <TableCell isHeader className="text-white">Endereço</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Número</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Ações</TableCell>
                                 </TableRow>
                             </TableHeader>
-                            <TableBody className="space-y-2">
-                                {enderecos.map((e) => (
-                                    <TableRow key={e.id_endereco} className="align-middle">
-                                        <TableCell>{e.id_endereco}</TableCell>
-                                        <TableCell>
+                            <TableBody>
+                                {enderecos.map((e, idx) => (
+                                    <TableRow
+                                        key={e.id_endereco}
+                                        className={`
+                                          align-middle
+                                          ${idx % 2 === 0
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
+                                          hover:bg-brand-50 dark:hover:bg-brand-500/10
+                                        `}
+                                        style={{ minHeight: 56 }}
+                                    >
+                                        <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{e.id_endereco}</TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
                                             {editId === e.id_endereco ? (
                                                 <Input
                                                     value={editCEP}
@@ -228,7 +238,7 @@ export default function EnderecoDashboard() {
                                                 e.CEP
                                             )}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
                                             {editId === e.id_endereco ? (
                                                 <Input
                                                     value={editCidade}
@@ -238,7 +248,7 @@ export default function EnderecoDashboard() {
                                                 e.cidade
                                             )}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
                                             {editId === e.id_endereco ? (
                                                 <Input
                                                     value={editEstado}
@@ -248,7 +258,7 @@ export default function EnderecoDashboard() {
                                                 e.estado
                                             )}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
                                             {editId === e.id_endereco ? (
                                                 <Input
                                                     value={editEndereco}
@@ -258,7 +268,7 @@ export default function EnderecoDashboard() {
                                                 e.endereco
                                             )}
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
                                             {editId === e.id_endereco ? (
                                                 <Input
                                                     type="number"
@@ -269,12 +279,13 @@ export default function EnderecoDashboard() {
                                                 e.numero
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-center">
+                                        <TableCell className="text-center py-3">
                                             {editId === e.id_endereco ? (
-                                                <div className="flex justify-center gap-3">
+                                                <div className="flex justify-center gap-2">
                                                     <Button
                                                         size="sm"
                                                         variant="success"
+                                                        className="py-2 px-4 bg-success-600 hover:bg-success-700  text-white rounded shadow"
                                                         onClick={() => handleEditSave(e.id_endereco)}
                                                         disabled={editLoading}
                                                         startIcon={<CheckIcon className="size-4" />}
@@ -284,6 +295,7 @@ export default function EnderecoDashboard() {
                                                     <Button
                                                         size="sm"
                                                         variant="outline"
+                                                        className="py-2 px-4 bg-gray-500 hover:bg-gray-600 text-white rounded shadow"
                                                         onClick={cancelEdit}
                                                         startIcon={<XMarkIcon className="size-4" />}
                                                     >
@@ -291,10 +303,11 @@ export default function EnderecoDashboard() {
                                                     </Button>
                                                 </div>
                                             ) : (
-                                                <div className="flex justify-center gap-3">
+                                                <div className="flex justify-center gap-2">
                                                     <Button
                                                         size="sm"
-                                                        variant="outline"
+                                                        variant="primary"
+                                                        className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
                                                         onClick={() => startEdit(e)}
                                                         startIcon={<PencilIcon className="size-4" />}
                                                     >
@@ -302,7 +315,8 @@ export default function EnderecoDashboard() {
                                                     </Button>
                                                     <Button
                                                         size="sm"
-                                                        variant="outline"
+                                                        variant="danger"
+                                                        className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
                                                         onClick={() => handleDelete(e.id_endereco)}
                                                         startIcon={<TrashBinIcon className="size-4" />}
                                                     >
