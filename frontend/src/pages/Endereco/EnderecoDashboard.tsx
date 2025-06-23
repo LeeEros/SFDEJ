@@ -295,7 +295,7 @@ export default function EnderecoDashboard() {
                                                     <Button
                                                         size="sm"
                                                         variant="outline"
-                                                        className="py-2 px-4 bg-gray-500 hover:bg-gray-600 text-white rounded shadow"
+                                                        className="py-2 px-4 !bg-gray-600 hover:!bg-gray-700 text-white rounded shadow"
                                                         onClick={cancelEdit}
                                                         startIcon={<XMarkIcon className="size-4" />}
                                                     >
