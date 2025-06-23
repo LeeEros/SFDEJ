@@ -20,6 +20,7 @@ import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
 import FederacaoDashboard from "./pages/Federacao/FederacaoDashboard";
 import AppFooter from "./layout/AppFooter";
+import EnderecoDashboard from "./pages/Endereco/EnderecoDashboard";
 
 export default function App() {
   return (
@@ -54,8 +55,9 @@ export default function App() {
             <Route path="/line-chart" element={<LineChart />} />
             <Route path="/bar-chart" element={<BarChart />} />
 
-            {/* Federacao Dashboard */}
             <Route path="/federacao" element={<FederacaoDashboard />} />
+            <Route path="/endereco" element={<EnderecoDashboard />} />
+
           </Route>
 
           {/* Auth Layout */}
