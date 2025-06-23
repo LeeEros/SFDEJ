@@ -14,7 +14,6 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 
-// Tipos
 type NavItem = {
   name: string;
   icon: React.ReactNode;
@@ -22,7 +21,6 @@ type NavItem = {
   subItems?: { name: string; path: string }[];
 };
 
-// Menu principal baseado no schema.prisma
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
@@ -47,7 +45,7 @@ const navItems: NavItem[] = [
   {
     icon: <GlobeAltIcon />,
     name: "Federações",
-    path: "/federacoes",
+    path: "/federacao",
   },
   {
     icon: <AcademicCapIcon />,
