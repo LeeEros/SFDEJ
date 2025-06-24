@@ -1,18 +1,12 @@
 import { useEffect, useState } from "react";
-import api from "../../services/api";
-import ComponentCard from "../../components/common/ComponentCard";
-import Button from "../../components/ui/button/Button";
-import Input from "../../components/form/input/InputField";
-import Label from "../../components/form/Label";
-import Select from "../../components/form/Select";
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    TableCell,
-} from "../../components/ui/table";
-import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../icons";
+import ComponentCard from "../../../components/common/ComponentCard";
+import Input from "../../../components/form/input/InputField";
+import Label from "../../../components/form/Label";
+import Select from "../../../components/form/Select";
+import Button from "../../../components/ui/button/Button";
+import { Table, TableHeader, TableRow, TableCell, TableBody } from "../../../components/ui/table";
+import { CheckIcon, XMarkIcon, PencilIcon, TrashBinIcon } from "../../../icons";
+import api from "../../../services/api";
 
 const niveis = [
     { label: "Regional", value: "REGIONAL" },
@@ -20,6 +14,8 @@ const niveis = [
     { label: "Nacional", value: "NACIONAL" },
     { label: "Internacional", value: "INTERNACIONAL" },
 ];
+
+const apiFederacoes = "/federacoes";
 
 function FederacaoForm({ onSuccess }: { onSuccess: () => void }) {
     const [nome, setNome] = useState("");
@@ -30,7 +26,7 @@ function FederacaoForm({ onSuccess }: { onSuccess: () => void }) {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post("/federacoes", { nome, nivel });
+            await api.post(apiFederacoes, { nome, nivel });
             setNome("");
             setNivel(niveis[0].value);
             onSuccess();
@@ -89,7 +85,7 @@ export default function FederacaoDashboard() {
     const fetchFederacoes = async () => {
         setLoading(true);
         try {
-            const { data } = await api.get("/federacoes");
+            const { data } = await api.get(apiFederacoes);
             setFederacoes(data);
         } catch {
             alert("Erro ao carregar federações");
@@ -103,7 +99,7 @@ export default function FederacaoDashboard() {
 
     const handleDelete = async (id: number) => {
         if (!window.confirm("Deseja remover?")) return;
-        await api.delete(`/federacoes/${id}`);
+        await api.delete(apiFederacoes + `/${id}`);
         fetchFederacoes();
     };
 
@@ -122,7 +118,7 @@ export default function FederacaoDashboard() {
     const handleEditSave = async (id: number) => {
         setEditLoading(true);
         try {
-            await api.put(`/federacoes/${id}`, { nome: editNome, nivel: editNivel });
+            await api.put(apiFederacoes + `/${id}`, { nome: editNome, nivel: editNivel });
             setEditId(null);
             fetchFederacoes();
         } catch {

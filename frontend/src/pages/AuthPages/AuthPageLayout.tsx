@@ -26,7 +26,7 @@ export default function AuthLayout({
                 />
               </Link>
               <p className="text-center text-gray-400 dark:text-white/60">
-                Free and Open-Source Tailwind CSS Admin Dashboard Template
+                Bem-vindo ao SFDEJ, o sistema de feedback para empresários juniores.
               </p>
             </div>
           </div>

@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import api from "../../services/api";
-import ComponentCard from "../../components/common/ComponentCard";
-import Button from "../../components/ui/button/Button";
-import Input from "../../components/form/input/InputField";
-import Label from "../../components/form/Label";
+import api from "../../../services/api";
+import ComponentCard from "../../../components/common/ComponentCard";
+import Button from "../../../components/ui/button/Button";
+import Input from "../../../components/form/input/InputField";
+import Label from "../../../components/form/Label";
 import {
     Table,
     TableHeader,
     TableBody,
     TableRow,
     TableCell,
-} from "../../components/ui/table";
-import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../icons";
+} from "../../../components/ui/table";
+import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../../icons";
 
 const apiEndereco = "/enderecos";
 
