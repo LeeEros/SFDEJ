@@ -18,9 +18,11 @@ import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
-import FederacaoDashboard from "./pages/Federacao/FederacaoDashboard";
+
 import AppFooter from "./layout/AppFooter";
-import EnderecoDashboard from "./pages/Endereco/EnderecoDashboard";
+import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
+import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
+
 
 export default function App() {
   return (
