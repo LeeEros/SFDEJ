@@ -22,6 +22,7 @@ import Home from "./pages/Dashboard/Home";
 import AppFooter from "./layout/AppFooter";
 import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
+import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 
 
 export default function App() {
@@ -59,6 +60,7 @@ export default function App() {
 
             <Route path="/federacao" element={<FederacaoDashboard />} />
             <Route path="/endereco" element={<EnderecoDashboard />} />
+            <Route path="/instituicoes" element={<InstituicaoDashboard />} />
 
           </Route>
 
