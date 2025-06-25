@@ -25,6 +25,7 @@ import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import AutenticarRota from "./components/rotasAutenticadas";
 import EJDashboard from "./pages/core/EJ/EJDashboard";
+import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
 
 export default function App() {
   return (
@@ -88,10 +89,19 @@ export default function App() {
             <Route
               path="/ejs"
               element={
-              <AutenticarRota>
-                <EJDashboard />
-              </AutenticarRota>
-            }
+                <AutenticarRota>
+                  <EJDashboard />
+                </AutenticarRota>
+              }
+            />
+
+            <Route
+              path="/diretorias"
+              element={
+                <AutenticarRota>
+                  <DiretoriaDashboard />
+                </AutenticarRota>
+              }
             />
             
           </Route>
