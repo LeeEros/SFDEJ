@@ -23,7 +23,7 @@ import AppFooter from "./layout/AppFooter";
 import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
-
+import AutenticarRota from "./components/rotasAutenticadas";
 
 export default function App() {
   return (
@@ -58,10 +58,31 @@ export default function App() {
             <Route path="/line-chart" element={<LineChart />} />
             <Route path="/bar-chart" element={<BarChart />} />
 
-            <Route path="/federacao" element={<FederacaoDashboard />} />
-            <Route path="/endereco" element={<EnderecoDashboard />} />
-            <Route path="/instituicoes" element={<InstituicaoDashboard />} />
-
+            {/* Rotas protegidas */}
+            <Route
+              path="/federacao"
+              element={
+                <AutenticarRota>
+                  <FederacaoDashboard />
+                </AutenticarRota>
+              }
+            />
+            <Route
+              path="/endereco"
+              element={
+                <AutenticarRota>
+                  <EnderecoDashboard />
+                </AutenticarRota>
+              }
+            />
+            <Route
+              path="/instituicoes"
+              element={
+                <AutenticarRota>
+                  <InstituicaoDashboard />
+                </AutenticarRota>
+              }
+            />
           </Route>
 
           {/* Auth Layout */}
