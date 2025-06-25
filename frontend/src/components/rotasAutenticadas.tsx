@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 
 export default function AutenticarRota({ children }: { children: JSX.Element }) {
   const [isValid, setIsValid] = useState<boolean | null>(null);
-  const token = localStorage.getItem("jwtToken");
+  const token = localStorage.getItem("token");
   const api = "http://localhost:3333/login/validar-token"
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function AutenticarRota({ children }: { children: JSX.Element }) 
   }
 
   if (!isValid) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/signin" />;
   }
 
   return children;
