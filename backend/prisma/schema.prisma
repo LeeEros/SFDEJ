@@ -53,7 +53,7 @@ model endereco {
   cidade      String @db.VarChar(255)
   estado      String @db.VarChar(255)
   endereco    String @db.VarChar(255)
-  numero      Int
+  numero      Int?
 
   cliente     cliente[]
   ej          ej[]

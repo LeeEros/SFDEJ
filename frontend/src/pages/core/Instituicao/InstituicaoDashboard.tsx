@@ -48,7 +48,7 @@ function InstituicaoForm({ onSuccess, enderecos }: { onSuccess: () => void, ende
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div>
-                    <Label htmlFor="faculdade">Faculdade</Label>
+                    <Label htmlFor="faculdade" required>Faculdade</Label>
                     <Input
                         id="faculdade"
                         name="faculdade"
@@ -69,7 +69,7 @@ function InstituicaoForm({ onSuccess, enderecos }: { onSuccess: () => void, ende
                     />
                 </div>
                 <div>
-                    <Label htmlFor="CNPJ">CNPJ</Label>
+                    <Label htmlFor="CNPJ" required>CNPJ</Label>
                     <Input
                         id="CNPJ"
                         name="CNPJ"
@@ -81,7 +81,7 @@ function InstituicaoForm({ onSuccess, enderecos }: { onSuccess: () => void, ende
                     />
                 </div>
                 <div>
-                    <Label htmlFor="fk_endereco">Endereço</Label>
+                    <Label htmlFor="fk_endereco" required>Endereço</Label>
                     <Select
                         options={enderecos.map(e => ({
                             label: `${e.endereco}, ${e.numero} - ${e.cidade}/${e.estado}`,
