@@ -44,7 +44,7 @@ const Select: React.FC<SelectProps> = ({
           {selectedOption ? (
             selectedOption.label
           ) : (
-            <span className="text-gray-400">{placeholder}</span>
+            <span className="text-gray-400 dark:text-white">{placeholder}</span>
           )}
         </span>
 
@@ -84,8 +84,7 @@ const Select: React.FC<SelectProps> = ({
             {filteredOptions.map((opt) => (
               <li
                 key={opt.value}
-                className={`px-4 py-2 cursor-pointer hover:bg-brand-50 dark:hover:bg-brand-500/10 ${value === opt.value ? "bg-brand-100 dark:bg-brand-500/20" : ""
-                  }`}
+                className={`px-4 py-2 cursor-pointer hover:bg-brand-50 dark:hover:bg-brand-500/10 ${value === opt.value ? "bg-brand-100 dark:bg-brand-500/20" : ""} text-gray-800 dark:text-white/90`}
                 onClick={() => {
                   onChange(opt.value);
                   setIsOpen(false);
