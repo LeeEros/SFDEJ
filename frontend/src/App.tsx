@@ -1,39 +1,37 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { Route, BrowserRouter as Router, Routes } from "react-router";
+import { ScrollToTop } from "./components/common/ScrollToTop";
+import AppLayout from "./layout/AppLayout";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
-import NotFound from "./pages/OtherPage/NotFound";
-import UserProfiles from "./pages/UserProfiles";
-import Videos from "./pages/UiElements/Videos";
-import Images from "./pages/UiElements/Images";
-import Alerts from "./pages/UiElements/Alerts";
-import Badges from "./pages/UiElements/Badges";
-import Avatars from "./pages/UiElements/Avatars";
-import Buttons from "./pages/UiElements/Buttons";
-import LineChart from "./pages/Charts/LineChart";
-import BarChart from "./pages/Charts/BarChart";
-import Calendar from "./pages/Calendar";
-import BasicTables from "./pages/Tables/BasicTables";
-import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
-import AppLayout from "./layout/AppLayout";
-import { ScrollToTop } from "./components/common/ScrollToTop";
+import Calendar from "./pages/Calendar";
+import BarChart from "./pages/Charts/BarChart";
+import LineChart from "./pages/Charts/LineChart";
 import Home from "./pages/Dashboard/Home";
+import FormElements from "./pages/Forms/FormElements";
+import NotFound from "./pages/OtherPage/NotFound";
+import BasicTables from "./pages/Tables/BasicTables";
+import Alerts from "./pages/UiElements/Alerts";
+import Avatars from "./pages/UiElements/Avatars";
+import Badges from "./pages/UiElements/Badges";
+import Buttons from "./pages/UiElements/Buttons";
+import Images from "./pages/UiElements/Images";
+import Videos from "./pages/UiElements/Videos";
+import UserProfiles from "./pages/UserProfiles";
 
+import AutenticarRota from "./components/rotasAutenticadas";
 import AppFooter from "./layout/AppFooter";
+import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
+import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
+import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
+import EJDashboard from "./pages/core/EJ/EJDashboard";
 import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
-import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
-import AutenticarRota from "./components/rotasAutenticadas";
-import EJDashboard from "./pages/core/EJ/EJDashboard";
-import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
-import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
-import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
-import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
-import FeedbackDashboard from "./pages/core/Feedback/FeedbackDashboard";
 import FeedbackCategoriaDashboard from "./pages/core/Feedback/FeedbackCategoriaDashboard";
-import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackDashboard";
-import { ChartBarIcon } from "./icons";
+import { default as FeedbackDashboard, default as FeedbackQuestaoDashboard } from "./pages/core/Feedback/FeedbackDashboard";
 import FbHistoricoDashboard from "./pages/core/Feedback/FeedbackHistoricoDashboard";
+import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
+import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 
 export default function App() {
   return (
@@ -43,7 +41,15 @@ export default function App() {
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
-            <Route index path="/" element={<Home />} />
+            <Route
+              index
+              path="/"
+              element={
+                <AutenticarRota>
+                  <Home />
+                </AutenticarRota>
+              }
+            />
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
@@ -120,60 +126,60 @@ export default function App() {
                 </AutenticarRota>
               }
             />
-            
+
             <Route
-            path="/categorias"
-            element={
-              <AutenticarRota>
-                <CategoriaDashboard />
-              </AutenticarRota>
-            }
-          />
+              path="/categorias"
+              element={
+                <AutenticarRota>
+                  <CategoriaDashboard />
+                </AutenticarRota>
+              }
+            />
 
-          <Route
-          path="/projetos"
-          element={
-            <AutenticarRota>
-              <ProjetoDashboard />
-            </AutenticarRota>
-          }
-        />
+            <Route
+              path="/projetos"
+              element={
+                <AutenticarRota>
+                  <ProjetoDashboard />
+                </AutenticarRota>
+              }
+            />
 
-        <Route
-          path="/feedbacks"
-          element={
-            <AutenticarRota>
-              <FeedbackDashboard />
-            </AutenticarRota>
-          }
-        />
+            <Route
+              path="/feedbacks"
+              element={
+                <AutenticarRota>
+                  <FeedbackDashboard />
+                </AutenticarRota>
+              }
+            />
 
-        <Route
-          path="/feedback-categorias"
-          element={
-            <AutenticarRota>
-              <FeedbackCategoriaDashboard />
-            </AutenticarRota>
-          }
-        />
+            <Route
+              path="/feedback-categorias"
+              element={
+                <AutenticarRota>
+                  <FeedbackCategoriaDashboard />
+                </AutenticarRota>
+              }
+            />
 
-        <Route
-          path="/feedback-questoes"
-          element={
-            <AutenticarRota>
-              <FeedbackQuestaoDashboard />
-            </AutenticarRota>
-          }
-        />
+            <Route
+              path="/feedback-questoes"
+              element={
+                <AutenticarRota>
+                  <FeedbackQuestaoDashboard />
+                </AutenticarRota>
+              }
+            />
 
-        <Route
-        path="/feedback-historico"
-        element={
-          <AutenticarRota>
-            <FbHistoricoDashboard />
-          </AutenticarRota>
-        }
-      />
+            <Route
+              path="/feedback-historico"
+              element={
+                <AutenticarRota>
+                  <FbHistoricoDashboard />
+                </AutenticarRota>
+              }
+            />
 
           </Route>
 
