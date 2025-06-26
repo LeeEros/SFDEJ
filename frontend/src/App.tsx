@@ -27,6 +27,7 @@ import AutenticarRota from "./components/rotasAutenticadas";
 import EJDashboard from "./pages/core/EJ/EJDashboard";
 import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
 import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
+import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
 
 export default function App() {
   return (
@@ -114,6 +115,15 @@ export default function App() {
               }
             />
             
+          <Route
+            path="/categorias"
+            element={
+              <AutenticarRota>
+                <CategoriaDashboard />
+              </AutenticarRota>
+            }
+          />
+
           </Route>
 
           {/* Auth Layout */}
