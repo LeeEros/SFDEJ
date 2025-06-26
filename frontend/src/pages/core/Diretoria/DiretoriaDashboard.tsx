@@ -34,7 +34,7 @@ function DiretoriaForm({ onSuccess }: { onSuccess: () => void }) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                 <div>
                     <Label htmlFor="diretoria">Nome da Diretoria</Label>
                     <Input
@@ -46,17 +46,17 @@ function DiretoriaForm({ onSuccess }: { onSuccess: () => void }) {
                         required
                     />
                 </div>
-            </div>
-            <div className="flex justify-end">
-                <Button
-                    type="submit"
-                    size="md"
-                    variant="primary"
-                    className="w-full md:w-auto"
-                    disabled={loading}
-                >
-                    {loading ? "Salvando..." : "Cadastrar"}
-                </Button>
+                <div>
+                    <Button
+                        type="submit"
+                        size="md"
+                        variant="primary"
+                        className="w-full md:w-auto"
+                        disabled={loading}
+                    >
+                        {loading ? "Salvando..." : "Cadastrar"}
+                    </Button>
+                </div>
             </div>
         </form>
     );

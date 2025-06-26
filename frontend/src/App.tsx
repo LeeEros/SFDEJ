@@ -26,6 +26,7 @@ import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard"
 import AutenticarRota from "./components/rotasAutenticadas";
 import EJDashboard from "./pages/core/EJ/EJDashboard";
 import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
+import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
 
 export default function App() {
   return (
@@ -100,6 +101,15 @@ export default function App() {
               element={
                 <AutenticarRota>
                   <DiretoriaDashboard />
+                </AutenticarRota>
+              }
+            />
+
+            <Route
+              path="/clientes"
+              element={
+                <AutenticarRota>
+                  <ClienteDashboard />
                 </AutenticarRota>
               }
             />
