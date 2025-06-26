@@ -32,6 +32,7 @@ import { default as FeedbackDashboard, default as FeedbackQuestaoDashboard } fro
 import FbHistoricoDashboard from "./pages/core/Feedback/FeedbackHistoricoDashboard";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
+import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
 
 export default function App() {
   return (
@@ -75,6 +76,17 @@ export default function App() {
             <Route path="/bar-chart" element={<BarChart />} />
 
             {/* Rotas protegidas */}
+
+            <Route
+              path="/usuarios"
+              element={
+                <AutenticarRota>
+                  <UsuarioDashboard />
+                </AutenticarRota>
+              }
+            />
+
+
             <Route
               path="/federacao"
               element={
