@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <PageMeta
-        title="SFDEJ - Admin Dashboard"
+        title="SFDEJ"
         description="Sistema de Feedback de Empresários Juniores - Dashboard Administrativo"
       />
       <div className="grid grid-cols-12 gap-4 md:gap-6">
