@@ -25,7 +25,7 @@ export default function NotFound() {
           />
 
           <p className="mt-10 mb-6 text-base text-gray-700 dark:text-gray-400 sm:text-lg">
-           Não foi possível encontrar a página que você está procurando.
+            Não foi possível encontrar a página que você está procurando.
           </p>
 
           <Link
@@ -36,9 +36,6 @@ export default function NotFound() {
           </Link>
         </div>
         {/* <!-- Footer   use o footer já pronto --> */}
-
-        <AppFooter />
-
       </div>
     </>
   );
