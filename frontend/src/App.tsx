@@ -30,6 +30,10 @@ import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
 import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import FeedbackDashboard from "./pages/core/Feedback/FeedbackDashboard";
+import FeedbackCategoriaDashboard from "./pages/core/Feedback/FeedbackCategoriaDashboard";
+import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackDashboard";
+import { ChartBarIcon } from "./icons";
+import FbHistoricoDashboard from "./pages/core/Feedback/FeedbackHistoricoDashboard";
 
 export default function App() {
   return (
@@ -144,6 +148,33 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/feedback-categorias"
+          element={
+            <AutenticarRota>
+              <FeedbackCategoriaDashboard />
+            </AutenticarRota>
+          }
+        />
+
+        <Route
+          path="/feedback-questoes"
+          element={
+            <AutenticarRota>
+              <FeedbackQuestaoDashboard />
+            </AutenticarRota>
+          }
+        />
+
+        <Route
+        path="/feedback-historico"
+        element={
+          <AutenticarRota>
+            <FbHistoricoDashboard />
+          </AutenticarRota>
+        }
+      />
+
           </Route>
 
           {/* Auth Layout */}
@@ -159,3 +190,4 @@ export default function App() {
     </>
   );
 }
+

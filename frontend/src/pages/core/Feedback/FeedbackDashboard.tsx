@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
 import ComponentCard from "../../../components/common/ComponentCard";
-import Button from "../../../components/ui/button/Button";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Select from "../../../components/form/Select";
+import Button from "../../../components/ui/button/Button";
 import {
     Table,
-    TableHeader,
     TableBody,
-    TableRow,
     TableCell,
+    TableHeader,
+    TableRow,
 } from "../../../components/ui/table";
-import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../../icons";
+import { CheckIcon, PencilIcon, TrashBinIcon, XMarkIcon } from "../../../icons";
+import api from "../../../services/api";
 
 const apiFeedback = "/feedback";
-const apiCategoria = "/projetos-categorias";
+const apiCategoria = "/fb-categorias";
 const apiProjeto = "/projetos";
 const apiUsuario = "/usuarios";
 
@@ -188,6 +188,12 @@ export default function FeedbackDashboard() {
     const [editFkProjeto, setEditFkProjeto] = useState<number | null>(null);
     const [editFkUsuarioAvaliado, setEditFkUsuarioAvaliado] = useState<number | null>(null);
     const [editLoading, setEditLoading] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [novaCategoria, setNovaCategoria] = useState("");
+    const [novaDescricao, setNovaDescricao] = useState("");
+    const [novoPerfil, setNovoPerfil] = useState("hard_skills");
+    const [novaMediaCategoria, setNovaMediaCategoria] = useState("");
+    const [loadingCategoria, setLoadingCategoria] = useState(false);
 
     const tipoAvaliadorOptions = [
         { label: "Interno", value: "INTERNO" },
@@ -266,6 +272,28 @@ export default function FeedbackDashboard() {
             alert("Erro ao editar feedback");
         }
         setEditLoading(false);
+    };
+
+    const handleNovaCategoriaSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoadingCategoria(true);
+        try {
+            await api.post("/feedback-categoria", {
+                categoria: novaCategoria,
+                descricao_categoria: novaDescricao,
+                perfil: novoPerfil,
+                media_categoria: novaMediaCategoria ? Number(novaMediaCategoria) : null,
+            });
+            setNovaCategoria("");
+            setNovaDescricao("");
+            setNovoPerfil("hard_skills");
+            setNovaMediaCategoria("");
+            fetchData();
+            setModalOpen(false);
+        } catch {
+            alert("Erro ao cadastrar categoria de feedback");
+        }
+        setLoadingCategoria(false);
     };
 
     return (
