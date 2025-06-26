@@ -4,6 +4,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import Button from "../../../components/ui/button/Button";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
+import Select from "../../../components/form/Select";
 import {
     Table,
     TableHeader,
@@ -52,7 +53,7 @@ function CategoriaForm({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                 <div>
-                    <Label htmlFor="categoria">Categoria</Label>
+                    <Label htmlFor="categoria" required>Categoria</Label>
                     <Input
                         id="categoria"
                         name="categoria"
@@ -63,20 +64,15 @@ function CategoriaForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="complexidade">Complexidade</Label>
-                    <select
-                        id="complexidade"
-                        name="complexidade"
-                        className="w-full border rounded px-3 py-2"
+                    <Label htmlFor="complexidade" required>Complexidade</Label>
+                    <Select
+                        options={niveis.map(n => ({ label: n.label, value: n.value }))}
                         value={complexidade}
-                        onChange={e => setComplexidade(e.target.value)}
+                        onChange={setComplexidade}
+                        placeholder="Selecione"
                         required
-                    >
-                        <option value="">Selecione</option>
-                        {niveis.map(n => (
-                            <option key={n.value} value={n.value}>{n.label}</option>
-                        ))}
-                    </select>
+                        className="w-full"
+                    />
                 </div>
                 <div>
                     <Label htmlFor="comentario">Comentário</Label>
@@ -193,8 +189,8 @@ export default function CategoriaDashboard() {
                                         className={`
                                           align-middle
                                           ${idx % 2 === 0
-                                            ? "bg-gray-100 dark:bg-gray-800"
-                                            : "bg-white dark:bg-gray-700"}
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
                                           hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                         style={{ minHeight: 56 }}

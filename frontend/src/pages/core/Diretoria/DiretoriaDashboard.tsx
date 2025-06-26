@@ -36,7 +36,7 @@ function DiretoriaForm({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                 <div>
-                    <Label htmlFor="diretoria">Nome da Diretoria</Label>
+                    <Label htmlFor="diretoria" required>Nome da Diretoria</Label>
                     <Input
                         id="diretoria"
                         name="diretoria"
@@ -139,8 +139,8 @@ export default function DiretoriaDashboard() {
                                         className={`
                                           align-middle
                                           ${idx % 2 === 0
-                                            ? "bg-gray-100 dark:bg-gray-800"
-                                            : "bg-white dark:bg-gray-700"}
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
                                           hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                         style={{ minHeight: 56 }}

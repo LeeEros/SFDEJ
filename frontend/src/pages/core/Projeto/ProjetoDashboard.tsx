@@ -66,7 +66,7 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                 <div>
-                    <Label htmlFor="nome">Nome</Label>
+                    <Label htmlFor="nome" required>Nome</Label>
                     <Input
                         id="nome"
                         name="nome"
@@ -77,7 +77,7 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                     />
                 </div>
                 <div>
-                    <Label htmlFor="descricao">Descrição</Label>
+                    <Label htmlFor="descricao" required>Descrição</Label>
                     <Input
                         id="descricao"
                         name="descricao"
@@ -88,20 +88,15 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                     />
                 </div>
                 <div>
-                    <Label htmlFor="status">Status</Label>
-                    <select
-                        id="status"
-                        name="status"
-                        className="w-full border rounded px-3 py-2"
+                    <Label htmlFor="status" required>Status</Label>
+                    <Select
+                        options={statusOptions}
                         value={status}
-                        onChange={e => setStatus(e.target.value)}
+                        onChange={setStatus}
+                        placeholder="Selecione"
                         required
-                    >
-                        <option value="">Selecione</option>
-                        {statusOptions.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                    </select>
+                        className="w-full"
+                    />
                 </div>
                 <div>
                     <Label htmlFor="data_assinatura">Data Assinatura</Label>
@@ -292,8 +287,8 @@ export default function ProjetoDashboard() {
                                         className={`
                                           align-middle
                                           ${idx % 2 === 0
-                                            ? "bg-gray-100 dark:bg-gray-800"
-                                            : "bg-white dark:bg-gray-700"}
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
                                           hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                         style={{ minHeight: 56 }}

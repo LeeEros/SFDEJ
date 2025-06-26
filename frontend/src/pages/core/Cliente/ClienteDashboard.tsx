@@ -54,7 +54,7 @@ function ClienteForm({ onSuccess, enderecos }: { onSuccess: () => void, endereco
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
                 <div>
-                    <Label htmlFor="nome">Nome</Label>
+                    <Label htmlFor="nome" required>Nome</Label>
                     <Input
                         id="nome"
                         name="nome"
@@ -83,11 +83,11 @@ function ClienteForm({ onSuccess, enderecos }: { onSuccess: () => void, endereco
                         value={CPF}
                         onChange={e => setCPF(e.target.value)}
                         placeholder="CPF (opcional)"
-                        maxLength={14}
+                        maxLength={11}
                     />
                 </div>
                 <div>
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email" required>Email</Label>
                     <Input
                         id="email"
                         name="email"
@@ -99,7 +99,7 @@ function ClienteForm({ onSuccess, enderecos }: { onSuccess: () => void, endereco
                     />
                 </div>
                 <div>
-                    <Label htmlFor="telefone">Telefone</Label>
+                    <Label htmlFor="telefone" required>Telefone</Label>
                     <Input
                         id="telefone"
                         name="telefone"
@@ -246,8 +246,8 @@ export default function ClienteDashboard() {
                                         className={`
                                           align-middle
                                           ${idx % 2 === 0
-                                            ? "bg-gray-100 dark:bg-gray-800"
-                                            : "bg-white dark:bg-gray-700"}
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
                                           hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                         style={{ minHeight: 56 }}

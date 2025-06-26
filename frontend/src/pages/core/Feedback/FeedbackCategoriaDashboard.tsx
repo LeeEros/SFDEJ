@@ -4,6 +4,7 @@ import ComponentCard from "../../../components/common/ComponentCard";
 import Button from "../../../components/ui/button/Button";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
+import Select from "../../../components/form/Select";
 
 const apiCategoria = "/fb-categorias";
 
@@ -49,19 +50,24 @@ export default function FeedbackCategoriaDashboard() {
                 <form onSubmit={handleSubmit} className="space-y-4 mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
-                            <Label>Categoria</Label>
+                            <Label required>Categoria</Label>
                             <Input value={categoria} onChange={e => setCategoria(e.target.value)} required />
                         </div>
                         <div>
-                            <Label>Descrição</Label>
+                            <Label required>Descrição</Label>
                             <Input value={descricao} onChange={e => setDescricao(e.target.value)} required />
                         </div>
                         <div>
-                            <Label>Perfil</Label>
-                            <select className="w-full border rounded px-3 py-2" value={perfil} onChange={e => setPerfil(e.target.value)}>
-                                <option value="hard_skills">Hard Skills</option>
-                                <option value="soft_skills">Soft Skills</option>
-                            </select>
+                            <Label required>Perfil</Label>
+                            <Select
+                                options={[
+                                    { label: "Hard Skills", value: "hard_skills" },
+                                    { label: "Soft Skills", value: "soft_skills" },
+                                ]}
+                                value={perfil}
+                                onChange={setPerfil}
+                                required
+                            />
                         </div>
                         <div>
                             <Label>Média</Label>

@@ -776,3 +776,8 @@ span.flatpickr-weekday,
 .simplebar-scrollbar.simplebar-visible:before {
   @apply opacity-100;
 }
+
+select,
+option {
+  @apply text-gray-800 dark:text-white/90 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-700;
+}

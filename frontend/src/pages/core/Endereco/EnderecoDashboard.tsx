@@ -50,7 +50,7 @@ function EnderecoForm({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
-                    <Label htmlFor="cep">CEP</Label>
+                    <Label htmlFor="cep" required>CEP</Label>
                     <Input
                         id="cep"
                         name="cep"
@@ -62,7 +62,7 @@ function EnderecoForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="cidade">Cidade</Label>
+                    <Label htmlFor="cidade" required>Cidade</Label>
                     <Input
                         id="cidade"
                         name="cidade"
@@ -73,7 +73,7 @@ function EnderecoForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="estado">Estado</Label>
+                    <Label htmlFor="estado" required>Estado</Label>
                     <Input
                         id="estado"
                         name="estado"
@@ -84,7 +84,7 @@ function EnderecoForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="endereco">Endereço</Label>
+                    <Label htmlFor="endereco" required>Endereço</Label>
                     <Input
                         id="endereco"
                         name="endereco"
@@ -95,7 +95,7 @@ function EnderecoForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="numero">Número</Label>
+                    <Label htmlFor="numero" >Número</Label>
                     <Input
                         id="numero"
                         name="numero"

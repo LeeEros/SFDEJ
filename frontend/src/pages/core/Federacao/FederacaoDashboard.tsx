@@ -40,7 +40,7 @@ function FederacaoForm({ onSuccess }: { onSuccess: () => void }) {
         <form onSubmit={handleSubmit} className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <Label htmlFor="nome">Nome</Label>
+                    <Label htmlFor="nome" required>Nome</Label>
                     <Input
                         id="nome"
                         name="nome"
@@ -51,11 +51,12 @@ function FederacaoForm({ onSuccess }: { onSuccess: () => void }) {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="nivel">Nível</Label>
+                    <Label htmlFor="nivel" required>Nível</Label>
                     <Select
                         options={niveis.map(n => ({ label: n.label, value: n.value }))}
                         onChange={setNivel}
                         defaultValue={nivel}
+                        required
                     />
                 </div>
                 <div className="flex items-end">
