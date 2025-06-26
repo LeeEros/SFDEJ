@@ -28,6 +28,7 @@ import EJDashboard from "./pages/core/EJ/EJDashboard";
 import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
 import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
 import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
+import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 
 export default function App() {
   return (
@@ -123,6 +124,15 @@ export default function App() {
               </AutenticarRota>
             }
           />
+
+          <Route
+          path="/projetos"
+          element={
+            <AutenticarRota>
+              <ProjetoDashboard />
+            </AutenticarRota>
+          }
+        />
 
           </Route>
 
