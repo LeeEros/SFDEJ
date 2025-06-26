@@ -1,27 +1,21 @@
-import { FC, ReactNode } from "react";
-import { twMerge } from "tailwind-merge";
-import { clsx } from "clsx";
+import React from "react";
 
-interface LabelProps {
-  htmlFor?: string;
-  children: ReactNode;
-  className?: string;
+interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+  required?: boolean;
 }
 
-const Label: FC<LabelProps> = ({ htmlFor, children, className }) => {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className={clsx(
-        twMerge(
-          "mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400",
-          className,
-        ),
-      )}
-    >
-      {children}
-    </label>
-  );
-};
+const Label: React.FC<LabelProps> = ({ children, required, ...props }) => (
+  <label
+    {...props}
+    className={`block mb-1 font-medium text-gray-700 dark:text-gray-300 ${props.className ?? ""}`}
+  >
+    {children}
+    {required && (
+      <span className="ml-1 text-error-500 dark:text-error-400" title="Obrigatório">
+        *
+      </span>
+    )}
+  </label>
+);
 
 export default Label;
