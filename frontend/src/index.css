@@ -291,6 +291,28 @@ layer(base);
   }
 }
 
+/* Inputs e selects: texto preto no claro, branco no escuro */
+input,
+select,
+textarea {
+  @apply text-gray-800 dark:text-white/90 bg-transparent;
+}
+
+/* Placeholder: cinza no claro, branco translúcido no escuro */
+input::placeholder,
+select::placeholder,
+textarea::placeholder {
+  @apply text-gray-400 dark:text-white/30;
+}
+
+/* Bordas e fundo para melhor contraste */
+input,
+select,
+textarea {
+  @apply border-gray-300 dark:border-gray-700;
+  @apply bg-white dark:bg-gray-900;
+}
+
 .tableCheckbox:checked ~ span span {
   @apply opacity-100;
 }
