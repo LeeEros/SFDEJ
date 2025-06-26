@@ -5,6 +5,14 @@ import Button from "../../../components/ui/button/Button";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Select from "../../../components/form/Select";
+import {
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    TableCell,
+} from "../../../components/ui/table";
+import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../../icons";
 
 const apiCategoria = "/fb-categorias";
 
@@ -15,6 +23,14 @@ export default function FeedbackCategoriaDashboard() {
     const [perfil, setPerfil] = useState("hard_skills");
     const [mediaCategoria, setMediaCategoria] = useState("");
     const [loading, setLoading] = useState(false);
+
+    // Estados para edição
+    const [editId, setEditId] = useState<number | null>(null);
+    const [editCategoria, setEditCategoria] = useState("");
+    const [editDescricao, setEditDescricao] = useState("");
+    const [editPerfil, setEditPerfil] = useState("hard_skills");
+    const [editMediaCategoria, setEditMediaCategoria] = useState("");
+    const [editLoading, setEditLoading] = useState(false);
 
     const fetchCategorias = async () => {
         const { data } = await api.get(apiCategoria);
@@ -42,6 +58,45 @@ export default function FeedbackCategoriaDashboard() {
             alert("Erro ao cadastrar categoria de feedback");
         }
         setLoading(false);
+    };
+
+    const startEdit = (c: any) => {
+        setEditId(c.id_fb_categoria);
+        setEditCategoria(c.categoria);
+        setEditDescricao(c.descricao_categoria);
+        setEditPerfil(c.perfil);
+        setEditMediaCategoria(c.media_categoria ?? "");
+    };
+
+    const cancelEdit = () => {
+        setEditId(null);
+        setEditCategoria("");
+        setEditDescricao("");
+        setEditPerfil("hard_skills");
+        setEditMediaCategoria("");
+    };
+
+    const handleEditSave = async (id: number) => {
+        setEditLoading(true);
+        try {
+            await api.put(`${apiCategoria}/${id}`, {
+                categoria: editCategoria,
+                descricao_categoria: editDescricao,
+                perfil: editPerfil,
+                media_categoria: editMediaCategoria ? Number(editMediaCategoria) : null,
+            });
+            setEditId(null);
+            fetchCategorias();
+        } catch {
+            alert("Erro ao editar categoria de feedback");
+        }
+        setEditLoading(false);
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm("Deseja remover?")) return;
+        await api.delete(`${apiCategoria}/${id}`);
+        fetchCategorias();
     };
 
     return (
@@ -81,28 +136,116 @@ export default function FeedbackCategoriaDashboard() {
             </ComponentCard>
             <ComponentCard title="Categorias de Feedback Cadastradas">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
-                        <thead>
-                            <tr className="bg-brand-500 text-white">
-                                <th className="px-2 py-1">ID</th>
-                                <th className="px-2 py-1">Categoria</th>
-                                <th className="px-2 py-1">Descrição</th>
-                                <th className="px-2 py-1">Perfil</th>
-                                <th className="px-2 py-1">Média</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {categorias.map((c: any) => (
-                                <tr key={c.id_fb_categoria} className="border-b">
-                                    <td className="px-2 py-1">{c.id_fb_categoria}</td>
-                                    <td className="px-2 py-1">{c.categoria}</td>
-                                    <td className="px-2 py-1">{c.descricao_categoria}</td>
-                                    <td className="px-2 py-1">{c.perfil}</td>
-                                    <td className="px-2 py-1">{c.media_categoria ?? "—"}</td>
-                                </tr>
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="bg-brand-500 dark:bg-gray-900">
+                                <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
+                                <TableCell isHeader className="text-white">Categoria</TableCell>
+                                <TableCell isHeader className="text-white">Descrição</TableCell>
+                                <TableCell isHeader className="text-white">Perfil</TableCell>
+                                <TableCell isHeader className="text-white">Média</TableCell>
+                                <TableCell isHeader className="text-center text-white">Ações</TableCell>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {categorias.map((c: any, idx: number) => (
+                                <TableRow
+                                    key={c.id_fb_categoria}
+                                    className={`
+                                        align-middle
+                                        ${idx % 2 === 0
+                                            ? "bg-gray-100 dark:bg-gray-800"
+                                            : "bg-white dark:bg-gray-700"}
+                                        hover:bg-brand-50 dark:hover:bg-brand-500/10
+                                    `}
+                                    style={{ minHeight: 56 }}
+                                >
+                                    <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{c.id_fb_categoria}</TableCell>
+                                    <TableCell className="text-gray-800 dark:text-white">
+                                        {editId === c.id_fb_categoria ? (
+                                            <Input value={editCategoria} onChange={e => setEditCategoria(e.target.value)} />
+                                        ) : (
+                                            c.categoria
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="text-gray-800 dark:text-white">
+                                        {editId === c.id_fb_categoria ? (
+                                            <Input value={editDescricao} onChange={e => setEditDescricao(e.target.value)} />
+                                        ) : (
+                                            c.descricao_categoria
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="text-gray-800 dark:text-white">
+                                        {editId === c.id_fb_categoria ? (
+                                            <Select
+                                                options={[
+                                                    { label: "Hard Skills", value: "hard_skills" },
+                                                    { label: "Soft Skills", value: "soft_skills" },
+                                                ]}
+                                                value={editPerfil}
+                                                onChange={setEditPerfil}
+                                            />
+                                        ) : (
+                                            c.perfil
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="text-gray-800 dark:text-white">
+                                        {editId === c.id_fb_categoria ? (
+                                            <Input type="number" value={editMediaCategoria} onChange={e => setEditMediaCategoria(e.target.value)} />
+                                        ) : (
+                                            c.media_categoria ?? "—"
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="text-center py-3">
+                                        {editId === c.id_fb_categoria ? (
+                                            <div className="flex justify-center gap-2">
+                                                <Button
+                                                    size="sm"
+                                                    variant="success"
+                                                    className="py-2 px-4 bg-success-600 hover:bg-success-700 text-white rounded shadow"
+                                                    onClick={() => handleEditSave(c.id_fb_categoria)}
+                                                    disabled={editLoading}
+                                                    startIcon={<CheckIcon className="size-4" />}
+                                                >
+                                                    Salvar
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="py-2 px-4 !bg-gray-600 hover:!bg-gray-700 text-white rounded shadow"
+                                                    onClick={cancelEdit}
+                                                    startIcon={<XMarkIcon className="size-4" />}
+                                                >
+                                                    Cancelar
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <div className="flex justify-center gap-2">
+                                                <Button
+                                                    size="sm"
+                                                    variant="primary"
+                                                    className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
+                                                    onClick={() => startEdit(c)}
+                                                    startIcon={<PencilIcon className="size-4" />}
+                                                >
+                                                    Editar
+                                                </Button>
+                                                <Button
+                                                    size="sm"
+                                                    variant="danger"
+                                                    className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
+                                                    onClick={() => handleDelete(c.id_fb_categoria)}
+                                                    startIcon={<TrashBinIcon className="size-4" />}
+                                                >
+                                                    Excluir
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
+                        </TableBody>
+                    </Table>
                 </div>
             </ComponentCard>
         </div>
