@@ -29,6 +29,7 @@ import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
 import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
 import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
+import FeedbackDashboard from "./pages/core/Feedback/FeedbackDashboard";
 
 export default function App() {
   return (
@@ -116,7 +117,7 @@ export default function App() {
               }
             />
             
-          <Route
+            <Route
             path="/categorias"
             element={
               <AutenticarRota>
@@ -130,6 +131,15 @@ export default function App() {
           element={
             <AutenticarRota>
               <ProjetoDashboard />
+            </AutenticarRota>
+          }
+        />
+
+        <Route
+          path="/feedbacks"
+          element={
+            <AutenticarRota>
+              <FeedbackDashboard />
             </AutenticarRota>
           }
         />
