@@ -35,7 +35,6 @@ export default function NotFound() {
             Voltar para o início.
           </Link>
         </div>
-        {/* <!-- Footer   use o footer já pronto --> */}
       </div>
     </>
   );
