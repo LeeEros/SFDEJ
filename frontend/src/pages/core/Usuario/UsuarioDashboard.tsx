@@ -18,6 +18,7 @@ const apiUsuario = "/usuarios";
 function UsuarioForm({ onSuccess }: { onSuccess: () => void }) {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
+    const [telefone, setTelefone] = useState(""); 
     const [senha, setSenha] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -28,12 +29,14 @@ function UsuarioForm({ onSuccess }: { onSuccess: () => void }) {
             await api.post(apiUsuario, {
                 nome,
                 email,
+                telefone,
                 senha,
                 ativo: true,
                 permissao: "USUARIO",
             });
             setNome("");
             setEmail("");
+            setTelefone("");
             setSenha("");
             onSuccess();
         } catch {
@@ -44,51 +47,26 @@ function UsuarioForm({ onSuccess }: { onSuccess: () => void }) {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 <div>
                     <Label htmlFor="nome" required>Nome</Label>
-                    <Input
-                        id="nome"
-                        name="nome"
-                        value={nome}
-                        onChange={e => setNome(e.target.value)}
-                        placeholder="Digite o nome"
-                        required
-                    />
+                    <Input id="nome" name="nome" value={nome} onChange={e => setNome(e.target.value)} required />
                 </div>
                 <div>
                     <Label htmlFor="email" required>Email</Label>
-                    <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={email}
-                        onChange={e => setEmail(e.target.value)}
-                        placeholder="Digite o email"
-                        required
-                    />
+                    <Input id="email" name="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                </div>
+                <div>
+                    <Label htmlFor="telefone" required>Telefone</Label>
+                    <Input id="telefone" name="telefone" value={telefone} onChange={e => setTelefone(e.target.value)} required />
                 </div>
                 <div>
                     <Label htmlFor="senha" required>Senha</Label>
-                    <Input
-                        id="senha"
-                        name="senha"
-                        type="password"
-                        value={senha}
-                        onChange={e => setSenha(e.target.value)}
-                        placeholder="Digite a senha"
-                        required
-                    />
+                    <Input id="senha" name="senha" type="password" value={senha} onChange={e => setSenha(e.target.value)} required />
                 </div>
             </div>
             <div className="flex justify-end">
-                <Button
-                    type="submit"
-                    size="md"
-                    variant="primary"
-                    className="w-full md:w-auto"
-                    disabled={loading}
-                >
+                <Button type="submit" size="md" variant="primary" className="w-full md:w-auto" disabled={loading}>
                     {loading ? "Salvando..." : "Cadastrar"}
                 </Button>
             </div>
@@ -102,6 +80,7 @@ export default function UsuarioDashboard() {
     const [editId, setEditId] = useState<number | null>(null);
     const [editNome, setEditNome] = useState("");
     const [editEmail, setEditEmail] = useState("");
+    const [editTelefone, setEditTelefone] = useState(""); 
     const [editLoading, setEditLoading] = useState(false);
 
     const fetchData = async () => {
@@ -129,12 +108,14 @@ export default function UsuarioDashboard() {
         setEditId(u.id_usuario);
         setEditNome(u.nome);
         setEditEmail(u.email);
+        setEditTelefone(u.telefone); 
     };
 
     const cancelEdit = () => {
         setEditId(null);
         setEditNome("");
         setEditEmail("");
+        setEditTelefone(""); 
     };
 
     const handleEditSave = async (id: number) => {
@@ -143,6 +124,7 @@ export default function UsuarioDashboard() {
             await api.put(`${apiUsuario}/${id}`, {
                 nome: editNome,
                 email: editEmail,
+                telefone: editTelefone,
             });
             setEditId(null);
             fetchData();
@@ -170,6 +152,7 @@ export default function UsuarioDashboard() {
                                     <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
                                     <TableCell isHeader className="text-white">Nome</TableCell>
                                     <TableCell isHeader className="text-white">Email</TableCell>
+                                    <TableCell isHeader className="text-white">Telefone</TableCell>
                                     <TableCell isHeader className="text-white">Permissão</TableCell>
                                     <TableCell isHeader className="text-white">Ativo</TableCell>
                                     <TableCell isHeader className="text-center text-white">Ações</TableCell>
@@ -201,6 +184,13 @@ export default function UsuarioDashboard() {
                                                 <Input value={editEmail} onChange={e => setEditEmail(e.target.value)} />
                                             ) : (
                                                 u.email
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
+                                            {editId === u.id_usuario ? (
+                                                <Input value={editTelefone} onChange={e => setEditTelefone(e.target.value)} />
+                                            ) : (
+                                                u.telefone
                                             )}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
