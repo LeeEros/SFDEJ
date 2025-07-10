@@ -7,7 +7,7 @@ import Label from "../../../components/form/Label";
 import Select from "../../../components/form/Select";
 
 const apiQuestao = "/fb-questoes";
-const apiCategoria = "/fb-categoria";
+const apiCategoria = "/fb-categorias";
 
 export default function FeedbackQuestaoDashboard() {
     const [questoes, setQuestoes] = useState<any[]>([]);
@@ -33,6 +33,11 @@ export default function FeedbackQuestaoDashboard() {
         e.preventDefault();
         setLoading(true);
         try {
+            if (!fk_fb_categoria) {
+                alert("Selecione uma categoria.");
+                setLoading(false);
+                return;
+            }
             await api.post(apiQuestao, {
                 enunciado,
                 comentario,
@@ -56,19 +61,19 @@ export default function FeedbackQuestaoDashboard() {
                 <form onSubmit={handleSubmit} className="space-y-4 mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div>
-                            <Label>Enunciado</Label>
+                            <Label className="dark:text-white">Enunciado</Label>
                             <Input value={enunciado} onChange={e => setEnunciado(e.target.value)} required />
                         </div>
                         <div>
-                            <Label>Comentário</Label>
+                            <Label className="dark:text-white">Comentário</Label>
                             <Input value={comentario} onChange={e => setComentario(e.target.value)} />
                         </div>
                         <div>
-                            <Label>Pontuação</Label>
+                            <Label className="dark:text-white">Pontuação</Label>
                             <Input type="number" value={pontuacao} onChange={e => setPontuacao(e.target.value)} required />
                         </div>
                         <div>
-                            <Label>Categoria</Label>
+                            <Label className="dark:text-white">Categoria</Label>
                             <Select
                                 options={categorias.map(c => ({
                                     label: c.categoria,
@@ -91,21 +96,21 @@ export default function FeedbackQuestaoDashboard() {
                     <table className="min-w-full text-sm">
                         <thead>
                             <tr className="bg-brand-500 text-white">
-                                <th className="px-2 py-1">ID</th>
-                                <th className="px-2 py-1">Enunciado</th>
-                                <th className="px-2 py-1">Comentário</th>
-                                <th className="px-2 py-1">Pontuação</th>
-                                <th className="px-2 py-1">Categoria</th>
+                                <th className="px-2 py-1 dark:text-white">ID</th>
+                                <th className="px-2 py-1 dark:text-white">Enunciado</th>
+                                <th className="px-2 py-1 dark:text-white">Comentário</th>
+                                <th className="px-2 py-1 dark:text-white">Pontuação</th>
+                                <th className="px-2 py-1 dark:text-white">Categoria</th>
                             </tr>
                         </thead>
                         <tbody>
                             {questoes.map((q: any) => (
                                 <tr key={q.id_questao} className="border-b">
-                                    <td className="px-2 py-1">{q.id_questao}</td>
-                                    <td className="px-2 py-1">{q.enunciado}</td>
-                                    <td className="px-2 py-1">{q.comentario}</td>
-                                    <td className="px-2 py-1">{q.pontuacao}</td>
-                                    <td className="px-2 py-1">
+                                    <td className="px-2 py-1 dark:text-white">{q.id_questao}</td>
+                                    <td className="px-2 py-1 dark:text-white">{q.enunciado}</td>
+                                    <td className="px-2 py-1 dark:text-white">{q.comentario}</td>
+                                    <td className="px-2 py-1 dark:text-white">{q.pontuacao}</td>
+                                    <td className="px-2 py-1 dark:text-white">
                                         {categorias.find(c => c.id_fb_categoria === q.fk_fb_categoria)?.categoria || "—"}
                                     </td>
                                 </tr>
