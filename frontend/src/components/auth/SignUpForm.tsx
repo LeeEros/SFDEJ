@@ -1,13 +1,37 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
 import Checkbox from "../form/input/Checkbox";
+import api from "../../services/api";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.post("/signup", {
+        nome: `${fname} ${lname}`.trim(),
+        email,
+        senha,
+      });
+      navigate("/signin");
+    } catch {
+      alert("Erro ao cadastrar. Verifique os dados e tente novamente.");
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="flex flex-col flex-1 w-full overflow-y-auto lg:w-1/2 no-scrollbar">
       <div className="w-full max-w-md mx-auto mb-5 sm:pt-10">
@@ -30,36 +54,38 @@ export default function SignUpForm() {
             </p>
           </div>
           <div>
-
-            <form>
+            <form onSubmit={handleSignUp}>
               <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {/* <!-- First Name --> */}
                   <div className="sm:col-span-1">
                     <Label>
-                      First Name<span className="text-error-500">*</span>
+                      Nome<span className="text-error-500">*</span>
                     </Label>
                     <Input
                       type="text"
                       id="fname"
                       name="fname"
-                      placeholder="Enter your first name"
+                      placeholder="Entre seu nome"
+                      value={fname}
+                      onChange={e => setFname(e.target.value)}
+                      required
                     />
                   </div>
-                  {/* <!-- Last Name --> */}
                   <div className="sm:col-span-1">
                     <Label>
-                      Last Name<span className="text-error-500">*</span>
+                      Sobrenome<span className="text-error-500">*</span>
                     </Label>
                     <Input
                       type="text"
                       id="lname"
                       name="lname"
-                      placeholder="Enter your last name"
+                      placeholder="Entre seu sobrenome"
+                      value={lname}
+                      onChange={e => setLname(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
-                {/* <!-- Email --> */}
                 <div>
                   <Label>
                     Email<span className="text-error-500">*</span>
@@ -68,18 +94,23 @@ export default function SignUpForm() {
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="Enter your email"
+                    placeholder="Digite seu email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
                   />
                 </div>
-                {/* <!-- Password --> */}
                 <div>
                   <Label>
-                    Password<span className="text-error-500">*</span>
+                    Senha<span className="text-error-500">*</span>
                   </Label>
                   <div className="relative">
                     <Input
-                      placeholder="Enter your password"
+                      placeholder="Digite sua senha"
                       type={showPassword ? "text" : "password"}
+                      value={senha}
+                      onChange={e => setSenha(e.target.value)}
+                      required
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -93,7 +124,6 @@ export default function SignUpForm() {
                     </span>
                   </div>
                 </div>
-                {/* <!-- Checkbox --> */}
                 <div className="flex items-center gap-3">
                   <Checkbox
                     className="w-5 h-5"
@@ -101,39 +131,41 @@ export default function SignUpForm() {
                     onChange={setIsChecked}
                   />
                   <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
-                    By creating an account means you agree to the{" "}
+                    Ao criar uma conta você concorda com os{" "}
                     <span className="text-gray-800 dark:text-white/90">
-                      Terms and Conditions,
+                      Termos e Condições,
                     </span>{" "}
-                    and our{" "}
+                    e nossa{" "}
                     <span className="text-gray-800 dark:text-white">
-                      Privacy Policy
+                      Política de Privacidade
                     </span>
                   </p>
                 </div>
-                {/* <!-- Button --> */}
                 <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    Sign Up
+                  <button
+                    type="submit"
+                    className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                    disabled={loading}
+                  >
+                    {loading ? "Cadastrando..." : "Sign Up"}
                   </button>
                 </div>
               </div>
             </form>
-
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-                Already have an account? {""}
+                Já tem uma conta?{" "}
                 <Link
                   to="/signin"
                   className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
-                  Sign In
+                  Entrar
                 </Link>
               </p>
             </div>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

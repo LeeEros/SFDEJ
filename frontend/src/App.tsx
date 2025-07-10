@@ -28,10 +28,12 @@ import EJDashboard from "./pages/core/EJ/EJDashboard";
 import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
 import FeedbackCategoriaDashboard from "./pages/core/Feedback/FeedbackCategoriaDashboard";
-import { default as FeedbackDashboard, default as FeedbackQuestaoDashboard } from "./pages/core/Feedback/FeedbackDashboard";
+import FeedbackDashboard from "./pages/core/Feedback/FeedbackDashboard";
+import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackQuestaoDashboard";
 import FbHistoricoDashboard from "./pages/core/Feedback/FeedbackHistoricoDashboard";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
+import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
 
 export default function App() {
   return (
@@ -75,6 +77,17 @@ export default function App() {
             <Route path="/bar-chart" element={<BarChart />} />
 
             {/* Rotas protegidas */}
+
+            <Route
+              path="/usuarios"
+              element={
+                <AutenticarRota>
+                  <UsuarioDashboard />
+                </AutenticarRota>
+              }
+            />
+
+
             <Route
               path="/federacao"
               element={

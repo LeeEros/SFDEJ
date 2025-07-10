@@ -12,7 +12,8 @@ import {
     TableRow,
     TableCell,
 } from "../../../components/ui/table";
-import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../../icons";
+import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon, PaperPlaneIcon } from "../../../icons";
+
 
 const apiProjeto = "/projetos";
 const apiCategoria = "/projetos-categorias";
@@ -26,6 +27,8 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
     const [valor, setValor] = useState("");
     const [fk_categoria, setFkCategoria] = useState<number | null>(null);
     const [fk_cliente, setFkCliente] = useState<number | null>(null);
+    const [anexo, setAnexo] = useState<File | null>(null);
+    const [anexoError, setAnexoError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
     const statusOptions = [
@@ -35,18 +38,36 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
         { label: "Cancelado", value: "CANCELADO" },
     ];
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            if (file.size > 10 * 1024 * 1024) {
+                setAnexoError("O arquivo deve ter no máximo 10MB.");
+                setAnexo(null);
+            } else {
+                setAnexo(file);
+                setAnexoError(null);
+            }
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+
+        const formData = new FormData();
+        formData.append("nome", nome);
+        formData.append("descricao", descricao);
+        formData.append("status", status);
+        formData.append("data_assinatura", data_assinatura);
+        formData.append("valor", valor);
+        if (fk_categoria) formData.append("fk_categoria", String(fk_categoria));
+        if (fk_cliente) formData.append("fk_cliente", String(fk_cliente));
+        if (anexo) formData.append("anexo", anexo);
+
         try {
-            await api.post(apiProjeto, {
-                nome,
-                descricao,
-                status,
-                data_assinatura,
-                valor: Number(valor),
-                fk_categoria,
-                fk_cliente,
+            await api.post(apiProjeto, formData, {
+                headers: { "Content-Type": "multipart/form-data" },
             });
             setNome("");
             setDescricao("");
@@ -55,6 +76,8 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
             setValor("");
             setFkCategoria(null);
             setFkCliente(null);
+            setAnexo(null);
+            setAnexoError(null);
             onSuccess();
         } catch {
             alert("Erro ao cadastrar projeto");
@@ -64,7 +87,7 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+            <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
                 <div>
                     <Label htmlFor="nome" required>Nome</Label>
                     <Input
@@ -146,6 +169,28 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                         placeholder="Selecione o cliente"
                         required
                     />
+                </div>
+                <div>
+                    <Label htmlFor="anexo">Anexo</Label>
+                    <div className="flex items-center gap-2">
+                        <label className="cursor-pointer flex items-center gap-1">
+                            <PaperPlaneIcon className="w-5 h-5 text-gray-500" />
+                            <input
+                                id="anexo"
+                                name="anexo"
+                                type="file"
+                                className="hidden"
+                                onChange={handleFileChange}
+                                accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                            />
+                            <span className="text-sm text-gray-600">
+                                {anexo ? anexo.name : "Selecionar arquivo"}
+                            </span>
+                        </label>
+                    </div>
+                    {anexoError && (
+                        <span className="text-xs text-red-500">{anexoError}</span>
+                    )}
                 </div>
             </div>
             <div className="flex justify-end">
