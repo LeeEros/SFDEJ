@@ -5,6 +5,13 @@ import Button from "../../../components/ui/button/Button";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
 import Select from "../../../components/form/Select";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableRow,
+} from "../../../components/ui/table";
 
 const apiQuestao = "/fb-questoes";
 const apiCategoria = "/fb-categorias";
@@ -93,30 +100,38 @@ export default function FeedbackQuestaoDashboard() {
             </ComponentCard>
             <ComponentCard title="Questões de Feedback Cadastradas">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm">
-                        <thead>
-                            <tr className="bg-brand-500 text-white">
-                                <th className="px-2 py-1 dark:text-white">ID</th>
-                                <th className="px-2 py-1 dark:text-white">Enunciado</th>
-                                <th className="px-2 py-1 dark:text-white">Comentário</th>
-                                <th className="px-2 py-1 dark:text-white">Pontuação</th>
-                                <th className="px-2 py-1 dark:text-white">Categoria</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {questoes.map((q: any) => (
-                                <tr key={q.id_questao} className="border-b">
-                                    <td className="px-2 py-1 dark:text-white">{q.id_questao}</td>
-                                    <td className="px-2 py-1 dark:text-white">{q.enunciado}</td>
-                                    <td className="px-2 py-1 dark:text-white">{q.comentario}</td>
-                                    <td className="px-2 py-1 dark:text-white">{q.pontuacao}</td>
-                                    <td className="px-2 py-1 dark:text-white">
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="bg-brand-500 dark:bg-gray-900">
+                                <TableCell isHeader className="px-2 py-1 text-white">ID</TableCell>
+                                <TableCell isHeader className="px-2 py-1 text-white">Enunciado</TableCell>
+                                <TableCell isHeader className="px-2 py-1 text-white">Comentário</TableCell>
+                                <TableCell isHeader className="px-2 py-1 text-white">Pontuação</TableCell>
+                                <TableCell isHeader className="px-2 py-1 text-white">Categoria</TableCell>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {questoes.map((q: any, idx: number) => (
+                                <TableRow
+                                    key={q.id_questao}
+                                    className={`
+                                        ${idx % 2 === 0
+                                            ? "bg-gray-100 dark:bg-gray-800"
+                                            : "bg-white dark:bg-gray-700"}
+                                        hover:bg-brand-50 dark:hover:bg-brand-500/10
+                                    `}
+                                >
+                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{q.id_questao}</TableCell>
+                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{q.enunciado}</TableCell>
+                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{q.comentario}</TableCell>
+                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{q.pontuacao}</TableCell>
+                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">
                                         {categorias.find(c => c.id_fb_categoria === q.fk_fb_categoria)?.categoria || "—"}
-                                    </td>
-                                </tr>
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
+                        </TableBody>
+                    </Table>
                 </div>
             </ComponentCard>
         </div>
