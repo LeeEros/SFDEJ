@@ -6,7 +6,7 @@ import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
 import { fbCategoriaRoutes } from "@/modules/feedback/fb-categoria/fb-categoria-routes";
 import { fbHistoricoRoutes } from "@/modules/feedback/fb-historico/fb-historico-routes";
 import { fbQuestaoRoutes } from "@/modules/feedback/fb-questao/fb-questao-routes";
-import { feedbackRoutes } from "@/modules/feedback/fb/feedback-routes";
+import { feedbackRoutes } from "@/modules/feedback/fb-sessao/feedback-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
 import { categoriaRoutes } from "@/modules/projeto/categoria/categoria-routes";
 import { projetoRoutes } from "@/modules/projeto/projeto-routes";

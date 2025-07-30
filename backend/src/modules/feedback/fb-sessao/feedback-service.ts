@@ -1,12 +1,12 @@
 import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
-import { feedback } from "@prisma/client";
-import { feedbackSchema } from "./feedback-schema";
+import { feedbackSessaoSchema } from "./feedback-schema";
+import { feedback_sessao } from "@prisma/client";
 
 export class FeedbackService {
   async findAll() {
-    const fb = await prisma.feedback.findMany({
-      orderBy: { id_feedback: "asc" },
+    const fb = await prisma.feedback_sessao.findMany({
+      orderBy: { id_sessao: "asc" },
     });
 
     if (!fb) {
@@ -17,7 +17,9 @@ export class FeedbackService {
   }
 
   async findById(id: number) {
-    const fb = await prisma.feedback.findUnique({ where: { id_feedback: id } });
+    const fb = await prisma.feedback_sessao.findUnique({
+      where: { id_sessao: id },
+    });
 
     if (!fb) {
       throw new AppError("Feedback não encontrado.", 404);
@@ -26,10 +28,10 @@ export class FeedbackService {
     return fb;
   }
 
-  async create(data: feedback) {
-    const fb = feedbackSchema.parse(data);
+  async create(data: feedback_sessao) {
+    const fb = feedbackSessaoSchema.parse(data);
 
-    const fbCriada = await prisma.feedback.create({ data: fb });
+    const fbCriada = await prisma.feedback_sessao.create({ data: fb });
 
     if (!fbCriada) {
       throw new AppError("Não foi possível criar feedback.", 400);
@@ -38,15 +40,15 @@ export class FeedbackService {
     return fbCriada;
   }
 
-  async update(id: number, data: feedback) {
+  async update(id: number, data: feedback_sessao) {
     const fb = await this.findById(id);
 
     if (!fb) {
       throw new AppError("Feedback não encontrado.", 404);
     }
 
-    const fbAtualizado = await prisma.feedback.update({
-      where: { id_feedback: id },
+    const fbAtualizado = await prisma.feedback_sessao.update({
+      where: { id_sessao: id },
       data,
     });
 
@@ -64,7 +66,7 @@ export class FeedbackService {
       throw new AppError("feedback não encontrado.", 404);
     }
 
-    await prisma.feedback.delete({ where: { id_feedback: id } });
+    await prisma.feedback_sessao.delete({ where: { id_sessao: id } });
 
     return { message: "feedback deletado com sucesso." };
   }

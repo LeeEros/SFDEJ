@@ -125,6 +125,11 @@ model feedback_categoria {
   sessoes  feedback_sessao[]
 }
 
+enum perfil {
+  hard_skills
+  soft_skills
+}
+
 model feedback_questao {
   id_questao Int    @id @default(autoincrement())
   enunciado  String @db.VarChar(255)
@@ -164,20 +169,16 @@ model feedback_avaliacao {
 }
 
 model feedback_resposta {
-  id_resposta Int     @id @default(autoincrement())
-  nota        Int
-  comentario  String? @db.VarChar(1000)
+  id_resposta   Int      @id @default(autoincrement())
+  nota          Int
+  data_resposta DateTime @default(now())
+  comentario    String?  @db.VarChar(1000)
 
   fk_fb_avaliacao Int
   fk_fb_questao   Int
 
   avaliacao feedback_avaliacao @relation(fields: [fk_fb_avaliacao], references: [id_avaliacao])
   questao   feedback_questao   @relation(fields: [fk_fb_questao], references: [id_questao])
-}
-
-enum perfil {
-  hard_skills
-  soft_skills
 }
 
 model projeto {
