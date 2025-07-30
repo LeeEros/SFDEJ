@@ -142,10 +142,10 @@ model feedback_sessao {
   status           Boolean   @default(true)
   link_forms       String?   @db.VarChar(255)
 
-  fk_fb_categoria    Int
+  fk_fb_categoria    Int?
   feedback_categoria feedback_categoria? @relation(fields: [fk_fb_categoria], references: [id_fb_categoria])
 
-  fk_projeto Int
+  fk_projeto Int?
   projeto    projeto? @relation(fields: [fk_projeto], references: [id_projeto])
 
   avaliados feedback_avaliacao[]
@@ -154,8 +154,8 @@ model feedback_sessao {
 model feedback_avaliacao {
   id_avaliacao Int @id @default(autoincrement())
 
-  fk_sessao Int
-  sessao    feedback_sessao @relation(fields: [fk_sessao], references: [id_sessao])
+  fk_fb_sessao Int
+  sessao       feedback_sessao @relation(fields: [fk_fb_sessao], references: [id_sessao])
 
   fk_usuario Int
   usuario    usuarios @relation(fields: [fk_usuario], references: [id_usuario])
@@ -168,11 +168,11 @@ model feedback_resposta {
   nota        Int
   comentario  String? @db.VarChar(1000)
 
-  fk_avaliacao Int
-  fk_questao   Int
+  fk_fb_avaliacao Int
+  fk_fb_questao   Int
 
-  avaliacao feedback_avaliacao @relation(fields: [fk_avaliacao], references: [id_avaliacao])
-  questao   feedback_questao   @relation(fields: [fk_questao], references: [id_questao])
+  avaliacao feedback_avaliacao @relation(fields: [fk_fb_avaliacao], references: [id_avaliacao])
+  questao   feedback_questao   @relation(fields: [fk_fb_questao], references: [id_questao])
 }
 
 enum perfil {
