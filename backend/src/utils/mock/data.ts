@@ -82,33 +82,29 @@ export const mockData = {
     categoria: faker.commerce.department(),
     descricao_categoria: faker.commerce.productDescription(),
     perfil: faker.helpers.arrayElement(["hard_skills", "soft_skills"]),
-    media_categoria: faker.datatype.boolean()
-      ? faker.number.float({ min: 0, max: 10, fractionDigits: 1 })
-      : null,
-  })),
-
-  feedback: Array.from({ length: 10 }, () => ({
-    tipo_avaliador: faker.helpers.arrayElement(["INTERNO", "EXTERNO"]),
-    comentario: faker.lorem.sentence(),
-    media_geral: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
-    data_realizacao: faker.date.past(),
-  })),
-
-  feedback_historico: Array.from({ length: 10 }, () => ({
-    media_geral: faker.number.float({ min: 0, max: 10, fractionDigits: 1 }),
-    media_categorias: faker.number.float({
-      min: 0,
-      max: 10,
-      fractionDigits: 1,
-    }),
-    data_geracao: faker.date.past(),
-    data_atualizacao: faker.date.recent(),
   })),
 
   feedback_questao: Array.from({ length: 10 }, () => ({
     enunciado: faker.lorem.sentence(),
-    pontuacao: faker.number.int({ min: 1, max: 10 }),
+  })),
+
+  feedback_sessao: Array.from({ length: 10 }, () => ({
+    status: faker.datatype.boolean(),
+    link_forms: faker.internet.url(),
+    data_criacao: faker.date.past(),
+    data_atualizacao: faker.date.recent(),
+  })),
+
+  feedback_avaliacao: Array.from({ length: 10 }, () => ({})),
+
+  feedback_resposta: Array.from({ length: 10 }, () => ({
+    nota: faker.number.int({ min: 1, max: 10 }),
+    data_resposta: faker.date.recent(),
     comentario: faker.lorem.sentence(),
+  })),
+
+  usuarios_em_projetos: Array.from({ length: 10 }, () => ({
+    data_entrada: faker.date.past(),
   })),
 };
 
@@ -216,12 +212,23 @@ async function main() {
     )
   );
 
-  const feedbacks = await Promise.all(
-    mockData.feedback.map((data, i) =>
-      prisma.feedback.create({
+  const feedbackQuestoes = await Promise.all(
+    mockData.feedback_questao.map((data, i) =>
+      prisma.feedback_questao.create({
         data: {
           ...data,
-          fk_usuario_avaliado: usuarios[i % usuarios.length].id_usuario,
+          fk_fb_categoria:
+            feedbackCategorias[i % feedbackCategorias.length].id_fb_categoria,
+        },
+      })
+    )
+  );
+
+  const feedbackSessoes = await Promise.all(
+    mockData.feedback_sessao.map((data, i) =>
+      prisma.feedback_sessao.create({
+        data: {
+          ...data,
           fk_fb_categoria:
             feedbackCategorias[i % feedbackCategorias.length].id_fb_categoria,
           fk_projeto: projetos[i % projetos.length].id_projeto,
@@ -230,24 +237,38 @@ async function main() {
     )
   );
 
-  await Promise.all(
-    mockData.feedback_historico.map((data, i) =>
-      prisma.feedback_historico.create({
+  const feedbackAvaliacoes = await Promise.all(
+    mockData.feedback_avaliacao.map((_, i) =>
+      prisma.feedback_avaliacao.create({
         data: {
-          ...data,
-          fk_feedback: feedbacks[i % feedbacks.length].id_feedback,
+          fk_fb_sessao: feedbackSessoes[i % feedbackSessoes.length].id_sessao,
+          fk_usuario: usuarios[i % usuarios.length].id_usuario,
         },
       })
     )
   );
 
   await Promise.all(
-    mockData.feedback_questao.map((data, i) =>
-      prisma.feedback_questao.create({
+    mockData.feedback_resposta.map((data, i) =>
+      prisma.feedback_resposta.create({
         data: {
           ...data,
-          fk_fb_categoria:
-            feedbackCategorias[i % feedbackCategorias.length].id_fb_categoria,
+          fk_fb_avaliacao:
+            feedbackAvaliacoes[i % feedbackAvaliacoes.length].id_avaliacao,
+          fk_fb_questao:
+            feedbackQuestoes[i % feedbackQuestoes.length].id_questao,
+        },
+      })
+    )
+  );
+
+  await Promise.all(
+    mockData.usuarios_em_projetos.map((data, i) =>
+      prisma.usuarios_em_projetos.create({
+        data: {
+          ...data,
+          fk_usuario: usuarios[i % usuarios.length].id_usuario,
+          fk_projeto: projetos[i % projetos.length].id_projeto,
         },
       })
     )
