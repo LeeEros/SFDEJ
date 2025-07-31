@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { fbQuestaoService } from "./fb-questao-service";
+import { FbQuestaoService } from "./fb-questao-service";
 
-const fbQuestaoService = new fbQuestaoService();
+const fbQuestaoService = new FbQuestaoService();
 
 export class FbQuestaoController {
   async findAll(request: Request, response: Response) {
