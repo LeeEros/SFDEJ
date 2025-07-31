@@ -3,7 +3,7 @@ import { AppError } from "@/utils/AppError";
 import { feedback_questao } from "@prisma/client";
 import { feedbackQuestaoSchema } from "./fb-questao.schema";
 
-export class FbQuestaoService {
+export class fbQuestaoService {
   async findAll() {
     const fb_questao = await prisma.feedback_questao.findMany({
       orderBy: { id_questao: "asc" },

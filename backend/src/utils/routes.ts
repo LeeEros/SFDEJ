@@ -6,6 +6,7 @@ import { federacaoRoutes } from "@/modules/federacao/federacao-routes";
 import { fbAvalicaoRoutes } from "@/modules/feedback/fb-avaliacao/fb-avaliacao-routes";
 import { fbCategoriaRoutes } from "@/modules/feedback/fb-categoria/fb-categoria-routes";
 import { fbQuestaoRoutes } from "@/modules/feedback/fb-questao/fb-questao-routes";
+import { fbRespostaRoutes } from "@/modules/feedback/fb-resposta/fb-resposta-routes";
 import { feedbackRoutes } from "@/modules/feedback/fb-sessao/feedback-routes";
 import { instRoutes } from "@/modules/instituicao/insituicao-routes";
 import { categoriaRoutes } from "@/modules/projeto/categoria/categoria-routes";
@@ -16,19 +17,28 @@ import { usuariosRoutes } from "@/modules/usuario/usuarios-routes";
 import { Router } from "express";
 
 const routes = Router();
+
+// Middleware
 routes.use("/login", sessaoRoutes);
 routes.use("/usuarios", usuariosRoutes);
 
+//sistema
 routes.use("/clientes", clienteRoutes);
 routes.use("/diretorias", diretoriasRoutes);
 routes.use("/ejs", ejRoutes);
 routes.use("/enderecos", enderecoRoutes);
+routes.use("/instituicoes", instRoutes);
+routes.use("/federacoes", federacaoRoutes);
+
+//feedback
+
 routes.use("/feedback", feedbackRoutes);
 routes.use("/fb-categorias", fbCategoriaRoutes);
 routes.use("/fb-avaliacao", fbAvalicaoRoutes);
 routes.use("/fb-questoes", fbQuestaoRoutes);
-routes.use("/instituicoes", instRoutes);
-routes.use("/federacoes", federacaoRoutes);
+routes.use("/fb-respostas", fbRespostaRoutes);
+
+//prjetos
 
 routes.use("/projetos", projetoRoutes);
 routes.use("/projetos-categorias", categoriaRoutes);
