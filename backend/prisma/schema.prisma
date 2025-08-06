@@ -33,20 +33,7 @@ model usuarios {
   fk_ej Int?
   ej    ej?  @relation(fields: [fk_ej], references: [id_ej])
 
-  feedback_avaliado    feedback_avaliacao[]
-  usuarios_em_projetos usuarios_em_projetos[]
-}
-
-model usuarios_em_projetos {
-  fk_usuario Int
-  usuario    usuarios @relation(fields: [fk_usuario], references: [id_usuario])
-
-  fk_projeto Int
-  projeto    projeto @relation(fields: [fk_projeto], references: [id_projeto])
-
-  data_entrada DateTime @default(now())
-
-  @@id([fk_usuario, fk_projeto])
+  feedback_avaliado feedback_avaliacao[]
 }
 
 enum permissao {
@@ -196,8 +183,7 @@ model projeto {
   fk_cliente   Int?
   cliente      cliente?   @relation(fields: [fk_cliente], references: [id_cliente])
 
-  feedback_sessao      feedback_sessao[]
-  usuarios_em_projetos usuarios_em_projetos[]
+  feedback_sessao feedback_sessao[]
 }
 
 enum status_projeto {

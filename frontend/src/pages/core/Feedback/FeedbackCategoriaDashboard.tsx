@@ -21,7 +21,6 @@ export default function FeedbackCategoriaDashboard() {
     const [categoria, setCategoria] = useState("");
     const [descricao, setDescricao] = useState("");
     const [perfil, setPerfil] = useState("hard_skills");
-    const [mediaCategoria, setMediaCategoria] = useState("");
     const [loading, setLoading] = useState(false);
 
     // Estados para edição
@@ -29,7 +28,6 @@ export default function FeedbackCategoriaDashboard() {
     const [editCategoria, setEditCategoria] = useState("");
     const [editDescricao, setEditDescricao] = useState("");
     const [editPerfil, setEditPerfil] = useState("hard_skills");
-    const [editMediaCategoria, setEditMediaCategoria] = useState("");
     const [editLoading, setEditLoading] = useState(false);
 
     const fetchCategorias = async () => {
@@ -47,12 +45,10 @@ export default function FeedbackCategoriaDashboard() {
                 categoria,
                 descricao_categoria: descricao,
                 perfil,
-                media_categoria: mediaCategoria ? Number(mediaCategoria) : null,
             });
             setCategoria("");
             setDescricao("");
             setPerfil("hard_skills");
-            setMediaCategoria("");
             fetchCategorias();
         } catch {
             alert("Erro ao cadastrar categoria de feedback");
@@ -65,7 +61,6 @@ export default function FeedbackCategoriaDashboard() {
         setEditCategoria(c.categoria);
         setEditDescricao(c.descricao_categoria);
         setEditPerfil(c.perfil);
-        setEditMediaCategoria(c.media_categoria ?? "");
     };
 
     const cancelEdit = () => {
@@ -73,7 +68,6 @@ export default function FeedbackCategoriaDashboard() {
         setEditCategoria("");
         setEditDescricao("");
         setEditPerfil("hard_skills");
-        setEditMediaCategoria("");
     };
 
     const handleEditSave = async (id: number) => {
@@ -83,7 +77,6 @@ export default function FeedbackCategoriaDashboard() {
                 categoria: editCategoria,
                 descricao_categoria: editDescricao,
                 perfil: editPerfil,
-                media_categoria: editMediaCategoria ? Number(editMediaCategoria) : null,
             });
             setEditId(null);
             fetchCategorias();
@@ -124,10 +117,6 @@ export default function FeedbackCategoriaDashboard() {
                                 required
                             />
                         </div>
-                        <div>
-                            <Label>Média</Label>
-                            <Input type="number" value={mediaCategoria} onChange={e => setMediaCategoria(e.target.value)} />
-                        </div>
                     </div>
                     <div className="flex justify-end">
                         <Button type="submit" disabled={loading}>{loading ? "Salvando..." : "Cadastrar"}</Button>
@@ -143,7 +132,6 @@ export default function FeedbackCategoriaDashboard() {
                                 <TableCell isHeader className="text-white">Categoria</TableCell>
                                 <TableCell isHeader className="text-white">Descrição</TableCell>
                                 <TableCell isHeader className="text-white">Perfil</TableCell>
-                                <TableCell isHeader className="text-white">Média</TableCell>
                                 <TableCell isHeader className="text-center text-white">Ações</TableCell>
                             </TableRow>
                         </TableHeader>
@@ -187,13 +175,6 @@ export default function FeedbackCategoriaDashboard() {
                                             />
                                         ) : (
                                             c.perfil
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="text-gray-800 dark:text-white">
-                                        {editId === c.id_fb_categoria ? (
-                                            <Input type="number" value={editMediaCategoria} onChange={e => setEditMediaCategoria(e.target.value)} />
-                                        ) : (
-                                            c.media_categoria ?? "—"
                                         )}
                                     </TableCell>
                                     <TableCell className="text-center py-3">

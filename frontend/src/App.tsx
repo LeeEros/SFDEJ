@@ -28,9 +28,9 @@ import EJDashboard from "./pages/core/EJ/EJDashboard";
 import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
 import FeedbackCategoriaDashboard from "./pages/core/Feedback/FeedbackCategoriaDashboard";
-import FeedbackDashboard from "./pages/core/Feedback/FeedbackDashboard";
 import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackQuestaoDashboard";
-import FbHistoricoDashboard from "./pages/core/Feedback/FeedbackHistoricoDashboard";
+import FeedbackRespostasDashboard from "./pages/core/Feedback/FeedbackRespostaDashboard";
+import FeedbackSessaoDashboard from "./pages/core/Feedback/FeedbackSessaoDashboard";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
@@ -159,10 +159,10 @@ export default function App() {
             />
 
             <Route
-              path="/feedbacks"
+              path="/feedback"
               element={
                 <AutenticarRota>
-                  <FeedbackDashboard />
+                  <FeedbackSessaoDashboard />
                 </AutenticarRota>
               }
             />
@@ -186,10 +186,10 @@ export default function App() {
             />
 
             <Route
-              path="/feedback-historico"
+              path="/feedback-respostas"
               element={
                 <AutenticarRota>
-                  <FbHistoricoDashboard />
+                  <FeedbackRespostasDashboard />
                 </AutenticarRota>
               }
             />
