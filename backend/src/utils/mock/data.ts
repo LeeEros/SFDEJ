@@ -262,18 +262,6 @@ async function main() {
     )
   );
 
-  await Promise.all(
-    mockData.usuarios_em_projetos.map((data, i) =>
-      prisma.usuarios_em_projetos.create({
-        data: {
-          ...data,
-          fk_usuario: usuarios[i % usuarios.length].id_usuario,
-          fk_projeto: projetos[i % projetos.length].id_projeto,
-        },
-      })
-    )
-  );
-
   console.log("Dados fictícios inseridos com sucesso!");
 }
 
