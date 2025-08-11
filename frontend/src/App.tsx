@@ -34,6 +34,7 @@ import FeedbackSessaoDashboard from "./pages/core/Feedback/FeedbackSessaoDashboa
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
+import FeedbackAvaliacaoDashboard from "./pages/core/Feedback/FeedbackAvaliacaoDashboard";
 
 export default function App() {
   return (
@@ -159,13 +160,19 @@ export default function App() {
             />
 
             <Route
-              path="/feedback"
+              path="/feedbacks"
               element={
                 <AutenticarRota>
                   <FeedbackSessaoDashboard />
                 </AutenticarRota>
               }
             />
+
+            <Route path="/feedback-avaliacoes" element={
+              <AutenticarRota>
+                <FeedbackAvaliacaoDashboard />
+              </AutenticarRota>
+            } />
 
             <Route
               path="/feedback-categorias"
