@@ -14,7 +14,7 @@ import {
 import { CheckIcon, PencilIcon, TrashBinIcon, XMarkIcon } from "../../../icons";
 import api from "../../../services/api";
 
-const apiSessao = "/feedback-sessao";
+const apiSessao = "/feedback";
 const apiCategoria = "/fb-categorias";
 const apiProjeto = "/projetos";
 
@@ -131,6 +131,15 @@ export default function FeedbackSessaoDashboard() {
     const [projetos, setProjetos] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
+    // Estados para edição
+    const [editId, setEditId] = useState<number | null>(null);
+    const [editDataCriacao, setEditDataCriacao] = useState("");
+    const [editStatus, setEditStatus] = useState(true);
+    const [editLinkForms, setEditLinkForms] = useState("");
+    const [editFkCategoria, setEditFkCategoria] = useState<number | null>(null);
+    const [editFkProjeto, setEditFkProjeto] = useState<number | null>(null);
+    const [editLoading, setEditLoading] = useState(false);
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -151,6 +160,42 @@ export default function FeedbackSessaoDashboard() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const startEdit = (sessao: any) => {
+        setEditId(sessao.id_sessao);
+        setEditDataCriacao(sessao.data_criacao.slice(0, 10));
+        setEditStatus(sessao.status);
+        setEditLinkForms(sessao.link_forms || "");
+        setEditFkCategoria(sessao.fk_fb_categoria);
+        setEditFkProjeto(sessao.fk_projeto);
+    };
+
+    const cancelEdit = () => {
+        setEditId(null);
+        setEditDataCriacao("");
+        setEditStatus(true);
+        setEditLinkForms("");
+        setEditFkCategoria(null);
+        setEditFkProjeto(null);
+    };
+
+    const handleEditSave = async (id: number) => {
+        setEditLoading(true);
+        try {
+            await api.put(`${apiSessao}/${id}`, {
+                data_criacao: editDataCriacao,
+                status: editStatus,
+                link_forms: editLinkForms,
+                fk_fb_categoria: editFkCategoria,
+                fk_projeto: editFkProjeto,
+            });
+            setEditId(null);
+            fetchData();
+        } catch {
+            alert("Erro ao editar sessão");
+        }
+        setEditLoading(false);
+    };
 
     const handleDelete = async (id: number) => {
         if (!window.confirm("Deseja remover?")) return;
@@ -187,7 +232,7 @@ export default function FeedbackSessaoDashboard() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {sessoes.map((s, idx) => (
+                                {sessoes.map((s: any, idx: number) => (
                                     <TableRow
                                         key={s.id_sessao}
                                         className={`
@@ -201,30 +246,113 @@ export default function FeedbackSessaoDashboard() {
                                     >
                                         <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{s.id_sessao}</TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {new Date(s.data_criacao).toLocaleDateString()}
+                                            {editId === s.id_sessao ? (
+                                                <Input
+                                                    type="date"
+                                                    value={editDataCriacao}
+                                                    onChange={e => setEditDataCriacao(e.target.value)}
+                                                />
+                                            ) : (
+                                                new Date(s.data_criacao).toLocaleDateString()
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {s.status ? "Ativo" : "Inativo"}
+                                            {editId === s.id_sessao ? (
+                                                <Select
+                                                    options={[
+                                                        { label: "Ativo", value: true },
+                                                        { label: "Inativo", value: false },
+                                                    ]}
+                                                    value={editStatus}
+                                                    onChange={val => setEditStatus(String(val) === "true")}
+                                                />
+                                            ) : (
+                                                s.status ? "Ativo" : "Inativo"
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {s.link_forms || "—"}
+                                            {editId === s.id_sessao ? (
+                                                <Input
+                                                    value={editLinkForms}
+                                                    onChange={e => setEditLinkForms(e.target.value)}
+                                                />
+                                            ) : (
+                                                s.link_forms || "—"
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {categorias.find(c => c.id_fb_categoria === s.fk_fb_categoria)?.categoria || "—"}
+                                            {editId === s.id_sessao ? (
+                                                <Select
+                                                    options={categorias.map(c => ({
+                                                        label: c.categoria,
+                                                        value: c.id_fb_categoria,
+                                                    }))}
+                                                    value={editFkCategoria}
+                                                    onChange={val => setEditFkCategoria(Number(val))}
+                                                />
+                                            ) : (
+                                                categorias.find(c => c.id_fb_categoria === s.fk_fb_categoria)?.categoria || "—"
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {projetos.find(p => p.id_projeto === s.fk_projeto)?.nome || "—"}
+                                            {editId === s.id_sessao ? (
+                                                <Select
+                                                    options={projetos.map(p => ({
+                                                        label: p.nome,
+                                                        value: p.id_projeto,
+                                                    }))}
+                                                    value={editFkProjeto}
+                                                    onChange={val => setEditFkProjeto(Number(val))}
+                                                />
+                                            ) : (
+                                                projetos.find(p => p.id_projeto === s.fk_projeto)?.nome || "—"
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-center py-3">
-                                            <Button
-                                                size="sm"
-                                                variant="danger"
-                                                className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
-                                                onClick={() => handleDelete(s.id_sessao)}
-                                                startIcon={<TrashBinIcon className="size-4" />}
-                                            >
-                                                Excluir
-                                            </Button>
+                                            {editId === s.id_sessao ? (
+                                                <div className="flex justify-center gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="success"
+                                                        className="py-2 px-4 bg-success-600 hover:bg-success-700 text-white rounded shadow"
+                                                        onClick={() => handleEditSave(s.id_sessao)}
+                                                        disabled={editLoading}
+                                                        startIcon={<CheckIcon className="size-4" />}
+                                                    >
+                                                        Salvar
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="py-2 px-4 !bg-gray-600 hover:!bg-gray-700 text-white rounded shadow"
+                                                        onClick={cancelEdit}
+                                                        startIcon={<XMarkIcon className="size-4" />}
+                                                    >
+                                                        Cancelar
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex justify-center gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="primary"
+                                                        className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
+                                                        onClick={() => startEdit(s)}
+                                                        startIcon={<PencilIcon className="size-4" />}
+                                                    >
+                                                        Editar
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="danger"
+                                                        className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
+                                                        onClick={() => handleDelete(s.id_sessao)}
+                                                        startIcon={<TrashBinIcon className="size-4" />}
+                                                    >
+                                                        Excluir
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 ))}
