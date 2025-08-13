@@ -90,12 +90,13 @@ export const mockData = {
 
   feedback_sessao: Array.from({ length: 10 }, () => ({
     status: faker.datatype.boolean(),
-    link_forms: faker.internet.url(),
     data_criacao: faker.date.past(),
     data_atualizacao: faker.date.recent(),
   })),
 
-  feedback_avaliacao: Array.from({ length: 10 }, () => ({})),
+  feedback_avaliacao: Array.from({ length: 10 }, () => ({
+    link_forms: faker.internet.url(),
+  })),
 
   feedback_resposta: Array.from({ length: 10 }, () => ({
     nota: faker.number.int({ min: 1, max: 10 }),
@@ -238,9 +239,10 @@ async function main() {
   );
 
   const feedbackAvaliacoes = await Promise.all(
-    mockData.feedback_avaliacao.map((_, i) =>
+    mockData.feedback_avaliacao.map((data, i) =>
       prisma.feedback_avaliacao.create({
         data: {
+          ...data,
           fk_fb_sessao: feedbackSessoes[i % feedbackSessoes.length].id_sessao,
           fk_usuario: usuarios[i % usuarios.length].id_usuario,
         },

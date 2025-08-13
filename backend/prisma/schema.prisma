@@ -132,7 +132,6 @@ model feedback_sessao {
   data_criacao     DateTime  @default(now())
   data_atualizacao DateTime? @updatedAt
   status           Boolean   @default(true)
-  link_forms       String?   @db.VarChar(255)
 
   fk_fb_categoria    Int?
   feedback_categoria feedback_categoria? @relation(fields: [fk_fb_categoria], references: [id_fb_categoria])
@@ -144,7 +143,8 @@ model feedback_sessao {
 }
 
 model feedback_avaliacao {
-  id_avaliacao Int @id @default(autoincrement())
+  id_avaliacao Int     @id @default(autoincrement())
+  link_forms   String? @db.VarChar(255)
 
   fk_fb_sessao Int
   sessao       feedback_sessao @relation(fields: [fk_fb_sessao], references: [id_sessao])
