@@ -8,7 +8,6 @@ import Calendar from "./pages/Calendar";
 import BarChart from "./pages/Charts/BarChart";
 import LineChart from "./pages/Charts/LineChart";
 import Home from "./pages/Dashboard/Home";
-import FormElements from "./pages/Forms/FormElements";
 import NotFound from "./pages/OtherPage/NotFound";
 import BasicTables from "./pages/Tables/BasicTables";
 import Alerts from "./pages/UiElements/Alerts";
@@ -18,7 +17,6 @@ import Buttons from "./pages/UiElements/Buttons";
 import Images from "./pages/UiElements/Images";
 import Videos from "./pages/UiElements/Videos";
 import UserProfiles from "./pages/UserProfiles";
-
 import AutenticarRota from "./components/rotasAutenticadas";
 import AppFooter from "./layout/AppFooter";
 import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
@@ -35,6 +33,7 @@ import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard"
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
 import FeedbackAvaliacaoDashboard from "./pages/core/Feedback/FeedbackAvaliacaoDashboard";
+import FormElements from "./pages/forms/FormElements";
 
 export default function App() {
   return (
