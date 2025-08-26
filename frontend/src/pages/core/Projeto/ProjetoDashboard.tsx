@@ -14,22 +14,72 @@ import {
 } from "../../../components/ui/table";
 import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon, PaperPlaneIcon } from "../../../icons";
 
-
 const apiProjeto = "/projetos";
 const apiCategoria = "/projetos-categorias";
 const apiCliente = "/clientes";
+
+const formatarDataBR = (dataISO: string) => {
+    if (!dataISO) return "";
+    try {
+        const data = new Date(dataISO);
+        if (isNaN(data.getTime())) return dataISO;
+
+        return data.toLocaleDateString('pt-BR');
+    } catch {
+        return dataISO;
+    }
+};
+
+const converterDataBRparaISO = (dataBR: string): string | null => {
+    if (!dataBR) return null;
+
+    try {
+        const partes = dataBR.split('/');
+        if (partes.length !== 3) return null;
+
+        const [dia, mes, ano] = partes;
+        if (dia.length !== 2 || mes.length !== 2 || ano.length !== 4) return null;
+
+        const diaNum = parseInt(dia, 10);
+        const mesNum = parseInt(mes, 10);
+        const anoNum = parseInt(ano, 10);
+
+        if (isNaN(diaNum) || isNaN(mesNum) || isNaN(anoNum)) return null;
+        if (mesNum < 1 || mesNum > 12) return null;
+        if (diaNum < 1 || diaNum > 31) return null;
+
+        return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+    } catch {
+        return null;
+    }
+};
+
+const formatarDataInput = (valor: string): string => {
+
+    let valorFormatado = valor.replace(/\D/g, '');
+
+    if (valorFormatado.length > 4) {
+        valorFormatado = valorFormatado.replace(/^(\d{2})(\d{2})(\d{0,4})/, '$1/$2/$3');
+    } else if (valorFormatado.length > 2) {
+        valorFormatado = valorFormatado.replace(/^(\d{2})(\d{0,2})/, '$1/$2');
+    }
+
+    return valorFormatado;
+};
 
 function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => void, categorias: any[], clientes: any[] }) {
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [status, setStatus] = useState("");
     const [data_assinatura, setDataAssinatura] = useState("");
+    const [data_conclusao, setDataConclusao] = useState("");
     const [valor, setValor] = useState("");
     const [fk_categoria, setFkCategoria] = useState<number | null>(null);
     const [fk_cliente, setFkCliente] = useState<number | null>(null);
     const [anexo, setAnexo] = useState<File | null>(null);
     const [anexoError, setAnexoError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [erros, setErros] = useState<string[]>([]);
 
     const statusOptions = [
         { label: "Negociação", value: "NEGOCIACAO" },
@@ -51,42 +101,139 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
         }
     };
 
+    const handleDataChange = (campo: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const valor = e.target.value;
+        const valorFormatado = formatarDataInput(valor);
+
+        if (campo === 'data_assinatura') {
+            setDataAssinatura(valorFormatado);
+        } else if (campo === 'data_conclusao') {
+            setDataConclusao(valorFormatado);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setErros([]);
 
-        const formData = new FormData();
-        formData.append("nome", nome);
-        formData.append("descricao", descricao);
-        formData.append("status", status);
-        formData.append("data_assinatura", data_assinatura);
-        formData.append("valor", valor);
-        if (fk_categoria) formData.append("fk_categoria", String(fk_categoria));
-        if (fk_cliente) formData.append("fk_cliente", String(fk_cliente));
-        if (anexo) formData.append("anexo", anexo);
+        if (!nome || !descricao || !status) {
+            setErros(["Nome, descrição e status são campos obrigatórios"]);
+            setLoading(false);
+            return;
+        }
+
+        const projetoData: any = {
+            nome,
+            descricao,
+            status,
+        };
+
+        if (data_assinatura) {
+            const dataISO = converterDataBRparaISO(data_assinatura);
+            if (dataISO) {
+                projetoData.data_assinatura = dataISO;
+            }
+        }
+
+        if (data_conclusao) {
+            const dataISO = converterDataBRparaISO(data_conclusao);
+            if (dataISO) {
+                projetoData.data_conclusao = dataISO;
+            }
+        }
+
+        if (valor) {
+            projetoData.valor = Number(valor);
+        }
+
+        if (fk_categoria) {
+            projetoData.fk_categoria = fk_categoria;
+        }
+
+        if (fk_cliente) {
+            projetoData.fk_cliente = fk_cliente;
+        }
+
+        console.log("Dados do projeto:", projetoData);
 
         try {
-            await api.post(apiProjeto, formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            if (anexo) {
+                const formData = new FormData();
+
+                Object.keys(projetoData).forEach(key => {
+                    formData.append(key, projetoData[key]);
+                });
+
+                formData.append("anexo", anexo);
+
+                await api.post(apiProjeto, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                });
+            } else {
+                await api.post(apiProjeto, projetoData);
+            }
+
             setNome("");
             setDescricao("");
             setStatus("");
             setDataAssinatura("");
+            setDataConclusao("");
             setValor("");
             setFkCategoria(null);
             setFkCliente(null);
             setAnexo(null);
             setAnexoError(null);
+            setErros([]);
+
             onSuccess();
-        } catch {
-            alert("Erro ao cadastrar projeto");
+        } catch (error: any) {
+            console.error("Erro ao cadastrar projeto:", error);
+
+            if (error.response?.data) {
+                console.error("Resposta de erro da API:", error.response.data);
+
+                if (error.response.data.issues) {
+                    const validationErrors: string[] = [];
+                    Object.keys(error.response.data.issues).forEach(field => {
+                        if (field !== "_errors" && error.response.data.issues[field]._errors) {
+                            error.response.data.issues[field]._errors.forEach((err: string) => {
+                                validationErrors.push(`${field}: ${err}`);
+                            });
+                        }
+                    });
+
+                    if (validationErrors.length > 0) {
+                        setErros(validationErrors);
+                    } else {
+                        alert("Erro de validação. Verifique os dados informados.");
+                    }
+                } else if (error.response.data.message) {
+                    alert(`Erro ao cadastrar projeto: ${error.response.data.message}`);
+                } else {
+                    alert("Erro ao cadastrar projeto. Verifique os dados e tente novamente.");
+                }
+            } else {
+                alert("Erro ao cadastrar projeto. Verifique os dados e tente novamente.");
+            }
         }
         setLoading(false);
     };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Exibir erros de validação */}
+            {erros.length > 0 && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    <strong className="font-bold">Erros de validação:</strong>
+                    <ul className="list-disc list-inside mt-2">
+                        {erros.map((erro, index) => (
+                            <li key={index}>{erro}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
                 <div>
                     <Label htmlFor="nome" required>Nome</Label>
@@ -126,10 +273,21 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                     <Input
                         id="data_assinatura"
                         name="data_assinatura"
-                        type="date"
                         value={data_assinatura}
-                        onChange={e => setDataAssinatura(e.target.value)}
-                        required
+                        onChange={handleDataChange('data_assinatura')}
+                        placeholder="dd/mm/aaaa"
+                        maxLength={10}
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="data_conclusao">Data Conclusão</Label>
+                    <Input
+                        id="data_conclusao"
+                        name="data_conclusao"
+                        value={data_conclusao}
+                        onChange={handleDataChange('data_conclusao')}
+                        placeholder="dd/mm/aaaa"
+                        maxLength={10}
                     />
                 </div>
                 <div>
@@ -141,7 +299,6 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                         value={valor}
                         onChange={e => setValor(e.target.value)}
                         placeholder="Valor"
-                        required
                     />
                 </div>
                 <div>
@@ -154,7 +311,6 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                         value={fk_categoria}
                         onChange={val => setFkCategoria(Number(val))}
                         placeholder="Selecione a categoria"
-                        required
                     />
                 </div>
                 <div>
@@ -167,7 +323,6 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
                         value={fk_cliente}
                         onChange={val => setFkCliente(Number(val))}
                         placeholder="Selecione o cliente"
-                        required
                     />
                 </div>
                 <div>
@@ -207,7 +362,6 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
         </form>
     );
 }
-
 export default function ProjetoDashboard() {
     const [projetos, setProjetos] = useState<any[]>([]);
     const [categorias, setCategorias] = useState<any[]>([]);
@@ -218,6 +372,7 @@ export default function ProjetoDashboard() {
     const [editDescricao, setEditDescricao] = useState("");
     const [editStatus, setEditStatus] = useState("");
     const [editDataAssinatura, setEditDataAssinatura] = useState("");
+    const [editDataConclusao, setEditDataConclusao] = useState("");
     const [editValor, setEditValor] = useState("");
     const [editFkCategoria, setEditFkCategoria] = useState<number | null>(null);
     const [editFkCliente, setEditFkCliente] = useState<number | null>(null);
@@ -241,7 +396,8 @@ export default function ProjetoDashboard() {
             setProjetos(projRes.data);
             setCategorias(catRes.data);
             setClientes(cliRes.data);
-        } catch {
+        } catch (error) {
+            console.error("Erro ao carregar dados:", error);
             alert("Erro ao carregar dados");
         }
         setLoading(false);
@@ -253,8 +409,24 @@ export default function ProjetoDashboard() {
 
     const handleDelete = async (id: number) => {
         if (!window.confirm("Deseja remover?")) return;
-        await api.delete(`${apiProjeto}/${id}`);
-        fetchData();
+        try {
+            await api.delete(`${apiProjeto}/${id}`);
+            fetchData();
+        } catch (error) {
+            console.error("Erro ao excluir projeto:", error);
+            alert("Erro ao excluir projeto");
+        }
+    };
+
+    const handleEditDataChange = (campo: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const valor = e.target.value;
+        const valorFormatado = formatarDataInput(valor);
+
+        if (campo === 'data_assinatura') {
+            setEditDataAssinatura(valorFormatado);
+        } else if (campo === 'data_conclusao') {
+            setEditDataConclusao(valorFormatado);
+        }
     };
 
     const startEdit = (p: any) => {
@@ -262,7 +434,9 @@ export default function ProjetoDashboard() {
         setEditNome(p.nome);
         setEditDescricao(p.descricao);
         setEditStatus(p.status);
-        setEditDataAssinatura(p.data_assinatura ? p.data_assinatura.slice(0, 10) : "");
+        // Formata as datas para o padrão brasileiro ao editar
+        setEditDataAssinatura(p.data_assinatura ? formatarDataBR(p.data_assinatura) : "");
+        setEditDataConclusao(p.data_conclusao ? formatarDataBR(p.data_conclusao) : "");
         setEditValor(p.valor);
         setEditFkCategoria(p.fk_categoria);
         setEditFkCliente(p.fk_cliente);
@@ -274,6 +448,7 @@ export default function ProjetoDashboard() {
         setEditDescricao("");
         setEditStatus("");
         setEditDataAssinatura("");
+        setEditDataConclusao("");
         setEditValor("");
         setEditFkCategoria(null);
         setEditFkCliente(null);
@@ -282,19 +457,75 @@ export default function ProjetoDashboard() {
     const handleEditSave = async (id: number) => {
         setEditLoading(true);
         try {
-            await api.put(`${apiProjeto}/${id}`, {
+            // Preparar dados para envio
+            const dados: any = {
                 nome: editNome,
                 descricao: editDescricao,
                 status: editStatus,
-                data_assinatura: editDataAssinatura,
-                valor: Number(editValor),
-                fk_categoria: editFkCategoria,
-                fk_cliente: editFkCliente,
-            });
+            };
+
+            // Adicionar campos opcionais apenas se tiverem valor
+            if (editValor) {
+                dados.valor = Number(editValor);
+            }
+
+            if (editFkCategoria) {
+                dados.fk_categoria = editFkCategoria;
+            }
+
+            if (editFkCliente) {
+                dados.fk_cliente = editFkCliente;
+            }
+
+            // Converter datas do formato BR para ISO se existirem
+            if (editDataAssinatura) {
+                const dataISO = converterDataBRparaISO(editDataAssinatura);
+                if (dataISO) {
+                    dados.data_assinatura = dataISO;
+                }
+            }
+
+            if (editDataConclusao) {
+                const dataISO = converterDataBRparaISO(editDataConclusao);
+                if (dataISO) {
+                    dados.data_conclusao = dataISO;
+                }
+            }
+
+            await api.put(`${apiProjeto}/${id}`, dados);
             setEditId(null);
             fetchData();
-        } catch {
-            alert("Erro ao editar projeto");
+        } catch (error: any) {
+            console.error("Erro ao editar projeto:", error);
+
+            // Exibir mensagem de erro mais específica se disponível
+            if (error.response?.data) {
+                console.error("Resposta de erro da API:", error.response.data);
+
+                if (error.response.data.issues) {
+                    const validationErrors: string[] = [];
+
+                    Object.keys(error.response.data.issues).forEach(field => {
+                        if (field !== "_errors" && error.response.data.issues[field]._errors) {
+                            error.response.data.issues[field]._errors.forEach((err: string) => {
+                                validationErrors.push(`${field}: ${err}`);
+                            });
+                        }
+                    });
+
+                    if (validationErrors.length > 0) {
+                        alert(`Erro de validação: ${validationErrors.join(', ')}`);
+                    } else {
+                        alert("Erro de validação. Verifique os dados informados.");
+                    }
+                } else if (error.response.data.message) {
+                    alert(`Erro ao editar projeto: ${error.response.data.message}`);
+                } else {
+                    alert("Erro ao editar projeto. Verifique os dados e tente novamente.");
+                }
+            } else {
+                alert("Erro ao editar projeto. Verifique os dados e tente novamente.");
+            }
         }
         setEditLoading(false);
     };
@@ -319,6 +550,7 @@ export default function ProjetoDashboard() {
                                     <TableCell isHeader className="text-white">Descrição</TableCell>
                                     <TableCell isHeader className="text-white">Status</TableCell>
                                     <TableCell isHeader className="text-white">Data Assinatura</TableCell>
+                                    <TableCell isHeader className="text-white">Data Conclusão</TableCell>
                                     <TableCell isHeader className="text-white">Valor</TableCell>
                                     <TableCell isHeader className="text-white">Categoria</TableCell>
                                     <TableCell isHeader className="text-white">Cliente</TableCell>
@@ -372,12 +604,25 @@ export default function ProjetoDashboard() {
                                         <TableCell className="text-gray-800 dark:text-white">
                                             {editId === p.id_projeto ? (
                                                 <Input
-                                                    type="date"
                                                     value={editDataAssinatura}
-                                                    onChange={e => setEditDataAssinatura(e.target.value)}
+                                                    onChange={handleEditDataChange('data_assinatura')}
+                                                    placeholder="dd/mm/aaaa"
+                                                    maxLength={10}
                                                 />
                                             ) : (
-                                                p.data_assinatura ? new Date(p.data_assinatura).toLocaleDateString() : ""
+                                                formatarDataBR(p.data_assinatura)
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
+                                            {editId === p.id_projeto ? (
+                                                <Input
+                                                    value={editDataConclusao}
+                                                    onChange={handleEditDataChange('data_conclusao')}
+                                                    placeholder="dd/mm/aaaa"
+                                                    maxLength={10}
+                                                />
+                                            ) : (
+                                                formatarDataBR(p.data_conclusao)
                                             )}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
