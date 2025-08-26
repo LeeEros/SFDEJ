@@ -4,12 +4,12 @@ export const projetoSchema = z.object({
   nome: z.string().min(3, "Nome deve conter no mínimo 3 letras"),
   descricao: z.string().min(3, "Descrição deve conter no mínimo 3 letras"),
   status: z.enum(["NEGOCIACAO", "EM_ANDAMENTO", "FINALIZADO", "CANCELADO"]),
-  data_assinatura: z
-    .string()
-    .transform((data) => new Date(data))
+  data_assinatura: z.coerce.date().optional(),
+  data_conclusao: z.coerce.date().optional(),
+  valor: z
+    .union([z.string(), z.number()])
+    .transform((val) => (typeof val === "string" ? parseFloat(val) : val))
     .optional(),
-  data_conclusao: z.date().optional(),
-  valor: z.number().optional(),
   anexo: z
     .instanceof(File)
     .refine((file) => file.size <= 10 * 1024 * 1024, {
