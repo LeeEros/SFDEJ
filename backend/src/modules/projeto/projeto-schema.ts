@@ -9,7 +9,7 @@ export const projetoSchema = z.object({
     .transform((data) => new Date(data))
     .optional(),
   data_conclusao: z.date().optional(),
-  valor: z.number(),
+  valor: z.number().optional(),
   anexo: z
     .instanceof(File)
     .refine((file) => file.size <= 10 * 1024 * 1024, {
