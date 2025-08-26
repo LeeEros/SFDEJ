@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
+import { EyeCloseIcon, EyeIcon } from "../../icons";
+import api from "../../services/api";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
-import Checkbox from "../form/input/Checkbox";
 import Button from "../ui/button/Button";
-import api from "../../services/api";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,18 +80,6 @@ export default function SignInForm() {
                 </div>
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Checkbox checked={isChecked} onChange={setIsChecked} />
-                  <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                    Manter conectado
-                  </span>
-                </div>
-                <a
-                  href="/reset-password"
-                  className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                >
-                  Esqueceu a senha?
-                </a>
               </div>
               <div>
                 <Button className="w-full" size="sm" disabled={loading}>
