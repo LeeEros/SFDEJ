@@ -188,7 +188,7 @@ model projeto {
 
 enum status_projeto {
   NEGOCIACAO
-  EM_ANDAMENTO
+  DESENVOLVIMENTO
   FINALIZADO
   CANCELADO
 }

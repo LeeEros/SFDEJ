@@ -83,7 +83,7 @@ function ProjetoForm({ onSuccess, categorias, clientes }: { onSuccess: () => voi
 
     const statusOptions = [
         { label: "Negociação", value: "NEGOCIACAO" },
-        { label: "Em andamento", value: "EM_ANDAMENTO" },
+        { label: "Em Desenvolvimento", value: "DESENVOLVIMENTO" },
         { label: "Finalizado", value: "FINALIZADO" },
         { label: "Cancelado", value: "CANCELADO" },
     ];
@@ -380,7 +380,7 @@ export default function ProjetoDashboard() {
 
     const statusOptions = [
         { label: "Negociação", value: "NEGOCIACAO" },
-        { label: "Em andamento", value: "EM_ANDAMENTO" },
+        { label: "Em Desenvolvimento", value: "DESENVOLVIMENTO" },
         { label: "Finalizado", value: "FINALIZADO" },
         { label: "Cancelado", value: "CANCELADO" },
     ];
@@ -434,7 +434,6 @@ export default function ProjetoDashboard() {
         setEditNome(p.nome);
         setEditDescricao(p.descricao);
         setEditStatus(p.status);
-        // Formata as datas para o padrão brasileiro ao editar
         setEditDataAssinatura(p.data_assinatura ? formatarDataBR(p.data_assinatura) : "");
         setEditDataConclusao(p.data_conclusao ? formatarDataBR(p.data_conclusao) : "");
         setEditValor(p.valor);
@@ -457,14 +456,12 @@ export default function ProjetoDashboard() {
     const handleEditSave = async (id: number) => {
         setEditLoading(true);
         try {
-            // Preparar dados para envio
             const dados: any = {
                 nome: editNome,
                 descricao: editDescricao,
                 status: editStatus,
             };
 
-            // Adicionar campos opcionais apenas se tiverem valor
             if (editValor) {
                 dados.valor = Number(editValor);
             }
@@ -477,11 +474,14 @@ export default function ProjetoDashboard() {
                 dados.fk_cliente = editFkCliente;
             }
 
-            // Converter datas do formato BR para ISO se existirem
             if (editDataAssinatura) {
                 const dataISO = converterDataBRparaISO(editDataAssinatura);
                 if (dataISO) {
                     dados.data_assinatura = dataISO;
+                } else {
+                    alert("Data de assinatura inválida.");
+                    setEditLoading(false);
+                    return;
                 }
             }
 
@@ -489,6 +489,10 @@ export default function ProjetoDashboard() {
                 const dataISO = converterDataBRparaISO(editDataConclusao);
                 if (dataISO) {
                     dados.data_conclusao = dataISO;
+                } else {
+                    alert("Data de conclusão inválida.");
+                    setEditLoading(false);
+                    return;
                 }
             }
 
@@ -498,7 +502,6 @@ export default function ProjetoDashboard() {
         } catch (error: any) {
             console.error("Erro ao editar projeto:", error);
 
-            // Exibir mensagem de erro mais específica se disponível
             if (error.response?.data) {
                 console.error("Resposta de erro da API:", error.response.data);
 

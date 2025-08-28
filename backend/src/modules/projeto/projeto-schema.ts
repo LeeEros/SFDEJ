@@ -3,7 +3,7 @@ import z from "zod";
 export const projetoSchema = z.object({
   nome: z.string().min(3, "Nome deve conter no mínimo 3 letras"),
   descricao: z.string().min(3, "Descrição deve conter no mínimo 3 letras"),
-  status: z.enum(["NEGOCIACAO", "EM_ANDAMENTO", "FINALIZADO", "CANCELADO"]),
+  status: z.enum(["NEGOCIACAO", "DESENVOLVIMENTO", "FINALIZADO", "CANCELADO"]),
   data_assinatura: z.coerce.date().optional(),
   data_conclusao: z.coerce.date().optional(),
   valor: z

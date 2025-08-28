@@ -66,19 +66,24 @@ export class ProjetoService {
       throw new AppError("Projeto não encontrado.", 404);
     }
 
-    if (projeto.status === "FINALIZADO") {
-      await prisma.projeto.update({
-        where: { id_projeto: id },
-        data: {
-          data_conclusao: new Date(),
-        },
-      });
-    }
+    const datasValidadas = {
+      ...projeto,
+      data_assinatura: data.data_assinatura
+        ? new Date(data.data_assinatura).toISOString()
+        : null,
+      data_conclusao: data.data_conclusao
+        ? new Date(data.data_conclusao).toISOString()
+        : null,
+    };
+
+    console.log(projeto);
 
     const projetoAtualizado = await prisma.projeto.update({
       where: { id_projeto: id },
-      data,
+      data: datasValidadas,
     });
+
+    console.log(projetoAtualizado + "att");
 
     if (!projetoAtualizado) {
       throw new AppError("Não foi possível atualizar projeto.", 400);
