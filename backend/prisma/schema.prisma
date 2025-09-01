@@ -131,6 +131,7 @@ model feedback_sessao {
   id_sessao        Int       @id @default(autoincrement())
   data_criacao     DateTime  @default(now())
   data_atualizacao DateTime? @updatedAt
+  data_fim         DateTime?
   status           Boolean   @default(true)
 
   fk_fb_categoria    Int?
