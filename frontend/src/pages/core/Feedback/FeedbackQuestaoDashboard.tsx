@@ -22,14 +22,11 @@ export default function FeedbackQuestaoDashboard() {
     const [categorias, setCategorias] = useState<any[]>([]);
     const [enunciado, setEnunciado] = useState("");
     const [comentario, setComentario] = useState("");
-    const [pontuacao, setPontuacao] = useState("");
     const [fk_fb_categoria, setFkFbCategoria] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
 
     const [editId, setEditId] = useState<number | null>(null);
     const [editEnunciado, setEditEnunciado] = useState("");
-    const [editComentario, setEditComentario] = useState("");
-    const [editPontuacao, setEditPontuacao] = useState("");
     const [editFkFbCategoria, setEditFkFbCategoria] = useState<number | null>(null);
     const [editLoading, setEditLoading] = useState(false);
 
@@ -58,12 +55,10 @@ export default function FeedbackQuestaoDashboard() {
             await api.post(apiQuestao, {
                 enunciado,
                 comentario,
-                pontuacao: Number(pontuacao),
                 fk_fb_categoria,
             });
             setEnunciado("");
             setComentario("");
-            setPontuacao("");
             setFkFbCategoria(null);
             fetchData();
         } catch {
@@ -121,10 +116,6 @@ export default function FeedbackQuestaoDashboard() {
                         <div>
                             <Label className="dark:text-white">Comentário</Label>
                             <Input value={comentario} onChange={e => setComentario(e.target.value)} />
-                        </div>
-                        <div>
-                            <Label className="dark:text-white">Pontuação</Label>
-                            <Input type="number" value={pontuacao} onChange={e => setPontuacao(e.target.value)} required />
                         </div>
                         <div>
                             <Label className="dark:text-white">Categoria</Label>
