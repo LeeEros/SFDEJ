@@ -11,40 +11,91 @@ import {
     TableHeader,
     TableRow,
 } from "../../../components/ui/table";
-import { CheckIcon, PencilIcon, TrashBinIcon, XMarkIcon } from "../../../icons";
+import { AlertIcon, TrashBinIcon } from "../../../icons";
 import api from "../../../services/api";
 
 const apiSessao = "/feedback";
 const apiCategoria = "/fb-categorias";
 const apiProjeto = "/projetos";
+const apiUsuarios = "/usuarios";
 
-function FeedbackSessaoForm({ onSuccess, categorias, projetos }: { onSuccess: () => void, categorias: any[], projetos: any[] }) {
+const converterDataBRparaISO = (dataBR: string): string | null => {
+    if (!dataBR) return null;
+
+    try {
+        const partes = dataBR.split('/');
+        if (partes.length !== 3) return null;
+
+        const [dia, mes, ano] = partes;
+        if (dia.length !== 2 || mes.length !== 2 || ano.length !== 4) return null;
+
+        const diaNum = parseInt(dia, 10);
+        const mesNum = parseInt(mes, 10);
+        const anoNum = parseInt(ano, 10);
+
+        if (isNaN(diaNum) || isNaN(mesNum) || isNaN(anoNum)) return null;
+        if (mesNum < 1 || mesNum > 12) return null;
+        if (diaNum < 1 || diaNum > 31) return null;
+
+        return `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+    } catch {
+        return null;
+    }
+};
+
+function FeedbackSessaoForm({ onSuccess, categorias, projetos, usuarios }: { onSuccess: () => void, categorias: any[], projetos: any[], usuarios: any[] }) {
     const [data_criacao, setDataCriacao] = useState("");
+    const [data_fim, setDataFim] = useState("");
     const [status, setStatus] = useState(true);
-    const [link_forms, setLinkForms] = useState("");
     const [fk_categoria, setFkCategoria] = useState<number | null>(null);
     const [fk_projeto, setFkProjeto] = useState<number | null>(null);
+    const [avaliados, setAvaliados] = useState<number[]>([]);
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+
+        // Validação de data
+        const dataCriacaoISO = converterDataBRparaISO(data_criacao);
+        const dataFimISO = converterDataBRparaISO(data_fim);
+
+        if (!dataCriacaoISO) {
+            alert("Data de criação inválida.");
+            setLoading(false);
+            return;
+        }
+
         try {
-            await api.post(apiSessao, {
-                data_criacao,
+            const { data: sessao } = await api.post(apiSessao, {
+                data_criacao: dataCriacaoISO,
+                data_fim: dataFimISO,
                 status,
-                link_forms,
                 fk_categoria,
                 fk_projeto,
+                avaliados,
             });
+            alert(`Sessão criada com sucesso! Links gerados para ${avaliados.length} usuários.`);
             setDataCriacao("");
+            setDataFim("");
             setStatus(true);
-            setLinkForms("");
             setFkCategoria(null);
             setFkProjeto(null);
+            setAvaliados([]);
             onSuccess();
-        } catch {
-            alert("Erro ao cadastrar sessão de feedback");
+        } catch (error: any) {
+            console.error(error);
+            if (error.response?.data?.issues) {
+                const issues = error.response.data.issues;
+                if (issues.data_criacao?._errors) {
+                    alert(`Erro na data de criação: ${issues.data_criacao._errors.join(", ")}`);
+                }
+                if (issues.fk_projeto?._errors) {
+                    alert(`Erro no projeto: ${issues.fk_projeto._errors.join(", ")}`);
+                }
+            } else {
+                alert("Erro ao cadastrar sessão de feedback");
+            }
         }
         setLoading(false);
     };
@@ -57,32 +108,36 @@ function FeedbackSessaoForm({ onSuccess, categorias, projetos }: { onSuccess: ()
                     <Input
                         id="data_criacao"
                         name="data_criacao"
-                        type="date"
+                        type="text"
                         value={data_criacao}
                         onChange={e => setDataCriacao(e.target.value)}
+                        placeholder="dd/mm/aaaa"
+                        maxLength={10}
                         required
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="data_fim">Data Fim</Label>
+                    <Input
+                        id="data_fim"
+                        name="data_fim"
+                        type="text"
+                        value={data_fim}
+                        onChange={e => setDataFim(e.target.value)}
+                        placeholder="dd/mm/aaaa"
+                        maxLength={10}
                     />
                 </div>
                 <div>
                     <Label htmlFor="status">Status</Label>
                     <Select
                         options={[
-                            { label: "Ativo", value: "true" },
-                            { label: "Inativo", value: "false" },
+                            { label: "Ativo", value: true },
+                            { label: "Inativo", value: false },
                         ]}
                         value={status}
                         onChange={val => setStatus(val === "true")}
                         required
-                    />
-                </div>
-                <div>
-                    <Label htmlFor="link_forms">Link Forms</Label>
-                    <Input
-                        id="link_forms"
-                        name="link_forms"
-                        value={link_forms}
-                        onChange={e => setLinkForms(e.target.value)}
-                        placeholder="Link para o formulário"
                     />
                 </div>
                 <div>
@@ -95,6 +150,7 @@ function FeedbackSessaoForm({ onSuccess, categorias, projetos }: { onSuccess: ()
                         value={fk_categoria}
                         onChange={val => setFkCategoria(Number(val))}
                         placeholder="Selecione"
+                        required
                     />
                 </div>
                 <div>
@@ -107,6 +163,21 @@ function FeedbackSessaoForm({ onSuccess, categorias, projetos }: { onSuccess: ()
                         value={fk_projeto}
                         onChange={val => setFkProjeto(Number(val))}
                         placeholder="Selecione"
+                        required
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="avaliados">Usuários Avaliados</Label>
+                    <Select
+                        options={usuarios.map(u => ({
+                            label: u.nome,
+                            value: u.id_usuario,
+                        }))}
+                        value={avaliados}
+                        onChange={val => setAvaliados(val)}
+                        isMulti
+                        placeholder="Selecione os usuários"
+                        required
                     />
                 </div>
             </div>
@@ -129,28 +200,22 @@ export default function FeedbackSessaoDashboard() {
     const [sessoes, setSessoes] = useState<any[]>([]);
     const [categorias, setCategorias] = useState<any[]>([]);
     const [projetos, setProjetos] = useState<any[]>([]);
+    const [usuarios, setUsuarios] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-
-    // Estados para edição
-    const [editId, setEditId] = useState<number | null>(null);
-    const [editDataCriacao, setEditDataCriacao] = useState("");
-    const [editStatus, setEditStatus] = useState(true);
-    const [editLinkForms, setEditLinkForms] = useState("");
-    const [editFkCategoria, setEditFkCategoria] = useState<number | null>(null);
-    const [editFkProjeto, setEditFkProjeto] = useState<number | null>(null);
-    const [editLoading, setEditLoading] = useState(false);
 
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [sessaoRes, catRes, projRes] = await Promise.all([
+            const [sessaoRes, catRes, projRes, userRes] = await Promise.all([
                 api.get(apiSessao),
                 api.get(apiCategoria),
                 api.get(apiProjeto),
+                api.get(apiUsuarios),
             ]);
             setSessoes(sessaoRes.data);
             setCategorias(catRes.data);
             setProjetos(projRes.data);
+            setUsuarios(userRes.data);
         } catch {
             alert("Erro ao carregar dados");
         }
@@ -160,42 +225,6 @@ export default function FeedbackSessaoDashboard() {
     useEffect(() => {
         fetchData();
     }, []);
-
-    const startEdit = (sessao: any) => {
-        setEditId(sessao.id_sessao);
-        setEditDataCriacao(sessao.data_criacao.slice(0, 10));
-        setEditStatus(sessao.status);
-        setEditLinkForms(sessao.link_forms || "");
-        setEditFkCategoria(sessao.fk_fb_categoria);
-        setEditFkProjeto(sessao.fk_projeto);
-    };
-
-    const cancelEdit = () => {
-        setEditId(null);
-        setEditDataCriacao("");
-        setEditStatus(true);
-        setEditLinkForms("");
-        setEditFkCategoria(null);
-        setEditFkProjeto(null);
-    };
-
-    const handleEditSave = async (id: number) => {
-        setEditLoading(true);
-        try {
-            await api.put(`${apiSessao}/${id}`, {
-                data_criacao: editDataCriacao,
-                status: editStatus,
-                link_forms: editLinkForms,
-                fk_fb_categoria: editFkCategoria,
-                fk_projeto: editFkProjeto,
-            });
-            setEditId(null);
-            fetchData();
-        } catch {
-            alert("Erro ao editar sessão");
-        }
-        setEditLoading(false);
-    };
 
     const handleDelete = async (id: number) => {
         if (!window.confirm("Deseja remover?")) return;
@@ -210,6 +239,7 @@ export default function FeedbackSessaoDashboard() {
                     onSuccess={fetchData}
                     categorias={categorias}
                     projetos={projetos}
+                    usuarios={usuarios}
                 />
             </ComponentCard>
             <ComponentCard title="Sessões de Feedback Cadastradas">
@@ -225,7 +255,6 @@ export default function FeedbackSessaoDashboard() {
                                     <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
                                     <TableCell isHeader className="text-white">Data Criação</TableCell>
                                     <TableCell isHeader className="text-white">Status</TableCell>
-                                    <TableCell isHeader className="text-white">Link Forms</TableCell>
                                     <TableCell isHeader className="text-white">Categoria</TableCell>
                                     <TableCell isHeader className="text-white">Projeto</TableCell>
                                     <TableCell isHeader className="text-center text-white">Ações</TableCell>
@@ -236,123 +265,32 @@ export default function FeedbackSessaoDashboard() {
                                     <TableRow
                                         key={s.id_sessao}
                                         className={`
-                                          align-middle
-                                          ${idx % 2 === 0
-                                                ? "bg-gray-100 dark:bg-gray-800"
-                                                : "bg-white dark:bg-gray-700"}
-                                          hover:bg-brand-50 dark:hover:bg-brand-500/10
+                                          ${idx % 2 === 0 ? "bg-gray-100" : "bg-white"}
+                                          hover:bg-brand-50
                                         `}
-                                        style={{ minHeight: 56 }}
                                     >
-                                        <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{s.id_sessao}</TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === s.id_sessao ? (
-                                                <Input
-                                                    type="date"
-                                                    value={editDataCriacao}
-                                                    onChange={e => setEditDataCriacao(e.target.value)}
-                                                />
-                                            ) : (
-                                                new Date(s.data_criacao).toLocaleDateString()
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === s.id_sessao ? (
-                                                <Select
-                                                    options={[
-                                                        { label: "Ativo", value: true },
-                                                        { label: "Inativo", value: false },
-                                                    ]}
-                                                    value={editStatus}
-                                                    onChange={val => setEditStatus(String(val) === "true")}
-                                                />
-                                            ) : (
-                                                s.status ? "Ativo" : "Inativo"
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === s.id_sessao ? (
-                                                <Input
-                                                    value={editLinkForms}
-                                                    onChange={e => setEditLinkForms(e.target.value)}
-                                                />
-                                            ) : (
-                                                s.link_forms || "—"
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === s.id_sessao ? (
-                                                <Select
-                                                    options={categorias.map(c => ({
-                                                        label: c.categoria,
-                                                        value: c.id_fb_categoria,
-                                                    }))}
-                                                    value={editFkCategoria}
-                                                    onChange={val => setEditFkCategoria(Number(val))}
-                                                />
-                                            ) : (
-                                                categorias.find(c => c.id_fb_categoria === s.fk_fb_categoria)?.categoria || "—"
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === s.id_sessao ? (
-                                                <Select
-                                                    options={projetos.map(p => ({
-                                                        label: p.nome,
-                                                        value: p.id_projeto,
-                                                    }))}
-                                                    value={editFkProjeto}
-                                                    onChange={val => setEditFkProjeto(Number(val))}
-                                                />
-                                            ) : (
-                                                projetos.find(p => p.id_projeto === s.fk_projeto)?.nome || "—"
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-center py-3">
-                                            {editId === s.id_sessao ? (
-                                                <div className="flex justify-center gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="success"
-                                                        className="py-2 px-4 bg-success-600 hover:bg-success-700 text-white rounded shadow"
-                                                        onClick={() => handleEditSave(s.id_sessao)}
-                                                        disabled={editLoading}
-                                                        startIcon={<CheckIcon className="size-4" />}
-                                                    >
-                                                        Salvar
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="py-2 px-4 !bg-gray-600 hover:!bg-gray-700 text-white rounded shadow"
-                                                        onClick={cancelEdit}
-                                                        startIcon={<XMarkIcon className="size-4" />}
-                                                    >
-                                                        Cancelar
-                                                    </Button>
-                                                </div>
-                                            ) : (
-                                                <div className="flex justify-center gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="primary"
-                                                        className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
-                                                        onClick={() => startEdit(s)}
-                                                        startIcon={<PencilIcon className="size-4" />}
-                                                    >
-                                                        Editar
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="danger"
-                                                        className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
-                                                        onClick={() => handleDelete(s.id_sessao)}
-                                                        startIcon={<TrashBinIcon className="size-4" />}
-                                                    >
-                                                        Excluir
-                                                    </Button>
-                                                </div>
-                                            )}
+                                        <TableCell className="text-center">{s.id_sessao}</TableCell>
+                                        <TableCell>{new Date(s.data_criacao).toLocaleDateString()}</TableCell>
+                                        <TableCell>{s.status ? "Ativo" : "Inativo"}</TableCell>
+                                        <TableCell>{s.categoria?.categoria || "—"}</TableCell>
+                                        <TableCell>{s.projeto?.nome || "—"}</TableCell>
+                                        <TableCell className="text-center">
+                                            <Button
+                                                size="sm"
+                                                variant="danger"
+                                                onClick={() => handleDelete(s.id_sessao)}
+                                                startIcon={<TrashBinIcon />}
+                                            >
+                                                Excluir
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="primary"
+                                                startIcon={< AlertIcon />}
+                                                onClick={() => alert("Relatório em construção")}
+                                            >
+                                                Relatório
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 ))}
