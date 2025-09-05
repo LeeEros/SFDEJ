@@ -1,6 +1,15 @@
 import { prisma } from "@/database/prisma";
 
 export class fbRespostaService {
+  async validarNumeroEntre1e10(numero: number) {
+    if (numero < 1 || numero > 10) {
+      throw new Error("A nota deve ser entre 1 e 10.");
+    }
+    if (!Number.isInteger(numero)) {
+      throw new Error("A nota deve ser um número inteiro.");
+    }
+  }
+
   async findAll() {
     const fb_resposta = await prisma.feedback_resposta.findMany({
       orderBy: { id_resposta: "asc" },
@@ -28,6 +37,8 @@ export class fbRespostaService {
   async create(data: any) {
     const fb_resposta = data;
 
+    await this.validarNumeroEntre1e10(fb_resposta.nota);
+
     const respostaCriada = await prisma.feedback_resposta.create({
       data: fb_resposta,
     });
@@ -45,6 +56,8 @@ export class fbRespostaService {
     if (!fb_resposta) {
       throw new Error("Resposta não encontrada.");
     }
+
+    await this.validarNumeroEntre1e10(data.nota);
 
     const respostaAtualizada = await prisma.feedback_resposta.update({
       where: { id_resposta: id },
