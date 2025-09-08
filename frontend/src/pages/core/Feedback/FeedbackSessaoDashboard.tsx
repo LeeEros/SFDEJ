@@ -11,7 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "../../../components/ui/table";
-import { TrashBinIcon } from "../../../icons";
+import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../../icons";
 import api from "../../../services/api";
 
 const apiSessao = "/feedback";
@@ -202,6 +202,13 @@ export default function FeedbackSessaoDashboard() {
     const [usuarios, setUsuarios] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const [editId, setEditId] = useState<number | null>(null);
+    const [editDataCriacao, setEditDataCriacao] = useState("");
+    const [editDataFim, setEditDataFim] = useState("");
+    const [editStatus, setEditStatus] = useState(true);
+    const [editFkCategoria, setEditFkCategoria] = useState<number | null>(null);
+    const [editFkProjeto, setEditFkProjeto] = useState<number | null>(null);
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -231,6 +238,50 @@ export default function FeedbackSessaoDashboard() {
         fetchData();
     };
 
+    const startEdit = (sessao: any) => {
+        setEditId(sessao.id_sessao);
+        setEditDataCriacao(sessao.data_criacao ? new Date(sessao.data_criacao).toLocaleDateString("pt-BR") : "");
+        setEditDataFim(sessao.data_fim ? new Date(sessao.data_fim).toLocaleDateString("pt-BR") : "");
+        setEditStatus(sessao.status);
+        setEditFkCategoria(sessao.fk_categoria);
+        setEditFkProjeto(sessao.fk_projeto);
+    };
+
+    const cancelEdit = () => {
+        setEditId(null);
+        setEditDataCriacao("");
+        setEditDataFim("");
+        setEditStatus(true);
+        setEditFkCategoria(null);
+        setEditFkProjeto(null);
+    };
+
+    const handleEditSave = async (id: number) => {
+        try {
+            const dataCriacaoISO = converterDataBRparaISO(editDataCriacao);
+            const dataFimISO = editDataFim ? converterDataBRparaISO(editDataFim) : null;
+
+            if (!dataCriacaoISO) {
+                alert("Data de criação inválida.");
+                return;
+            }
+
+            await api.put(`${apiSessao}/${id}`, {
+                data_criacao: dataCriacaoISO,
+                data_fim: dataFimISO,
+                status: editStatus,
+                fk_categoria: editFkCategoria || undefined,
+                fk_projeto: editFkProjeto || undefined,
+            });
+
+            setEditId(null);
+            fetchData();
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao salvar alterações.");
+        }
+    };
+
     return (
         <div className="space-y-6">
             <ComponentCard title="Cadastrar Sessão de Feedback">
@@ -253,6 +304,7 @@ export default function FeedbackSessaoDashboard() {
                                 <TableRow className="bg-brand-500 dark:bg-gray-900">
                                     <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
                                     <TableCell isHeader className="text-white">Data Criação</TableCell>
+                                    <TableCell isHeader className="text-white">Data Fim</TableCell>
                                     <TableCell isHeader className="text-white">Status</TableCell>
                                     <TableCell isHeader className="text-white">Categoria</TableCell>
                                     <TableCell isHeader className="text-white">Projeto</TableCell>
@@ -274,30 +326,114 @@ export default function FeedbackSessaoDashboard() {
                                         <TableCell className="text-center font-semibold text-gray-800 dark:text-white">
                                             {s.id_sessao}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {new Date(s.data_criacao).toLocaleDateString()}
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {editId === s.id_sessao ? (
+                                                <Input
+                                                    value={editDataCriacao}
+                                                    onChange={e => setEditDataCriacao(e.target.value)}
+                                                    placeholder="dd/mm/aaaa"
+                                                />
+                                            ) : (
+                                                new Date(s.data_criacao).toLocaleDateString()
+                                            )}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {s.status ? "Ativo" : "Inativo"}
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {editId === s.id_sessao ? (
+                                                <Input
+                                                    value={editDataFim}
+                                                    onChange={e => setEditDataFim(e.target.value)}
+                                                    placeholder="dd/mm/aaaa"
+                                                />
+                                            ) : (
+                                                s.data_fim ? new Date(s.data_fim).toLocaleDateString() : "—"
+                                            )}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {s.categoria?.categoria || "—"}
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {editId === s.id_sessao ? (
+                                                <Select
+                                                    options={[
+                                                        { label: "Ativo", value: true },
+                                                        { label: "Inativo", value: false },
+                                                    ]}
+                                                    value={editStatus}
+                                                    onChange={val => setEditStatus(val === "true")}
+                                                />
+                                            ) : (
+                                                s.status ? "Ativo" : "Inativo"
+                                            )}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {s.projeto?.nome || "—"}
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {editId === s.id_sessao ? (
+                                                <Select
+                                                    options={categorias.map(c => ({
+                                                        label: c.categoria,
+                                                        value: c.id_fb_categoria,
+                                                    }))}
+                                                    value={editFkCategoria}
+                                                    onChange={val => setEditFkCategoria(Number(val))}
+                                                />
+                                            ) : (
+                                                s.categoria?.categoria || "—"
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {editId === s.id_sessao ? (
+                                                <Select
+                                                    options={projetos.map(p => ({
+                                                        label: p.nome,
+                                                        value: p.id_projeto,
+                                                    }))}
+                                                    value={editFkProjeto}
+                                                    onChange={val => setEditFkProjeto(Number(val))}
+                                                />
+                                            ) : (
+                                                s.projeto?.nome || "—"
+                                            )}
                                         </TableCell>
                                         <TableCell className="text-center">
-                                            <div className="flex justify-center gap-2">
-                                                <Button
-                                                    size="sm"
-                                                    variant="danger"
-                                                    className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
-                                                    onClick={() => handleDelete(s.id_sessao)}
-                                                    startIcon={<TrashBinIcon />}
-                                                >
-                                                    Excluir
-                                                </Button>
-                                            </div>
+                                            {editId === s.id_sessao ? (
+                                                <div className="flex justify-center gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="success"
+                                                        className="py-2 px-4 bg-success-600 hover:bg-success-700 text-white rounded shadow"
+                                                        onClick={() => handleEditSave(s.id_sessao)}
+                                                        startIcon={<CheckIcon />}
+                                                    >
+                                                        Salvar
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        className="py-2 px-4 !bg-gray-600 hover:!bg-gray-700 text-white rounded shadow"
+                                                        onClick={cancelEdit}
+                                                        startIcon={<XMarkIcon />}
+                                                    >
+                                                        Cancelar
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <div className="flex justify-center gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="primary"
+                                                        className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
+                                                        onClick={() => startEdit(s)}
+                                                        startIcon={<PencilIcon />}
+                                                    >
+                                                        Editar
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="danger"
+                                                        className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
+                                                        onClick={() => handleDelete(s.id_sessao)}
+                                                        startIcon={<TrashBinIcon />}
+                                                    >
+                                                        Excluir
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </TableCell>
                                     </TableRow>
                                 ))}
