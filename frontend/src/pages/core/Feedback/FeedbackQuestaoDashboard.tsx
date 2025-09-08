@@ -158,15 +158,15 @@ export default function FeedbackQuestaoDashboard() {
                                         hover:bg-brand-50 dark:hover:bg-brand-500/10
                                     `}
                                 >
-                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{q.id_questao}</TableCell>
-                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">
+                                    <TableCell className="text-center px-2 py-1 text-gray-800 dark:text-white">{q.id_questao}</TableCell>
+                                    <TableCell className="text-center px-2 py-1 text-gray-800 dark:text-white">
                                         {editId === q.id_questao ? (
                                             <Input value={editEnunciado} onChange={e => setEditEnunciado(e.target.value)} />
                                         ) : (
                                             q.enunciado
                                         )}
                                     </TableCell>
-                                    <TableCell className="px-2 py-1 text-gray-800 dark:text-white">
+                                    <TableCell className="text-center px-2 py-1 text-gray-800 dark:text-white">
                                         {editId === q.id_questao ? (
                                             <Select
                                                 options={categorias.map(c => ({
