@@ -148,22 +148,24 @@ export default function FeedbackCategoriaDashboard() {
                                     `}
                                     style={{ minHeight: 56 }}
                                 >
-                                    <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{c.id_fb_categoria}</TableCell>
-                                    <TableCell className="text-gray-800 dark:text-white">
+                                    <TableCell className="text-center font-semibold text-gray-800 dark:text-white">
+                                        {c.id_fb_categoria}
+                                    </TableCell>
+                                    <TableCell className="text-center text-gray-800 dark:text-white">
                                         {editId === c.id_fb_categoria ? (
                                             <Input value={editCategoria} onChange={e => setEditCategoria(e.target.value)} />
                                         ) : (
                                             c.categoria
                                         )}
                                     </TableCell>
-                                    <TableCell className="text-gray-800 dark:text-white">
+                                    <TableCell className="text-center text-gray-800 dark:text-white">
                                         {editId === c.id_fb_categoria ? (
                                             <Input value={editDescricao} onChange={e => setEditDescricao(e.target.value)} />
                                         ) : (
                                             c.descricao_categoria
                                         )}
                                     </TableCell>
-                                    <TableCell className="text-gray-800 dark:text-white">
+                                    <TableCell className="text-center text-gray-800 dark:text-white">
                                         {editId === c.id_fb_categoria ? (
                                             <Select
                                                 options={[
@@ -174,7 +176,7 @@ export default function FeedbackCategoriaDashboard() {
                                                 onChange={setEditPerfil}
                                             />
                                         ) : (
-                                            c.perfil
+                                            c.perfil === "hard_skills" ? "Hard Skills" : "Soft Skills"
                                         )}
                                     </TableCell>
                                     <TableCell className="text-center py-3">
