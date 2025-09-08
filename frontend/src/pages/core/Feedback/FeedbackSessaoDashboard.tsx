@@ -11,7 +11,7 @@ import {
     TableHeader,
     TableRow,
 } from "../../../components/ui/table";
-import { AlertIcon, TrashBinIcon } from "../../../icons";
+import { TrashBinIcon } from "../../../icons";
 import api from "../../../services/api";
 
 const apiSessao = "/feedback";
@@ -56,7 +56,6 @@ function FeedbackSessaoForm({ onSuccess, categorias, projetos, usuarios }: { onS
         e.preventDefault();
         setLoading(true);
 
-        // Validação de data
         const dataCriacaoISO = converterDataBRparaISO(data_criacao);
         const dataFimISO = converterDataBRparaISO(data_fim);
 
@@ -265,32 +264,40 @@ export default function FeedbackSessaoDashboard() {
                                     <TableRow
                                         key={s.id_sessao}
                                         className={`
-                                          ${idx % 2 === 0 ? "bg-gray-100" : "bg-white"}
-                                          hover:bg-brand-50
+                                            align-middle
+                                            ${idx % 2 === 0
+                                                ? "bg-gray-100 dark:bg-gray-800"
+                                                : "bg-white dark:bg-gray-700"}
+                                            hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                     >
-                                        <TableCell className="text-center">{s.id_sessao}</TableCell>
-                                        <TableCell>{new Date(s.data_criacao).toLocaleDateString()}</TableCell>
-                                        <TableCell>{s.status ? "Ativo" : "Inativo"}</TableCell>
-                                        <TableCell>{s.categoria?.categoria || "—"}</TableCell>
-                                        <TableCell>{s.projeto?.nome || "—"}</TableCell>
+                                        <TableCell className="text-center font-semibold text-gray-800 dark:text-white">
+                                            {s.id_sessao}
+                                        </TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
+                                            {new Date(s.data_criacao).toLocaleDateString()}
+                                        </TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
+                                            {s.status ? "Ativo" : "Inativo"}
+                                        </TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
+                                            {s.categoria?.categoria || "—"}
+                                        </TableCell>
+                                        <TableCell className="text-gray-800 dark:text-white">
+                                            {s.projeto?.nome || "—"}
+                                        </TableCell>
                                         <TableCell className="text-center">
-                                            <Button
-                                                size="sm"
-                                                variant="danger"
-                                                onClick={() => handleDelete(s.id_sessao)}
-                                                startIcon={<TrashBinIcon />}
-                                            >
-                                                Excluir
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="primary"
-                                                startIcon={< AlertIcon />}
-                                                onClick={() => alert("Relatório em construção")}
-                                            >
-                                                Relatório
-                                            </Button>
+                                            <div className="flex justify-center gap-2">
+                                                <Button
+                                                    size="sm"
+                                                    variant="danger"
+                                                    className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
+                                                    onClick={() => handleDelete(s.id_sessao)}
+                                                    startIcon={<TrashBinIcon />}
+                                                >
+                                                    Excluir
+                                                </Button>
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}
