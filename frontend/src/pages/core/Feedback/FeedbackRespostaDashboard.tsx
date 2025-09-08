@@ -58,11 +58,21 @@ export default function FeedbackRespostasDashboard() {
                                             hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                     >
-                                        <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{r.id_resposta}</TableCell>
-                                        <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{r.nota}</TableCell>
-                                        <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{r.comentario || "—"}</TableCell>
-                                        <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{r.data_resposta ? new Date(r.data_resposta).toLocaleDateString() : "—"}</TableCell>
-                                        <TableCell className="px-2 py-1 text-gray-800 dark:text-white">{r.fk_fb_questao}</TableCell>
+                                        <TableCell className="px-2 py-1 text-center text-gray-800 dark:text-white">
+                                            {r.id_resposta}
+                                        </TableCell>
+                                        <TableCell className="px-2 py-1 text-center text-gray-800 dark:text-white">
+                                            {r.nota}
+                                        </TableCell>
+                                        <TableCell className="px-2 py-1 text-center text-gray-800 dark:text-white">
+                                            {r.comentario || "—"}
+                                        </TableCell>
+                                        <TableCell className="px-2 py-1 text-center text-gray-800 dark:text-white">
+                                            {r.data_resposta ? new Date(r.data_resposta).toLocaleDateString() : "—"}
+                                        </TableCell>
+                                        <TableCell className="px-2 py-1 text-center text-gray-800 dark:text-white">
+                                            {r.fk_fb_questao}
+                                        </TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

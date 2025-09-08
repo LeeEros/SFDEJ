@@ -11,7 +11,7 @@ import Button from "../../../components/ui/button/Button";
 import { TrashBinIcon } from "../../../icons";
 import api from "../../../services/api";
 
-const apiAvaliacao = "/feedback-avaliacao";
+const apiAvaliacao = "/fb-avaliacao";
 
 export default function FeedbackAvaliacaoDashboard() {
     const [avaliacoes, setAvaliacoes] = useState<any[]>([]);
@@ -54,10 +54,11 @@ export default function FeedbackAvaliacaoDashboard() {
                         <Table>
                             <TableHeader>
                                 <TableRow className="bg-brand-500 dark:bg-gray-900">
-                                    <TableCell isHeader className="text-white">ID</TableCell>
-                                    <TableCell isHeader className="text-white">Sessão</TableCell>
-                                    <TableCell isHeader className="text-white">Usuário</TableCell>
-                                    <TableCell isHeader className="text-white">Ações</TableCell>
+                                    <TableCell isHeader className="text-center text-white">ID</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Sessão</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Usuário</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Link Forms</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Ações</TableCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -71,9 +72,29 @@ export default function FeedbackAvaliacaoDashboard() {
                                             hover:bg-brand-50 dark:hover:bg-brand-500/10
                                         `}
                                     >
-                                        <TableCell className="text-gray-800 dark:text-white">{a.id_avaliacao}</TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">{a.sessao?.id_sessao || "—"}</TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">{a.usuario?.nome || "—"}</TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {a.id_avaliacao}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {a.sessao?.id_sessao || "—"}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {a.usuario?.nome || "—"}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            {a.link_forms ? (
+                                                <a
+                                                    href={a.link_forms}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-brand-500 hover:underline"
+                                                >
+                                                    Acessar
+                                                </a>
+                                            ) : (
+                                                "—"
+                                            )}
+                                        </TableCell>
                                         <TableCell className="text-center">
                                             <Button
                                                 size="sm"

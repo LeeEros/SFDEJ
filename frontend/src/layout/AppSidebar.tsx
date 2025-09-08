@@ -87,11 +87,16 @@ const navItems: NavItem[] = [
         path: "/feedback-questoes",
         icon: <ClipboardDocumentListIcon />,
       },
-      //{
-      //name: "Histórico de Feedback",
-      //path: "/feedback-historico",
-      //icon: <ChartBarIcon />
-      //},
+      {
+        name: "Avaliações de Feedback",
+        path: "/feedback-avaliacoes",
+        icon: <AcademicCapIcon />
+      },
+      {
+        name: "Respostas de Feedback",
+        path: "/feedback-respostas",
+        icon: <UsersIcon />
+      },
     ],
   },
   {
