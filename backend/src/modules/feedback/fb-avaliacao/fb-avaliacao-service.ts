@@ -2,6 +2,7 @@ import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { feedbackAvaliacaoSchema } from "./fb-avaliacao-schema";
 import { feedback_avaliacao } from "@prisma/client";
+import { randomUUID } from "crypto";
 
 export class fbHistoricoService {
   async findAll() {
@@ -31,8 +32,14 @@ export class fbHistoricoService {
   async create(data: feedback_avaliacao) {
     const fb_avaliacao = feedbackAvaliacaoSchema.parse(data);
 
+    const uuuid = randomUUID();
+    const linkAvaliacao = uuuid;
+
     const avaliacaoCriada = await prisma.feedback_avaliacao.create({
-      data: fb_avaliacao,
+      data: {
+        ...fb_avaliacao,
+        link_forms: linkAvaliacao,
+      },
     });
 
     if (!avaliacaoCriada) {

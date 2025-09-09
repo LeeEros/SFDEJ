@@ -27,13 +27,14 @@ import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
 import FeedbackCategoriaDashboard from "./pages/core/Feedback/FeedbackCategoriaDashboard";
 import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackQuestaoDashboard";
-import FeedbackRespostasDashboard from "./pages/core/Feedback/FeedbackRespostaDashboard";
+import FeedbackRespostasDashboard from "./pages/core/Feedback/FeedbackFormulario";
 import FeedbackSessaoDashboard from "./pages/core/Feedback/FeedbackSessaoDashboard";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
 import FeedbackAvaliacaoDashboard from "./pages/core/Feedback/FeedbackAvaliacaoDashboard";
-import FormElements from "./pages/forms/FormElements";
+import FormElements from "./pages/Forms/FormElements";
+
 
 export default function App() {
   return (
