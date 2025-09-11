@@ -11,7 +11,7 @@ import MultiSelect from '../../../components/form/MultiSelect';
 import Button from '../../../components/ui/button/Button';
 import { Modal } from '../../../components/ui/modal';
 import { useModal } from '../../../hooks/useModal';
-import DatePicker from '../../../components/form/date-picker'; // Importe o DatePicker
+import DatePicker from '../../../components/form/date-picker';
 
 const FeedbackSessaoDashboard: React.FC = () => {
     const { isOpen: isCriacaoModalOpen, toggleModal: toggleCriacaoModal } = useModal();
@@ -22,13 +22,11 @@ const FeedbackSessaoDashboard: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Estados do formulário
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('');
     const [projetoSelecionado, setProjetoSelecionado] = useState<string>('');
     const [avaliadosSelecionados, setAvaliadosSelecionados] = useState<string[]>([]);
-    const [dataFim, setDataFim] = useState<Date | null>(null); // Estado para a data de fim
+    const [dataFim, setDataFim] = useState<Date | null>(null);
 
-    // Estado do modal de links
     const [linksGerados, setLinksGerados] = useState<any[]>([]);
     const { isOpen: isLinksModalOpen, toggleModal: toggleLinksModal } = useModal();
 

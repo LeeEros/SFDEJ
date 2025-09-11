@@ -36,7 +36,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({ label, options, selectedValue
     } else {
       onChange([...selectedValues, value]);
     }
-    setSearchTerm(''); // Limpa a busca ao selecionar
+    setSearchTerm('');
   };
 
   const filteredOptions = options.filter((option) =>

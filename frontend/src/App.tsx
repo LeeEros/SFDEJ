@@ -34,6 +34,7 @@ import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
 import FeedbackAvaliacaoDashboard from "./pages/core/Feedback/FeedbackAvaliacaoDashboard";
 import FormElements from "./pages/Forms/FormElements";
+import PublicFeedbackForm from "./pages/core/Feedback/PublicFeedbackForms";
 
 
 export default function App() {
@@ -206,6 +207,7 @@ export default function App() {
           {/* Auth Layout */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/feedback/responder/:token" element={<PublicFeedbackForm />} />
 
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
