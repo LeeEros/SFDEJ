@@ -32,12 +32,13 @@ export class FeedbackService {
   }
 
   async create(data: PostProps) {
-    const { fk_fb_categoria, fk_projeto, avaliados } =
+    const { fk_fb_categoria, fk_projeto, avaliados, data_fim } =
       feedbackSessaoSchema.parse(data);
 
     const novaSessao = await prisma.feedback_sessao.create({
       data: {
         status: true,
+        data_fim,
         ...(fk_fb_categoria && {
           feedback_categoria: {
             connect: { id_fb_categoria: fk_fb_categoria },
