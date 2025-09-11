@@ -5,6 +5,11 @@ import { FbHistoricoController } from "./fb-avaliacao-controllers";
 const fbAvalicaoRoutes = Router();
 const fbAvaliacaoController = new FbHistoricoController();
 
+fbAvalicaoRoutes.get(
+  "/publico/:token",
+  fbAvaliacaoController.findPublicByToken
+);
+
 fbAvalicaoRoutes.use(usuarioAutenticado);
 fbAvalicaoRoutes.get("/", fbAvaliacaoController.findAll);
 fbAvalicaoRoutes.get("/:id", fbAvaliacaoController.findById);

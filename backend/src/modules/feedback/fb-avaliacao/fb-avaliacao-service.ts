@@ -79,4 +79,47 @@ export class fbHistoricoService {
 
     return { message: "Avaliação deletada com sucesso." };
   }
+
+  async findPublicByToken(token: string) {
+    const avaliacao = await prisma.feedback_avaliacao.findUnique({
+      where: {
+        token,
+      },
+      select: {
+        avaliado: {
+          select: {
+            nome: true,
+          },
+        },
+        sessao: {
+          select: {
+            feedback_categoria: {
+              select: {
+                categoria: true,
+                questoes: {
+                  select: {
+                    id_questao: true,
+                    enunciado: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!avaliacao) {
+      throw new AppError(
+        "Formulário de feedback não encontrado ou inválido.",
+        404
+      );
+    }
+
+    return {
+      nome_avaliado: avaliacao.avaliado.nome,
+      categoria: avaliacao.sessao.feedback_categoria?.categoria,
+      questoes: avaliacao.sessao.feedback_categoria?.questoes || [],
+    };
+  }
 }

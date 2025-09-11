@@ -145,13 +145,14 @@ model feedback_sessao {
 
 model feedback_avaliacao {
   id_avaliacao Int     @id @default(autoincrement())
+  token        String  @unique @default(uuid())
   link_forms   String? @db.VarChar(255)
 
   fk_fb_sessao Int
   sessao       feedback_sessao @relation(fields: [fk_fb_sessao], references: [id_sessao])
 
-  fk_usuario Int
-  usuario    usuarios @relation(fields: [fk_usuario], references: [id_usuario])
+  fk_avaliado Int
+  avaliado    usuarios @relation(fields: [fk_avaliado], references: [id_usuario])
 
   respostas feedback_resposta[]
 }

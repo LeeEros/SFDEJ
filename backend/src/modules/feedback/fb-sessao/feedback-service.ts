@@ -2,6 +2,9 @@ import { prisma } from "@/database/prisma";
 import { AppError } from "@/utils/AppError";
 import { feedbackSessaoSchema } from "./feedback-schema";
 import { feedback_sessao } from "@prisma/client";
+import { z } from "zod";
+
+type PostProps = z.infer<typeof feedbackSessaoSchema>;
 
 export class FeedbackService {
   async findAll() {
@@ -28,16 +31,47 @@ export class FeedbackService {
     return fb;
   }
 
-  async create(data: feedback_sessao) {
-    const fb = feedbackSessaoSchema.parse(data);
+  async create(data: PostProps) {
+    const { fk_fb_categoria, fk_projeto, avaliados } =
+      feedbackSessaoSchema.parse(data);
 
-    const fbCriada = await prisma.feedback_sessao.create({ data: fb });
+    const novaSessao = await prisma.feedback_sessao.create({
+      data: {
+        status: true,
+        ...(fk_fb_categoria && {
+          feedback_categoria: {
+            connect: { id_fb_categoria: fk_fb_categoria },
+          },
+        }),
 
-    if (!fbCriada) {
-      throw new AppError("Não foi possível criar feedback.", 400);
-    }
+        ...(fk_projeto && {
+          projeto: {
+            connect: { id_projeto: fk_projeto },
+          },
+        }),
+        avaliados: {
+          create: avaliados.map((idUsuario) => ({
+            avaliado: {
+              connect: { id_usuario: idUsuario },
+            },
+          })),
+        },
+      },
+      include: {
+        avaliados: {
+          select: {
+            token: true,
+            avaliado: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-    return fbCriada;
+    return novaSessao;
   }
 
   async update(id: number, data: feedback_sessao) {

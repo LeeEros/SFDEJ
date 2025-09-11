@@ -1,9 +1,13 @@
-import z from "zod";
+import { z } from "zod";
 
-export const feedbackRespostaSchema = z.object({
-  nota: z.number().min(0).max(10),
-  data_resposta: z.string().datetime(),
-  comentario: z.string().max(500).optional(),
-  fk_fb_avaliacao: z.number().int(),
-  fk_fb_questao: z.number().int(),
+const respostaSchema = z.object({
+  fk_fb_questao: z.number().int().positive(),
+  nota: z.number().int().min(1).max(10),
+  comentario: z.string().max(1000).optional(),
+});
+
+export const POST_RESPOSTA_SCHEMA = z.object({
+  respostas: z
+    .array(respostaSchema)
+    .min(1, "É necessário fornecer ao menos uma resposta."),
 });

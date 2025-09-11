@@ -32,4 +32,10 @@ export class FbHistoricoController {
     const fb = await fb_avaliacao.delete(Number(id));
     return response.status(200).json(fb);
   }
+
+  async findPublicByToken(req: Request, res: Response) {
+    const { token } = req.params;
+    const resultado = await fb_avaliacao.findPublicByToken(token);
+    return res.status(200).json(resultado);
+  }
 }
