@@ -40,4 +40,12 @@ export class UsuariosController {
     const usuario = await usuariosService.delete(Number(id));
     return response.status(200).json(usuario);
   }
+
+  async getFeedbackReport(req: Request, res: Response) {
+    const { id_usuario } = req.params;
+    const resultado = await usuariosService.getFeedbackReport(
+      Number(id_usuario)
+    );
+    return res.status(200).json(resultado);
+  }
 }

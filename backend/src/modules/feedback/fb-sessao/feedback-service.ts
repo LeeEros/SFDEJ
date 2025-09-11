@@ -104,4 +104,87 @@ export class FeedbackService {
 
     return { message: "feedback deletado com sucesso." };
   }
+
+  async getReport(id_sessao: number) {
+    const sessao = await prisma.feedback_sessao.findUnique({
+      where: { id_sessao },
+      include: {
+        feedback_categoria: {
+          select: {
+            categoria: true,
+            questoes: true,
+          },
+        },
+        projeto: {
+          select: {
+            nome: true,
+          },
+        },
+        avaliados: {
+          include: {
+            avaliado: {
+              select: {
+                nome: true,
+              },
+            },
+            respostas: {
+              select: {
+                nota: true,
+                comentario: true,
+                fk_fb_questao: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!sessao) {
+      throw new AppError("Sessão de feedback não encontrada.", 404);
+    }
+
+    const questoesDoFormulario = sessao.feedback_categoria?.questoes || [];
+
+    const relatorioAvaliados = sessao.avaliados.map((avaliacao) => {
+      const resultadosPorQuestao = questoesDoFormulario.map((questao) => {
+        const respostasParaQuestao = avaliacao.respostas.filter(
+          (r) => r.fk_fb_questao === questao.id_questao
+        );
+
+        const totalNotas = respostasParaQuestao.reduce(
+          (soma, r) => soma + r.nota,
+          0
+        );
+        const media =
+          respostasParaQuestao.length > 0
+            ? totalNotas / respostasParaQuestao.length
+            : 0;
+
+        const comentarios = respostasParaQuestao
+          .map((r) => r.comentario)
+          .filter((c) => c);
+
+        return {
+          id_questao: questao.id_questao,
+          enunciado: questao.enunciado,
+          media_notas: parseFloat(media.toFixed(2)),
+          comentarios,
+        };
+      });
+
+      return {
+        nome_avaliado: avaliacao.avaliado.nome,
+        status: avaliacao.respostas.length > 0 ? "Respondido" : "Pendente",
+        resultados: resultadosPorQuestao,
+      };
+    });
+
+    return {
+      id_sessao: sessao.id_sessao,
+      data_criacao: sessao.data_criacao,
+      categoria: sessao.feedback_categoria?.categoria || "N/A",
+      projeto: sessao.projeto?.nome || "N/A",
+      participantes: relatorioAvaliados,
+    };
+  }
 }

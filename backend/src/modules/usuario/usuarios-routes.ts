@@ -12,5 +12,9 @@ usuariosRoutes.get("/desativados", usuariosController.findAllDesativados);
 usuariosRoutes.get("/:id", usuariosController.findById);
 usuariosRoutes.put("/:id", usuariosController.update);
 usuariosRoutes.delete("/:id", usuariosController.delete);
+usuariosRoutes.get(
+  "/relatorio/:id_usuario",
+  usuariosController.getFeedbackReport
+);
 
 export { usuariosRoutes };

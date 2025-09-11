@@ -11,5 +11,6 @@ feedbackRoutes.get("/:id", fbController.findById);
 feedbackRoutes.post("/", fbController.create);
 feedbackRoutes.put("/:id", fbController.update);
 feedbackRoutes.delete("/:id", fbController.delete);
+feedbackRoutes.get("/relatorio/:id_sessao", fbController.getReport);
 
 export { feedbackRoutes };

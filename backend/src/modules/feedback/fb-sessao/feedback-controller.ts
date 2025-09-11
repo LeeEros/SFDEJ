@@ -32,4 +32,10 @@ export class FeedbackController {
     const fb = await fbService.delete(Number(id));
     return response.status(200).json(fb);
   }
+
+  async getReport(req: Request, res: Response) {
+    const { id_sessao } = req.params;
+    const resultado = await fbService.getReport(Number(id_sessao));
+    return res.status(200).json(resultado);
+  }
 }

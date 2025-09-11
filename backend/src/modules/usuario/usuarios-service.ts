@@ -126,4 +126,83 @@ export class UsuariosService {
 
     return { message: "Usuário desativado com sucesso" };
   }
+
+  async getFeedbackReport(id_usuario: number) {
+    const usuarioComAvaliacoes = await prisma.usuarios.findUnique({
+      where: { id_usuario },
+
+      include: {
+        feedback_avaliado: {
+          orderBy: {
+            sessao: {
+              data_criacao: "desc",
+            },
+          },
+          include: {
+            respostas: {
+              include: {
+                questao: {
+                  select: { enunciado: true },
+                },
+              },
+            },
+            sessao: {
+              include: {
+                feedback_categoria: { select: { categoria: true } },
+                projeto: { select: { nome: true } },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!usuarioComAvaliacoes) {
+      throw new AppError("Usuário não encontrado.", 404);
+    }
+
+    const relatorioFormatado = usuarioComAvaliacoes.feedback_avaliado.map(
+      (avaliacao) => {
+        const respostasAgrupadas = avaliacao.respostas.reduce(
+          (acc, resposta) => {
+            const questao = resposta.questao.enunciado;
+            if (!acc[questao]) {
+              acc[questao] = { notas: [], comentarios: [] };
+            }
+            acc[questao].notas.push(resposta.nota);
+            if (resposta.comentario) {
+              acc[questao].comentarios.push(resposta.comentario);
+            }
+            return acc;
+          },
+          {} as Record<string, { notas: number[]; comentarios: string[] }>
+        );
+
+        return {
+          data_feedback: avaliacao.sessao.data_criacao,
+          contexto:
+            avaliacao.sessao.projeto?.nome ||
+            avaliacao.sessao.feedback_categoria?.categoria ||
+            "Geral",
+          resultados: Object.entries(respostasAgrupadas).map(
+            ([enunciado, dados]) => {
+              const media =
+                dados.notas.reduce((s, n) => s + n, 0) / dados.notas.length;
+              return {
+                enunciado,
+                media_notas: parseFloat(media.toFixed(2)),
+                comentarios: dados.comentarios,
+              };
+            }
+          ),
+        };
+      }
+    );
+
+    return {
+      id_usuario: usuarioComAvaliacoes.id_usuario,
+      nome_usuario: usuarioComAvaliacoes.nome,
+      historico_feedbacks: relatorioFormatado,
+    };
+  }
 }
