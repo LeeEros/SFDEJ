@@ -19,6 +19,27 @@ export class FeedbackService {
     return fb;
   }
 
+  async findLinks(id_sessao: number) {
+    const sessao = await prisma.feedback_sessao.findUnique({
+      where: { id_sessao },
+      select: {
+        avaliados: {
+          select: {
+            token: true,
+            avaliado: {
+              select: { nome: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!sessao) {
+      throw new AppError("Sessão não encontrada.", 404);
+    }
+    return sessao.avaliados;
+  }
+
   async findById(id: number) {
     const fb = await prisma.feedback_sessao.findUnique({
       where: { id_sessao: id },

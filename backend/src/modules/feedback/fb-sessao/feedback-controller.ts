@@ -9,6 +9,12 @@ export class FeedbackController {
     return response.status(200).json(fb);
   }
 
+  async findLinks(req: Request, res: Response) {
+    const { id_sessao } = req.params;
+    const resultado = await fbService.findLinks(Number(id_sessao));
+    return res.status(200).json(resultado);
+  }
+
   async findById(request: Request, response: Response) {
     const { id } = request.params;
 
