@@ -150,9 +150,8 @@ model feedback_avaliacao {
 
   fk_fb_sessao Int
   sessao       feedback_sessao @relation(fields: [fk_fb_sessao], references: [id_sessao], onDelete: Cascade)
-
-  fk_avaliado Int
-  avaliado    usuarios @relation(fields: [fk_avaliado], references: [id_usuario])
+  fk_avaliado  Int
+  avaliado     usuarios        @relation(fields: [fk_avaliado], references: [id_usuario])
 
   respostas feedback_resposta[]
 }
@@ -165,9 +164,8 @@ model feedback_resposta {
 
   fk_fb_avaliacao Int
   fk_fb_questao   Int
-
-  avaliacao feedback_avaliacao @relation(fields: [fk_fb_avaliacao], references: [id_avaliacao])
-  questao   feedback_questao   @relation(fields: [fk_fb_questao], references: [id_questao])
+  avaliacao       feedback_avaliacao @relation(fields: [fk_fb_avaliacao], references: [id_avaliacao], onDelete: Cascade)
+  questao         feedback_questao   @relation(fields: [fk_fb_questao], references: [id_questao])
 }
 
 model projeto {
