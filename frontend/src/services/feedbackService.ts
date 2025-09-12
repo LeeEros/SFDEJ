@@ -108,7 +108,7 @@ export const deleteSessao = (id_sessao: number) => {
 };
 
 export const getSessaoById = (id_sessao: number) => {
-  return api.get<Sessao>(`/feedback/${id_sessao}`);
+  return api.get<RelatorioSessao>(`/feedback/${id_sessao}`);
 };
 
 export const updateSessao = (id_sessao: number, data: UpdateSessaoData) => {
