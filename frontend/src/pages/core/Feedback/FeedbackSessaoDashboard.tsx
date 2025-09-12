@@ -6,6 +6,7 @@ import {
     Usuario,
     Categoria,
     Projeto,
+    RelatorioSessao,
 
 } from '../../../services/feedbackService';
 import Select from '../../../components/form/Select';
@@ -18,11 +19,10 @@ import DatePicker from '../../../components/form/date-picker';
 import { Link } from 'react-router-dom';
 
 const FeedbackSessaoDashboard: React.FC = () => {
-    // Estados para a lista de sessões
-    const [sessoes, setSessoes] = useState<Sessao[]>([]);
+
+    const [sessoes, setSessoes] = useState<RelatorioSessao[]>([]);
     const [isLoadingSessoes, setIsLoadingSessoes] = useState(true);
 
-    // Estados do modal de criação
     const { isOpen: isCriacaoModalOpen, toggleModal: toggleCriacaoModal } = useModal();
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -34,11 +34,10 @@ const FeedbackSessaoDashboard: React.FC = () => {
     const [avaliadosSelecionados, setAvaliadosSelecionados] = useState<string[]>([]);
     const [dataFim, setDataFim] = useState<Date | null>(null);
 
-    // Estados do modal de links
+
     const [linksVisiveis, setLinksVisiveis] = useState<any[]>([]);
     const { isOpen: isLinksModalOpen, toggleModal: toggleLinksModal } = useModal();
 
-    // Função para carregar a lista de sessões
     const carregarSessoes = async () => {
         setIsLoadingSessoes(true);
         try {
@@ -51,12 +50,11 @@ const FeedbackSessaoDashboard: React.FC = () => {
         }
     };
 
-    // Carrega as sessões quando o componente monta
+
     useEffect(() => {
         carregarSessoes();
     }, []);
 
-    // Busca dados para o formulário quando o modal de criação abre
     useEffect(() => {
         if (isCriacaoModalOpen) {
             const fetchData = async () => {
