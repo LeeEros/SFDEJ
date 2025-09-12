@@ -9,7 +9,14 @@ type PostProps = z.infer<typeof feedbackSessaoSchema>;
 export class FeedbackService {
   async findAll() {
     const fb = await prisma.feedback_sessao.findMany({
-      orderBy: { id_sessao: "asc" },
+      orderBy: { data_criacao: "desc" },
+      include: {
+        feedback_categoria: { select: { categoria: true } },
+        projeto: { select: { nome: true } },
+        _count: {
+          select: { avaliados: true },
+        },
+      },
     });
 
     if (!fb) {
@@ -115,16 +122,17 @@ export class FeedbackService {
     return fbAtualizado;
   }
 
-  async delete(id: number) {
-    const fb = await this.findById(id);
+  async delete(id_sessao: number) {
+    const sessao = await prisma.feedback_sessao.findUnique({
+      where: { id_sessao },
+    });
 
-    if (!fb) {
-      throw new AppError("feedback não encontrado.", 404);
+    if (!sessao) {
+      throw new AppError("Sessão de feedback não encontrada.", 404);
     }
-
-    await prisma.feedback_sessao.delete({ where: { id_sessao: id } });
-
-    return { message: "feedback deletado com sucesso." };
+    await prisma.feedback_sessao.delete({
+      where: { id_sessao },
+    });
   }
 
   async getReport(id_sessao: number) {

@@ -10,11 +10,26 @@ import {
 import Button from "../../../components/ui/button/Button";
 import { TrashBinIcon } from "../../../icons";
 import api from "../../../services/api";
+import Badge from "../../../components/ui/badge/Badge";
 
 const apiAvaliacao = "/fb-avaliacao";
 
+interface Avaliacao {
+    id_avaliacao: number;
+    link_forms: string | null;
+    sessao: {
+        id_sessao: number;
+    };
+    avaliado: {
+        nome: string;
+    };
+    _count: {
+        respostas: number;
+    };
+}
+
 export default function FeedbackAvaliacaoDashboard() {
-    const [avaliacoes, setAvaliacoes] = useState<any[]>([]);
+    const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
     const [loading, setLoading] = useState(true);
 
     const fetchAvaliacoes = async () => {
@@ -46,9 +61,9 @@ export default function FeedbackAvaliacaoDashboard() {
         <div className="space-y-6">
             <ComponentCard title="Avaliações de Feedback">
                 {loading ? (
-                    <p>Carregando...</p>
+                    <p className="dark:text-white">Carregando...</p>
                 ) : avaliacoes.length === 0 ? (
-                    <p className="text-gray-500">Nenhuma avaliação encontrada.</p>
+                    <p className="text-gray-500 dark:text-gray-400">Nenhuma avaliação encontrada.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <Table>
@@ -56,8 +71,9 @@ export default function FeedbackAvaliacaoDashboard() {
                                 <TableRow className="bg-brand-500 dark:bg-gray-900">
                                     <TableCell isHeader className="text-center text-white">ID</TableCell>
                                     <TableCell isHeader className="text-center text-white">Sessão</TableCell>
-                                    <TableCell isHeader className="text-center text-white">Usuário</TableCell>
-                                    <TableCell isHeader className="text-center text-white">Link Forms</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Avaliado</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Status</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Link</TableCell>
                                     <TableCell isHeader className="text-center text-white">Ações</TableCell>
                                 </TableRow>
                             </TableHeader>
@@ -65,35 +81,27 @@ export default function FeedbackAvaliacaoDashboard() {
                                 {avaliacoes.map((a, idx) => (
                                     <TableRow
                                         key={a.id_avaliacao}
-                                        className={`
-                                            ${idx % 2 === 0
-                                                ? "bg-gray-100 dark:bg-gray-800"
-                                                : "bg-white dark:bg-gray-700"}
-                                            hover:bg-brand-50 dark:hover:bg-brand-500/10
-                                        `}
+                                        className={`${idx % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-700"} hover:bg-brand-50 dark:hover:bg-brand-500/10`}
                                     >
-                                        <TableCell className="text-center text-gray-800 dark:text-white">
-                                            {a.id_avaliacao}
-                                        </TableCell>
-                                        <TableCell className="text-center text-gray-800 dark:text-white">
-                                            {a.sessao?.id_sessao || "—"}
-                                        </TableCell>
-                                        <TableCell className="text-center text-gray-800 dark:text-white">
-                                            {a.usuario?.nome || "—"}
-                                        </TableCell>
-                                        <TableCell className="text-center text-gray-800 dark:text-white">
-                                            {a.link_forms ? (
-                                                <a
-                                                    href={a.link_forms}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-brand-500 hover:underline"
-                                                >
-                                                    Acessar
-                                                </a>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">{a.id_avaliacao}</TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">{a.sessao?.id_sessao || "—"}</TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">{a.avaliado?.nome || "—"}</TableCell>
+                                        <TableCell className="text-center">
+                                            {a._count.respostas > 0 ? (
+                                                <Badge color="success">Respondido</Badge>
                                             ) : (
-                                                "—"
+                                                <Badge color="warning">Pendente</Badge>
                                             )}
+                                        </TableCell>
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
+                                            <a
+                                                href={`/feedback/responder/${a.token}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-brand-500 hover:underline"
+                                            >
+                                                Acessar
+                                            </a>
                                         </TableCell>
                                         <TableCell className="text-center">
                                             <Button

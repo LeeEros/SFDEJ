@@ -73,11 +73,6 @@ const navItems: NavItem[] = [
     name: "Feedback",
     subItems: [
       {
-        name: "Feedbacks",
-        path: "/feedbacks",
-        icon: <ChartBarIcon />,
-      },
-      {
         name: "Categorias de Feedback",
         path: "/feedback-categorias",
         icon: <FolderIcon />,
@@ -88,14 +83,14 @@ const navItems: NavItem[] = [
         icon: <ClipboardDocumentListIcon />,
       },
       {
+        name: "Feedbacks Sessões",
+        path: "/feedbacks",
+        icon: <ChartBarIcon />,
+      },
+      {
         name: "Avaliações de Feedback",
         path: "/feedback-avaliacoes",
         icon: <AcademicCapIcon />
-      },
-      {
-        name: "Respostas de Feedback",
-        path: "/feedback-respostas",
-        icon: <UsersIcon />
       },
     ],
   },

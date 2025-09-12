@@ -1,9 +1,12 @@
 import {
     criarSessaoFeedback,
     getDadosParaFormulario,
+    getLinksDaSessao,
+    getSessoes,
     Usuario,
     Categoria,
     Projeto,
+
 } from '../../../services/feedbackService';
 import Select from '../../../components/form/Select';
 import { useState, useEffect } from 'react';
@@ -12,24 +15,48 @@ import Button from '../../../components/ui/button/Button';
 import { Modal } from '../../../components/ui/modal';
 import { useModal } from '../../../hooks/useModal';
 import DatePicker from '../../../components/form/date-picker';
+import { Link } from 'react-router-dom';
 
 const FeedbackSessaoDashboard: React.FC = () => {
-    const { isOpen: isCriacaoModalOpen, toggleModal: toggleCriacaoModal } = useModal();
+    // Estados para a lista de sessões
+    const [sessoes, setSessoes] = useState<Sessao[]>([]);
+    const [isLoadingSessoes, setIsLoadingSessoes] = useState(true);
 
+    // Estados do modal de criação
+    const { isOpen: isCriacaoModalOpen, toggleModal: toggleCriacaoModal } = useModal();
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const [projetos, setProjetos] = useState<Projeto[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
     const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('');
     const [projetoSelecionado, setProjetoSelecionado] = useState<string>('');
     const [avaliadosSelecionados, setAvaliadosSelecionados] = useState<string[]>([]);
     const [dataFim, setDataFim] = useState<Date | null>(null);
 
-    const [linksGerados, setLinksGerados] = useState<any[]>([]);
+    // Estados do modal de links
+    const [linksVisiveis, setLinksVisiveis] = useState<any[]>([]);
     const { isOpen: isLinksModalOpen, toggleModal: toggleLinksModal } = useModal();
 
+    // Função para carregar a lista de sessões
+    const carregarSessoes = async () => {
+        setIsLoadingSessoes(true);
+        try {
+            const response = await getSessoes();
+            setSessoes(response.data);
+        } catch (error) {
+            console.error("Erro ao carregar sessões:", error);
+        } finally {
+            setIsLoadingSessoes(false);
+        }
+    };
+
+    // Carrega as sessões quando o componente monta
+    useEffect(() => {
+        carregarSessoes();
+    }, []);
+
+    // Busca dados para o formulário quando o modal de criação abre
     useEffect(() => {
         if (isCriacaoModalOpen) {
             const fetchData = async () => {
@@ -67,11 +94,10 @@ const FeedbackSessaoDashboard: React.FC = () => {
                 data_fim: dataFim ? dataFim.toISOString() : undefined,
             };
 
-            const response = await criarSessaoFeedback(data);
+            await criarSessaoFeedback(data);
 
-            setLinksGerados(response.data.avaliados);
             toggleCriacaoModal();
-            toggleLinksModal();
+            await carregarSessoes();
 
             setCategoriaSelecionada('');
             setProjetoSelecionado('');
@@ -81,6 +107,17 @@ const FeedbackSessaoDashboard: React.FC = () => {
         } catch (error) {
             console.error("Erro ao criar sessão:", error);
             alert("Ocorreu um erro ao criar a sessão. Verifique o console para mais detalhes.");
+        }
+    };
+
+    const handleVerLinks = async (id_sessao: number) => {
+        try {
+            const response = await getLinksDaSessao(id_sessao);
+            setLinksVisiveis(response.data);
+            toggleLinksModal();
+        } catch (error) {
+            console.error("Erro ao buscar links:", error);
+            alert("Não foi possível carregar os links desta sessão.");
         }
     };
 
@@ -97,6 +134,52 @@ const FeedbackSessaoDashboard: React.FC = () => {
                 </div>
             </div>
 
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead className="bg-gray-50 dark:bg-gray-700">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contexto</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Criada em</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Expira em</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Avaliados</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        {isLoadingSessoes ? (
+                            <tr><td colSpan={5} className="text-center p-4 dark:text-white">Carregando...</td></tr>
+                        ) : sessoes.length === 0 ? (
+                            <tr><td colSpan={5} className="text-center p-4 text-gray-500 dark:text-gray-400">Nenhuma sessão encontrada.</td></tr>
+                        ) : (
+                            sessoes.map((sessao) => (
+                                <tr key={sessao.id_sessao}>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                        {sessao.projeto?.nome || sessao.feedback_categoria?.categoria || 'Geral'}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        {new Date(sessao.data_criacao).toLocaleDateString()}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                        {sessao.data_fim ? new Date(sessao.data_fim).toLocaleDateString() : 'Não expira'}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{sessao._count.avaliados}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                        <Button size="sm" onClick={() => handleVerLinks(sessao.id_sessao)}>
+                                            Ver Links
+                                        </Button>
+                                        <Link to={`/feedback/relatorio/${sessao.id_sessao}`}>
+                                            <Button size="sm" variant="secondary">
+                                                Relatório
+                                            </Button>
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
             <Modal
                 title="Criar Nova Sessão de Feedback"
                 isOpen={isCriacaoModalOpen}
@@ -106,9 +189,9 @@ const FeedbackSessaoDashboard: React.FC = () => {
                     <div className="p-6">
                         {isLoading && <p className="text-center dark:text-white">Carregando...</p>}
                         {error && <p className="text-center text-red-500">{error}</p>}
-
                         {!isLoading && !error && (
                             <>
+
                                 <div className="mb-4">
                                     <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
                                         Categoria (Opcional)
@@ -149,7 +232,6 @@ const FeedbackSessaoDashboard: React.FC = () => {
                                         onChange={setAvaliadosSelecionados}
                                     />
                                 </div>
-
                                 <Button type="submit" color="primary" className="w-full">
                                     Criar Sessão e Gerar Links
                                 </Button>
@@ -160,7 +242,7 @@ const FeedbackSessaoDashboard: React.FC = () => {
             </Modal>
 
             <Modal
-                title="Links Gerados com Sucesso!"
+                title="Links de Avaliação"
                 isOpen={isLinksModalOpen}
                 onClose={toggleLinksModal}
             >
@@ -169,7 +251,7 @@ const FeedbackSessaoDashboard: React.FC = () => {
                         Copie e distribua os links abaixo para os avaliadores:
                     </p>
                     <ul className="space-y-3">
-                        {linksGerados.map(link => (
+                        {linksVisiveis.map(link => (
                             <li key={link.token} className="p-3 border border-gray-200 dark:border-gray-700 rounded-md bg-gray-50 dark:bg-gray-800">
                                 <p className="font-semibold text-gray-900 dark:text-white">{link.avaliado.nome}</p>
                                 <input

@@ -36,7 +36,7 @@ export class FeedbackController {
   async delete(request: Request, response: Response) {
     const { id } = request.params;
     const fb = await fbService.delete(Number(id));
-    return response.status(200).json(fb);
+    return response.status(204).json(fb);
   }
 
   async getReport(req: Request, res: Response) {

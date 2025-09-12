@@ -1,40 +1,28 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router";
 import { ScrollToTop } from "./components/common/ScrollToTop";
+import AutenticarRota from "./components/rotasAutenticadas";
+import AppFooter from "./layout/AppFooter";
 import AppLayout from "./layout/AppLayout";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
-import Blank from "./pages/Blank";
-import Calendar from "./pages/Calendar";
-import BarChart from "./pages/Charts/BarChart";
-import LineChart from "./pages/Charts/LineChart";
-import Home from "./pages/Dashboard/Home";
-import NotFound from "./pages/OtherPage/NotFound";
-import BasicTables from "./pages/Tables/BasicTables";
-import Alerts from "./pages/UiElements/Alerts";
-import Avatars from "./pages/UiElements/Avatars";
-import Badges from "./pages/UiElements/Badges";
-import Buttons from "./pages/UiElements/Buttons";
-import Images from "./pages/UiElements/Images";
-import Videos from "./pages/UiElements/Videos";
-import UserProfiles from "./pages/UserProfiles";
-import AutenticarRota from "./components/rotasAutenticadas";
-import AppFooter from "./layout/AppFooter";
 import CategoriaDashboard from "./pages/core/Categoria/CategoriaDashboard";
 import ClienteDashboard from "./pages/core/Cliente/ClienteDashboard";
 import DiretoriaDashboard from "./pages/core/Diretoria/DiretoriaDashboard";
 import EJDashboard from "./pages/core/EJ/EJDashboard";
 import EnderecoDashboard from "./pages/core/Endereco/EnderecoDashboard";
 import FederacaoDashboard from "./pages/core/Federacao/FederacaoDashboard";
+import FeedbackAvaliacaoDashboard from "./pages/core/Feedback/FeedbackAvaliacaoDashboard";
 import FeedbackCategoriaDashboard from "./pages/core/Feedback/FeedbackCategoriaDashboard";
-import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackQuestaoDashboard";
 import FeedbackRespostasDashboard from "./pages/core/Feedback/FeedbackFormulario";
+import FeedbackQuestaoDashboard from "./pages/core/Feedback/FeedbackQuestaoDashboard";
 import FeedbackSessaoDashboard from "./pages/core/Feedback/FeedbackSessaoDashboard";
+import PublicFeedbackForm from "./pages/core/Feedback/PublicFeedbackForms";
 import InstituicaoDashboard from "./pages/core/Instituicao/InstituicaoDashboard";
 import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
-import FeedbackAvaliacaoDashboard from "./pages/core/Feedback/FeedbackAvaliacaoDashboard";
-import FormElements from "./pages/Forms/FormElements";
-import PublicFeedbackForm from "./pages/core/Feedback/PublicFeedbackForms";
+import Home from "./pages/Dashboard/Home";
+import NotFound from "./pages/OtherPage/NotFound";
+import FeedbackReportPage from "./pages/core/Feedback/FeedbackReportPage";
 
 
 export default function App() {
@@ -43,7 +31,7 @@ export default function App() {
       <Router>
         <ScrollToTop />
         <Routes>
-          {/* Dashboard Layout */}
+
           <Route element={<AppLayout />}>
             <Route
               index
@@ -54,31 +42,6 @@ export default function App() {
                 </AutenticarRota>
               }
             />
-
-            {/* Others Page */}
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
-
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
-
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
-
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
-
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
-
-            {/* Rotas protegidas */}
 
             <Route
               path="/usuarios"
@@ -193,23 +156,20 @@ export default function App() {
               }
             />
 
-            <Route
-              path="/feedback-respostas"
+            <Route path="/feedback/relatorio/:id_sessao"
               element={
                 <AutenticarRota>
-                  <FeedbackRespostasDashboard />
+                  <FeedbackReportPage />
                 </AutenticarRota>
-              }
-            />
+              } />
 
           </Route>
 
-          {/* Auth Layout */}
+
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/feedback/responder/:token" element={<PublicFeedbackForm />} />
 
-          {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

@@ -6,15 +6,28 @@ import { randomUUID } from "crypto";
 
 export class fbHistoricoService {
   async findAll() {
-    const fb_avaliacao = await prisma.feedback_avaliacao.findMany({
-      orderBy: { id_avaliacao: "asc" },
+    return prisma.feedback_avaliacao.findMany({
+      orderBy: {
+        id_avaliacao: "desc",
+      },
+      include: {
+        sessao: {
+          select: {
+            id_sessao: true,
+          },
+        },
+        avaliado: {
+          select: {
+            nome: true,
+          },
+        },
+        _count: {
+          select: {
+            respostas: true,
+          },
+        },
+      },
     });
-
-    if (!fb_avaliacao) {
-      throw new AppError("Nenhum histórico encontrado.", 404);
-    }
-
-    return fb_avaliacao;
   }
 
   async findById(id: number) {
@@ -87,12 +100,11 @@ export class fbHistoricoService {
       },
       select: {
         avaliado: {
-          select: {
-            nome: true,
-          },
+          select: { nome: true },
         },
         sessao: {
           select: {
+            data_fim: true,
             feedback_categoria: {
               select: {
                 categoria: true,
@@ -113,6 +125,14 @@ export class fbHistoricoService {
       throw new AppError(
         "Formulário de feedback não encontrado ou inválido.",
         404
+      );
+    }
+
+    const agora = new Date();
+    if (avaliacao.sessao.data_fim && avaliacao.sessao.data_fim < agora) {
+      throw new AppError(
+        "Este formulário de feedback expirou e não pode mais ser respondido.",
+        403
       );
     }
 

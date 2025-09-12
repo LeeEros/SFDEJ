@@ -20,10 +20,6 @@ export class fbRespostaService {
       );
     }
 
-    if (avaliacao.respostas.length > 0) {
-      throw new AppError("Este formulário de feedback já foi respondido.", 409); // 409 Conflict
-    }
-
     const dadosParaCriar = respostas.map((resposta) => ({
       ...resposta,
       fk_fb_avaliacao: avaliacao.id_avaliacao,
