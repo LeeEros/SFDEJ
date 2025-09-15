@@ -5,5 +5,5 @@ export const enderecoSchema = z.object({
   cidade: z.string().max(255),
   estado: z.string().max(255).toUpperCase(),
   endereco: z.string().max(255),
-  numero: z.number().int().optional(),
+  numero: z.number().int().min(1).max(10000000).optional(),
 });
