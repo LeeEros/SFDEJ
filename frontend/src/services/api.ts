@@ -4,11 +4,15 @@ const url = "http://localhost:3333";
 
 const api = axios.create({
   baseURL: url,
+  maxContentLength: 10000000,
+  maxBodyLength: 10000000,
 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
