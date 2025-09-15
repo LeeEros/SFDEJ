@@ -23,7 +23,6 @@ export default function FeedbackCategoriaDashboard() {
     const [perfil, setPerfil] = useState("hard_skills");
     const [loading, setLoading] = useState(false);
 
-    // Estados para edição
     const [editId, setEditId] = useState<number | null>(null);
     const [editCategoria, setEditCategoria] = useState("");
     const [editDescricao, setEditDescricao] = useState("");
