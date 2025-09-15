@@ -46,7 +46,7 @@ function InstituicaoForm({ onSuccess, enderecos }: { onSuccess: () => void, ende
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
                 <div>
                     <Label htmlFor="faculdade" required>Faculdade</Label>
                     <Input
