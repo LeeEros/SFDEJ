@@ -1,12 +1,11 @@
+import cors from "cors";
 import express from "express";
 import "express-async-errors";
-import cors from "cors";
 import rateLimit from "express-rate-limit";
-import helmet from "helmet";
 
 import { tratamentoErros } from "./middlewares/tratamento.erros";
-import { routes } from "./utils/routes";
 import { createAdmin } from "./utils/create-admin";
+import { routes } from "./utils/routes";
 
 const app = express();
 
