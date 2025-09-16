@@ -46,7 +46,7 @@ function InstituicaoForm({ onSuccess, enderecos }: { onSuccess: () => void, ende
 
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
                 <div>
                     <Label htmlFor="faculdade" required>Faculdade</Label>
                     <Input
@@ -194,10 +194,10 @@ export default function InstituicaoDashboard() {
                             <TableHeader>
                                 <TableRow className="bg-brand-500 dark:bg-gray-900">
                                     <TableCell isHeader className="w-20 text-center text-white">ID</TableCell>
-                                    <TableCell isHeader className="text-white">Faculdade</TableCell>
-                                    <TableCell isHeader className="text-white">Unidade</TableCell>
-                                    <TableCell isHeader className="text-white">CNPJ</TableCell>
-                                    <TableCell isHeader className="text-white">Endereço</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Faculdade</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Unidade</TableCell>
+                                    <TableCell isHeader className="text-center text-white">CNPJ</TableCell>
+                                    <TableCell isHeader className="text-center text-white">Endereço</TableCell>
                                     <TableCell isHeader className="text-center text-white">Ações</TableCell>
                                 </TableRow>
                             </TableHeader>
@@ -215,7 +215,7 @@ export default function InstituicaoDashboard() {
                                         style={{ minHeight: 56 }}
                                     >
                                         <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{i.id_instituicao}</TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
                                             {editId === i.id_instituicao ? (
                                                 <Input
                                                     value={editFaculdade}
@@ -225,7 +225,7 @@ export default function InstituicaoDashboard() {
                                                 i.faculdade
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
                                             {editId === i.id_instituicao ? (
                                                 <Input
                                                     value={editUnidade}
@@ -235,7 +235,7 @@ export default function InstituicaoDashboard() {
                                                 i.unidade
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
                                             {editId === i.id_instituicao ? (
                                                 <Input
                                                     value={editCNPJ}
@@ -245,7 +245,7 @@ export default function InstituicaoDashboard() {
                                                 i.CNPJ
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
+                                        <TableCell className="text-center text-gray-800 dark:text-white">
                                             {editId === i.id_instituicao ? (
                                                 <Select
                                                     options={enderecos.map(e => ({
