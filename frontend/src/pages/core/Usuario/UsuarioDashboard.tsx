@@ -1,24 +1,34 @@
 import { useEffect, useState } from "react";
-import api from "../../../services/api";
+import { Link } from "react-router-dom";
 import ComponentCard from "../../../components/common/ComponentCard";
-import Button from "../../../components/ui/button/Button";
 import Input from "../../../components/form/input/InputField";
 import Label from "../../../components/form/Label";
+import Button from "../../../components/ui/button/Button";
 import {
     Table,
-    TableHeader,
     TableBody,
-    TableRow,
     TableCell,
+    TableHeader,
+    TableRow,
 } from "../../../components/ui/table";
-import { TrashBinIcon, PencilIcon, CheckIcon, XMarkIcon } from "../../../icons";
+import { CheckIcon, DocsIcon, PencilIcon, TrashBinIcon, XMarkIcon } from "../../../icons";
+import api from "../../../services/api";
 
 const apiUsuario = "/usuarios";
+
+interface Usuario {
+    id_usuario: number;
+    nome: string;
+    email: string;
+    telefone: string;
+    permissao: string;
+    ativo: boolean;
+}
 
 function UsuarioForm({ onSuccess }: { onSuccess: () => void }) {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
-    const [telefone, setTelefone] = useState(""); 
+    const [telefone, setTelefone] = useState("");
     const [senha, setSenha] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -26,14 +36,7 @@ function UsuarioForm({ onSuccess }: { onSuccess: () => void }) {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post(apiUsuario, {
-                nome,
-                email,
-                telefone,
-                senha,
-                ativo: true,
-                permissao: "USUARIO",
-            });
+            await api.post(apiUsuario, { nome, email, telefone, senha, ativo: true, permissao: "USUARIO" });
             setNome("");
             setEmail("");
             setTelefone("");
@@ -75,12 +78,10 @@ function UsuarioForm({ onSuccess }: { onSuccess: () => void }) {
 }
 
 export default function UsuarioDashboard() {
-    const [usuarios, setUsuarios] = useState<any[]>([]);
+    const [usuarios, setUsuarios] = useState<Usuario[]>([]);
     const [loading, setLoading] = useState(true);
     const [editId, setEditId] = useState<number | null>(null);
-    const [editNome, setEditNome] = useState("");
-    const [editEmail, setEditEmail] = useState("");
-    const [editTelefone, setEditTelefone] = useState(""); 
+    const [editData, setEditData] = useState({ nome: "", email: "", telefone: "" });
     const [editLoading, setEditLoading] = useState(false);
 
     const fetchData = async () => {
@@ -99,33 +100,28 @@ export default function UsuarioDashboard() {
     }, []);
 
     const handleDelete = async (id: number) => {
-        if (!window.confirm("Deseja remover?")) return;
-        await api.delete(`${apiUsuario}/${id}`);
-        fetchData();
+        if (!window.confirm("Deseja remover este usuário?")) return;
+        try {
+            await api.delete(`${apiUsuario}/${id}`);
+            fetchData();
+        } catch {
+            alert("Erro ao excluir o usuário");
+        }
     };
 
-    const startEdit = (u: any) => {
+    const startEdit = (u: Usuario) => {
         setEditId(u.id_usuario);
-        setEditNome(u.nome);
-        setEditEmail(u.email);
-        setEditTelefone(u.telefone); 
+        setEditData({ nome: u.nome, email: u.email, telefone: u.telefone });
     };
 
     const cancelEdit = () => {
         setEditId(null);
-        setEditNome("");
-        setEditEmail("");
-        setEditTelefone(""); 
     };
 
     const handleEditSave = async (id: number) => {
         setEditLoading(true);
         try {
-            await api.put(`${apiUsuario}/${id}`, {
-                nome: editNome,
-                email: editEmail,
-                telefone: editTelefone,
-            });
+            await api.put(`${apiUsuario}/${id}`, editData);
             setEditId(null);
             fetchData();
         } catch {
@@ -141,9 +137,9 @@ export default function UsuarioDashboard() {
             </ComponentCard>
             <ComponentCard title="Usuários Cadastrados">
                 {loading ? (
-                    <p>Carregando...</p>
+                    <p className="dark:text-white">Carregando...</p>
                 ) : usuarios.length === 0 ? (
-                    <p className="text-gray-500">Nenhum usuário cadastrado.</p>
+                    <p className="text-gray-500 dark:text-gray-400">Nenhum usuário cadastrado.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <Table>
@@ -153,8 +149,6 @@ export default function UsuarioDashboard() {
                                     <TableCell isHeader className="text-white">Nome</TableCell>
                                     <TableCell isHeader className="text-white">Email</TableCell>
                                     <TableCell isHeader className="text-white">Telefone</TableCell>
-                                    <TableCell isHeader className="text-white">Permissão</TableCell>
-                                    <TableCell isHeader className="text-white">Ativo</TableCell>
                                     <TableCell isHeader className="text-center text-white">Ações</TableCell>
                                 </TableRow>
                             </TableHeader>
@@ -162,88 +156,35 @@ export default function UsuarioDashboard() {
                                 {usuarios.map((u, idx) => (
                                     <TableRow
                                         key={u.id_usuario}
-                                        className={`
-                                          align-middle
-                                          ${idx % 2 === 0
-                                                ? "bg-gray-100 dark:bg-gray-800"
-                                                : "bg-white dark:bg-gray-700"}
-                                          hover:bg-brand-50 dark:hover:bg-brand-500/10
-                                        `}
-                                        style={{ minHeight: 56 }}
+                                        className={`${idx % 2 === 0 ? "bg-gray-100 dark:bg-gray-800" : "bg-white dark:bg-gray-700"} hover:bg-brand-50 dark:hover:bg-brand-500/10`}
                                     >
                                         <TableCell className="text-center font-semibold text-gray-800 dark:text-white">{u.id_usuario}</TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === u.id_usuario ? (
-                                                <Input value={editNome} onChange={e => setEditNome(e.target.value)} />
-                                            ) : (
-                                                u.nome
-                                            )}
+                                            {editId === u.id_usuario ? (<Input value={editData.nome} onChange={e => setEditData({ ...editData, nome: e.target.value })} />) : (u.nome)}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === u.id_usuario ? (
-                                                <Input value={editEmail} onChange={e => setEditEmail(e.target.value)} />
-                                            ) : (
-                                                u.email
-                                            )}
+                                            {editId === u.id_usuario ? (<Input value={editData.email} onChange={e => setEditData({ ...editData, email: e.target.value })} />) : (u.email)}
                                         </TableCell>
                                         <TableCell className="text-gray-800 dark:text-white">
-                                            {editId === u.id_usuario ? (
-                                                <Input value={editTelefone} onChange={e => setEditTelefone(e.target.value)} />
-                                            ) : (
-                                                u.telefone
-                                            )}
-                                        </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {u.permissao}
-                                        </TableCell>
-                                        <TableCell className="text-gray-800 dark:text-white">
-                                            {u.ativo ? "Sim" : "Não"}
+                                            {editId === u.id_usuario ? (<Input value={editData.telefone} onChange={e => setEditData({ ...editData, telefone: e.target.value })} />) : (u.telefone)}
                                         </TableCell>
                                         <TableCell className="text-center py-3">
-                                            {editId === u.id_usuario ? (
-                                                <div className="flex justify-center gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="success"
-                                                        className="py-2 px-4 bg-success-600 hover:bg-success-700 text-white rounded shadow"
-                                                        onClick={() => handleEditSave(u.id_usuario)}
-                                                        disabled={editLoading}
-                                                        startIcon={<CheckIcon className="size-4" />}
-                                                    >
-                                                        Salvar
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="outline"
-                                                        className="py-2 px-4 !bg-gray-600 hover:!bg-gray-700 text-white rounded shadow"
-                                                        onClick={cancelEdit}
-                                                        startIcon={<XMarkIcon className="size-4" />}
-                                                    >
-                                                        Cancelar
-                                                    </Button>
-                                                </div>
-                                            ) : (
-                                                <div className="flex justify-center gap-2">
-                                                    <Button
-                                                        size="sm"
-                                                        variant="primary"
-                                                        className="py-2 px-4 bg-brand-500 hover:bg-brand-600 text-white rounded shadow"
-                                                        onClick={() => startEdit(u)}
-                                                        startIcon={<PencilIcon className="size-4" />}
-                                                    >
-                                                        Editar
-                                                    </Button>
-                                                    <Button
-                                                        size="sm"
-                                                        variant="danger"
-                                                        className="py-2 px-4 bg-error-600 hover:bg-error-700 text-white rounded shadow"
-                                                        onClick={() => handleDelete(u.id_usuario)}
-                                                        startIcon={<TrashBinIcon className="size-4" />}
-                                                    >
-                                                        Excluir
-                                                    </Button>
-                                                </div>
-                                            )}
+                                            <div className="flex justify-center gap-2">
+                                                {editId === u.id_usuario ? (
+                                                    <>
+                                                        <Button size="sm" variant="success" onClick={() => handleEditSave(u.id_usuario)} disabled={editLoading} startIcon={<CheckIcon className="size-4" />}>Salvar</Button>
+                                                        <Button size="sm" variant="secondary" onClick={cancelEdit} startIcon={<XMarkIcon className="size-4" />}>Cancelar</Button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Button size="sm" variant="primary" onClick={() => startEdit(u)} startIcon={<PencilIcon className="size-4" />}>Editar</Button>
+                                                        <Button size="sm" variant="danger" onClick={() => handleDelete(u.id_usuario)} startIcon={<TrashBinIcon className="size-4" />}>Excluir</Button>
+                                                        <Link to={`/usuarios/relatorio/${u.id_usuario}`}>
+                                                            <Button size="sm" variant="outline" startIcon={<DocsIcon className="size-4" />}>Feedbacks</Button>
+                                                        </Link>
+                                                    </>
+                                                )}
+                                            </div>
                                         </TableCell>
                                     </TableRow>
                                 ))}

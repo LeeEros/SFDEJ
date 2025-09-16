@@ -22,6 +22,7 @@ import ProjetoDashboard from "./pages/core/Projeto/ProjetoDashboard";
 import UsuarioDashboard from "./pages/core/Usuario/UsuarioDashboard";
 import Home from "./pages/Dashboard/Home";
 import NotFound from "./pages/OtherPage/NotFound";
+import UserFeedbackReportPage from "./pages/core/Usuario/UsuarioFeedbackReportPage";
 
 
 export default function App() {
@@ -161,6 +162,8 @@ export default function App() {
                   <FeedbackReportPage />
                 </AutenticarRota>
               } />
+
+            <Route path="/usuarios/relatorio/:id_usuario" element={<UserFeedbackReportPage />} />
 
           </Route>
 
