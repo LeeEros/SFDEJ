@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getRelatorioSessao, RelatorioSessao } from '../../../services/feedbackService';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/ui/button/Button';
-import { InfoIcon } from '../../../icons';
+import { ChevronLeftIcon } from '../../../icons';
+import { getRelatorioSessao, RelatorioSessao } from '../../../services/feedbackService';
 
 
 const FeedbackReportPage = () => {
@@ -45,7 +45,7 @@ const FeedbackReportPage = () => {
     return (
         <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
             <div className="mb-6">
-                <Button variant="secondary" onClick={() => navigate(-1)} startIcon={<InfoIcon className="size-4" />}>
+                <Button variant="secondary" onClick={() => navigate(-1)} startIcon={<ChevronLeftIcon className="size-4" />}>
                     Voltar
                 </Button>
             </div>
