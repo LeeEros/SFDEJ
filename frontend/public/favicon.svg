@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+    <path
+        d="M0.425781 12.6316C0.425781 5.65535 6.08113 0 13.0574 0H35.7942C42.7704 0 48.4258 5.65535 48.4258 12.6316V35.3684C48.4258 42.3446 42.7704 48 35.7942 48H13.0574C6.08113 48 0.425781 42.3446 0.425781 35.3684V12.6316Z"
+        fill="#465FFF" />
+    <text x="24.425781" y="24" dominant-baseline="middle" text-anchor="middle"
+        font-family="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" font-size="28" font-weight="bold" fill="white">
+        S
+    </text>
+</svg>
