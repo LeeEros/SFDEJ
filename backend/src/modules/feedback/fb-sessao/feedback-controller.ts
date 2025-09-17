@@ -44,4 +44,9 @@ export class FeedbackController {
     const resultado = await fbService.getReport(Number(id_sessao));
     return res.status(200).json(resultado);
   }
+
+  async getMediaPorCategoria(req: Request, res: Response) {
+    const resultado = await fbService.getMediaPorCategoria();
+    return res.status(200).json(resultado);
+  }
 }
