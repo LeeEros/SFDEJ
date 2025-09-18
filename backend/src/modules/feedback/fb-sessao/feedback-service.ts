@@ -217,4 +217,44 @@ export class FeedbackService {
       participantes: relatorioAvaliados,
     };
   }
+
+  async getMediaPorCategoria() {
+    const categoriasComRespostas = await prisma.feedback_categoria.findMany({
+      include: {
+        questoes: {
+          include: {
+            respostas: {
+              select: {
+                nota: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const relatorio = categoriasComRespostas
+      .map((categoria) => {
+        let totalNotas = 0;
+        let numeroDeRespostas = 0;
+
+        categoria.questoes.forEach((questao) => {
+          questao.respostas.forEach((resposta) => {
+            totalNotas += resposta.nota;
+            numeroDeRespostas++;
+          });
+        });
+
+        const media =
+          numeroDeRespostas > 0 ? totalNotas / numeroDeRespostas : 0;
+
+        return {
+          categoria: categoria.categoria,
+          media: parseFloat(media.toFixed(2)),
+        };
+      })
+      .filter((item) => item.media > 0);
+
+    return relatorio;
+  }
 }

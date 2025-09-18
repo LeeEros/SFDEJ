@@ -53,6 +53,11 @@ export interface RelatorioSessao {
   participantes: RelatorioAvaliado[];
 }
 
+export interface MediaPorCategoria {
+  categoria: string;
+  media: number;
+}
+
 export const getDadosParaFormulario = async () => {
   const [usuarios, categorias, projetos] = await Promise.all([
     api.get<Usuario[]>("/usuarios"),
@@ -85,3 +90,9 @@ export const getLinksDaSessao = (id_sessao: number) =>
 
 export const getRelatorioSessao = (id_sessao: number) =>
   api.get<RelatorioSessao>(`/feedback/relatorio/${id_sessao}`);
+
+export const getMediaGeralPorCategoria = () => {
+  return api.get<MediaPorCategoria[]>(
+    "/feedback/relatorios/media-por-categoria"
+  );
+};
