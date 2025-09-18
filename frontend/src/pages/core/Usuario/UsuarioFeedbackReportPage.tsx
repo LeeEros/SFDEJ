@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/ui/button/Button';
 import { getRelatorioUsuario, RelatorioUsuario } from '../../../services/usuarioService';
 import { ChevronLeftIcon } from '../../../icons';
+import DesempenhoIndividualChart from '../../Charts/feedback/DesempenhoIndividual';
+
 
 const UserFeedbackReportPage = () => {
     const { id_usuario } = useParams<{ id_usuario: string }>();
@@ -55,8 +57,12 @@ const UserFeedbackReportPage = () => {
                 </h1>
             </div>
 
+            {relatorio.historico_feedbacks.length > 0 && (
+                <DesempenhoIndividualChart historico_feedbacks={relatorio.historico_feedbacks} />
+            )}
+
             {relatorio.historico_feedbacks.length > 0 ? (
-                <div className="space-y-8">
+                <div className="space-y-8 mt-8">
                     {relatorio.historico_feedbacks.map((historico, index) => (
                         <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
                             <div className="p-5 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
