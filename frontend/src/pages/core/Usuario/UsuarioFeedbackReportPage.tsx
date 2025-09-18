@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../../components/ui/button/Button';
 import { getRelatorioUsuario, RelatorioUsuario } from '../../../services/usuarioService';
 import { ChevronLeftIcon } from '../../../icons';
+import UserRadarChart from '../../Charts/feedback/GraficoUsuario';
 
 const UserFeedbackReportPage = () => {
     const { id_usuario } = useParams<{ id_usuario: string }>();
@@ -47,6 +48,10 @@ const UserFeedbackReportPage = () => {
                 <Button variant="secondary" onClick={() => navigate(-1)} startIcon={<ChevronLeftIcon className="size-4" />}>
                     Voltar
                 </Button>
+            </div>
+
+            <div className="mb-8">
+                {id_usuario && <UserRadarChart userId={Number(id_usuario)} />}
             </div>
 
             <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md mb-8">

@@ -205,4 +205,45 @@ export class UsuariosService {
       historico_feedbacks: relatorioFormatado,
     };
   }
+
+  async getRadarChartData(id_usuario: number) {
+    const respostas = await prisma.feedback_resposta.findMany({
+      where: {
+        avaliacao: {
+          fk_avaliado: id_usuario,
+        },
+      },
+      include: {
+        questao: {
+          include: {
+            feedback_categoria: {
+              select: { categoria: true },
+            },
+          },
+        },
+      },
+    });
+
+    const notasPorCategoria = respostas.reduce((acc, resposta) => {
+      const categoria = resposta.questao.feedback_categoria.categoria;
+      if (!acc[categoria]) {
+        acc[categoria] = [];
+      }
+      acc[categoria].push(resposta.nota);
+      return acc;
+    }, {} as Record<string, number[]>);
+
+    const mediaPorCategoria = Object.entries(notasPorCategoria).map(
+      ([categoria, notas]) => {
+        const media =
+          notas.reduce((soma, nota) => soma + nota, 0) / notas.length;
+        return {
+          categoria,
+          media: parseFloat(media.toFixed(2)),
+        };
+      }
+    );
+
+    return mediaPorCategoria;
+  }
 }

@@ -16,5 +16,9 @@ usuariosRoutes.get(
   "/relatorio/:id_usuario",
   usuariosController.getFeedbackReport
 );
+usuariosRoutes.get(
+  "/relatorio/:id_usuario/grafico-radar",
+  usuariosController.getRadarChartData
+);
 
 export { usuariosRoutes };

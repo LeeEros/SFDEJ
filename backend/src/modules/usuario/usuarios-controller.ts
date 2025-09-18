@@ -48,4 +48,10 @@ export class UsuariosController {
     );
     return res.status(200).json(resultado);
   }
+
+  async getRadarChartData(req: Request, res: Response) {
+    const { id_usuario } = req.params;
+    const resultado = await service.getRadarChartData(Number(id_usuario));
+    return res.status(200).json(resultado);
+  }
 }
