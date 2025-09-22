@@ -1,5 +1,6 @@
 import PageMeta from "../../components/common/PageMeta";
-import MediaPorCategoriaChart from "../Charts/MediaPorCategoria";
+import MediaPorCategoriaChart from "../Charts/feedback/MediaPorCategoria";
+
 
 export default function Home() {
   return (
