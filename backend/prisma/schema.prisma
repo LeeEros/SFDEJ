@@ -175,7 +175,7 @@ model projeto {
   status          status_projeto @default(NEGOCIACAO)
   data_assinatura DateTime?      @db.Date
   data_conclusao  DateTime?      @db.Date
-  valor           Float?
+  valor           Decimal?       @db.Decimal(10, 2)
   anexo           Bytes?
 
   fk_categoria Int?
