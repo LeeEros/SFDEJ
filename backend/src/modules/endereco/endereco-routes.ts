@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import { usuarioAutenticado } from "@/middlewares/auth-usuario";
+import { userAuthenticated } from "@/middlewares/auth-usuario";
 import { EnderecoController } from "./endereco-controller";
 
 const enderecoRoutes = Router();
 const enderecoController = new EnderecoController();
 
-enderecoRoutes.use(usuarioAutenticado);
+enderecoRoutes.use(userAuthenticated);
 enderecoRoutes.get("/", enderecoController.findAll);
 enderecoRoutes.get("/:id", enderecoController.findById);
 enderecoRoutes.post("/", enderecoController.create);

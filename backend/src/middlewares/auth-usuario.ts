@@ -8,7 +8,7 @@ interface TokenPayload {
   sub: string;
 }
 
-export function usuarioAutenticado(
+export function userAuthenticated(
   request: Request,
   response: Response,
   next: NextFunction

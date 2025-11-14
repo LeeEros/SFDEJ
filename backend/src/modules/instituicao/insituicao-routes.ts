@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { InstituicaoController } from "./instituicao-controllers";
-import { usuarioAutenticado } from "@/middlewares/auth-usuario";
+import { userAuthenticated } from "@/middlewares/auth-usuario";
 
 const instRoutes = Router();
 const instituicaoController = new InstituicaoController();
 
-instRoutes.use(usuarioAutenticado);
+instRoutes.use(userAuthenticated);
 instRoutes.get("/", instituicaoController.findAll);
 instRoutes.get("/:id", instituicaoController.findById);
 instRoutes.post("/", instituicaoController.create);

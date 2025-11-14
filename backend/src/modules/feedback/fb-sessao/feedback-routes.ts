@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { usuarioAutenticado } from "@/middlewares/auth-usuario";
+import { userAuthenticated } from "@/middlewares/auth-usuario";
 import { FeedbackController } from "./feedback-controller";
 
 const feedbackRoutes = Router();
 const fbController = new FeedbackController();
 
-feedbackRoutes.use(usuarioAutenticado);
+feedbackRoutes.use(userAuthenticated);
 feedbackRoutes.get("/", fbController.findAll);
 feedbackRoutes.get("/:id", fbController.findById);
 feedbackRoutes.post("/", fbController.create);

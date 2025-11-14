@@ -1,11 +1,11 @@
-import { usuarioAutenticado } from "@/middlewares/auth-usuario";
+import { userAuthenticated } from "@/middlewares/auth-usuario";
 import { Router } from "express";
 import { FbCategoriaController } from "./fb-categoria-controller";
 
 const fbCategoriaRoutes = Router();
 const fbCategoriaController = new FbCategoriaController();
 
-fbCategoriaRoutes.use(usuarioAutenticado);
+fbCategoriaRoutes.use(userAuthenticated);
 fbCategoriaRoutes.get("/", fbCategoriaController.findAll);
 fbCategoriaRoutes.get("/:id", fbCategoriaController.findById);
 fbCategoriaRoutes.post("/", fbCategoriaController.create);

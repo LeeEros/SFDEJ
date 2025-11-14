@@ -15,7 +15,7 @@ export class UsuariosService {
     return usuariosSemSenha;
   }
 
-  async findAllDesativados() {
+  async findAllDisabled() {
     const usuarioDesativados = await prisma.usuarios.findMany({
       where: { ativo: false },
       orderBy: { id_usuario: "asc" },

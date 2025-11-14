@@ -9,8 +9,8 @@ export class UsuariosController {
     return response.status(200).json(usuarios);
   }
 
-  async findAllDesativados(request: Request, response: Response) {
-    const usuarios = await usuariosService.findAllDesativados();
+  async findAllDisabled(request: Request, response: Response) {
+    const usuarios = await usuariosService.findAllDisabled();
     return response.status(200).json(usuarios);
   }
 
@@ -51,7 +51,9 @@ export class UsuariosController {
 
   async getRadarChartData(req: Request, res: Response) {
     const { id_usuario } = req.params;
-    const resultado = await service.getRadarChartData(Number(id_usuario));
+    const resultado = await usuariosService.getRadarChartData(
+      Number(id_usuario)
+    );
     return res.status(200).json(resultado);
   }
 }

@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { usuarioAutenticado } from "@/middlewares/auth-usuario";
 import { UsuariosController } from "./usuarios-controller";
+import { userAuthenticated } from "@/middlewares/auth-usuario";
 
 const usuariosRoutes = Router();
 const usuariosController = new UsuariosController();
 
 usuariosRoutes.post("/", usuariosController.create);
-usuariosRoutes.use(usuarioAutenticado);
+usuariosRoutes.use(userAuthenticated);
 usuariosRoutes.get("/", usuariosController.findAll);
-usuariosRoutes.get("/desativados", usuariosController.findAllDesativados);
+usuariosRoutes.get("/desativados", usuariosController.findAllDisabled);
 usuariosRoutes.get("/:id", usuariosController.findById);
 usuariosRoutes.put("/:id", usuariosController.update);
 usuariosRoutes.delete("/:id", usuariosController.delete);

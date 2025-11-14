@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { usuarioAutenticado } from "@/middlewares/auth-usuario";
+import { userAuthenticated } from "@/middlewares/auth-usuario";
 import { FbHistoricoController } from "./fb-avaliacao-controllers";
 
 const fbAvalicaoRoutes = Router();
@@ -10,7 +10,7 @@ fbAvalicaoRoutes.get(
   fbAvaliacaoController.findPublicByToken
 );
 
-fbAvalicaoRoutes.use(usuarioAutenticado);
+fbAvalicaoRoutes.use(userAuthenticated);
 fbAvalicaoRoutes.get("/", fbAvaliacaoController.findAll);
 fbAvalicaoRoutes.get("/:id", fbAvaliacaoController.findById);
 fbAvalicaoRoutes.post("/", fbAvaliacaoController.create);
