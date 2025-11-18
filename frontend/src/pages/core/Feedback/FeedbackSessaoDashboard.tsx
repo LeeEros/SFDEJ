@@ -209,7 +209,7 @@ const FeedbackSessaoDashboard: React.FC = () => {
                         {!isLoadingFormData && !error && (
                             <>
                                 <div className="mb-4">
-                                    <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Categoria (Opcional)</label>
+                                    <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">Categoria</label>
                                     <Select options={categorias.map(c => ({ value: c.id_fb_categoria.toString(), label: c.categoria }))} value={categoriaSelecionada} onChange={value => setCategoriaSelecionada(value)} />
                                 </div>
                                 <div className="mb-4">
