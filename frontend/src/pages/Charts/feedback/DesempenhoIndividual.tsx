@@ -7,12 +7,17 @@ interface DesempenhoIndividualChartProps {
 }
 
 const DesempenhoIndividualChart = ({ historico_feedbacks }: DesempenhoIndividualChartProps) => {
+
+    const feedbacksOrdenados = [...historico_feedbacks].sort((a, b) =>
+        new Date(a.data_feedback).getTime() - new Date(b.data_feedback).getTime()
+    );
+
     const series: ApexAxisChartSeries = [];
     const categories: string[] = [];
 
     const dadosPorEnunciado: { [enunciado: string]: { data: number[], datas: string[] } } = {};
 
-    historico_feedbacks.forEach(historico => {
+    feedbacksOrdenados.forEach(historico => {
         historico.resultados.forEach(resultado => {
             if (!dadosPorEnunciado[resultado.enunciado]) {
                 dadosPorEnunciado[resultado.enunciado] = { data: [], datas: [] };
